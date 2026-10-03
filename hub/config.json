@@ -19,10 +19,10 @@
   },
 
   "backend": {
-    "appsScriptUrl": "",
+    "appsScriptUrl": "https://script.google.com/macros/s/AKfycbzAivk36uh69nqofdTPMxWjjovB2ZwHhc7cIHcbsxJz-ALQe-22Dy5HhluuTovkgIF9/exec",
     "timeoutMs": 8000,
     "form": {
-      "action": "",
+      "action": "https://docs.google.com/forms/d/e/1FAIpQLSdDUJnGP3Ms0kd-kQaUMVE60aRE8Rz0qYdbf3XEp924jt0J9g/formResponse",
       "entries": {
         "code": "2114455115",
         "kurs": "415096849",
