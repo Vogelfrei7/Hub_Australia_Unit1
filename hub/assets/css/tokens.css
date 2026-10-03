@@ -1,0 +1,77 @@
+/* Australia Road Trip – Design-Tokens (verbindlich, siehe docs/setup.md)
+   Die Werte koennen pro Unit in config.json -> "theme" ueberschrieben werden. */
+
+/* Schriften lokal (SIL Open Font License, siehe ../fonts/OFL-*.txt) – keine Verbindung zu Google beim Laden */
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/atkinson-hyperlegible-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/atkinson-hyperlegible-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Caveat Brush";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/caveat-brush-400.woff2") format("woff2");
+}
+
+:root {
+  /* Farben */
+  --navy:        #1B2A55;  /* Primaerfarbe: Text, Buttons, Next-Stop-Tag, Routen (begangen) */
+  --navy-dark:   #0F1A38;  /* Hover */
+  --cream:       #F2EADA;  /* Seitenhintergrund */
+  --paper:       #FFFBF3;  /* Karten, Panel, Passseiten */
+  --sky:         #8DB9E2;  /* Pinselstrich unter Headlines */
+  --sky-glow:    rgba(141, 185, 226, .75); /* Next-Stop-Glow */
+  --sky-light:   #DCEAF5;  /* Hinweis-/Postkartenflaechen */
+  --ocean:       #A9CDEB;  /* Meer auf der Map */
+  --ocean-ink:   #2C5E86;  /* Meeresbeschriftungen */
+  --teal:        #3F8E99;  /* Express-Route (gestrichelt) */
+  --teal-ink:    #1F5F68;  /* Text auf Teal-Flaechen */
+  --teal-light:  #DDEFF0;
+  --terracotta:  #C9643B;  /* Stempel/erledigt, Tipp-Marker */
+  --terra-ink:   #A9502B;  /* Terrakotta als Textfarbe */
+  --terra-light: #F8E1D3;
+  --terra-dark:  #6A2C12;  /* Text auf terra-light */
+  --sage:        #4F7449;  /* Salbei (nur dunkel, als Text/Stempel) */
+  --land:        #EBD9BC;  /* unentdecktes Land */
+  --land-hatch:  #E0C9A5;  /* Schraffur, 45 Grad */
+  --land-trail:  #E9A26C;  /* freigelegter Korridor, opacity .75 */
+  --coast:       #B9763F;  /* Kuestenlinie, 3px */
+  --route-open:  #7D6A52;  /* nicht begangene Route, dasharray 2 10 */
+  --locked:      #DCCFB8;  /* gesperrte Station */
+  --locked-ink:  #3E3529;
+  --locked-line: #CDBC9E;
+  --text-muted:  #3D4560;  /* Sekundaertext, >= 4.5:1 auf cream/paper */
+  --line:        #E2D4BA;  /* Raender */
+  --white:       #FFFFFF;
+
+  /* Typografie */
+  --font-hand: "Caveat Brush", cursive;
+  --font-body: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --fs-h1: 46px;
+  --fs-place: 38px;
+  --fs-passport: 50px;
+  --fs-stamp-head: 52px;
+  --fs-body: 16px;
+  --fs-small: 15px;
+  --fs-label: 13px;
+
+  /* Formen */
+  --radius-panel: 18px;
+  --radius-card: 12px;
+  --radius-tag: 12px 5px 13px 5px;  /* Pinsel-Tag */
+  --touch: 44px;
+
+  /* Bewegung */
+  --dur-unlock: 560ms;
+}

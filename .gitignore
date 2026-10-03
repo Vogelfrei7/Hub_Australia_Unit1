@@ -1,0 +1,22 @@
+# Niemals ins öffentliche Repo:
+# - echte Ergebnisse, Code-Listen, Exporte aus dem Sheet
+# - Buchseiten, Lösungsschlüssel, Knowledge mit Buchtexten
+private/
+exports/
+*.csv
+*.xlsx
+**/*_loesung*
+knowledge/buch/
+originale/
+
+# Rohbilder (nur die konvertierten WebP kommen ins Repo)
+hub/assets/img/*.png
+hub/assets/img/*.jpg
+hub/assets/img/*.jpeg
+!hub/assets/img/README.md
+
+node_modules/
+.DS_Store
+Thumbs.db
+desktop.ini
+.claude/

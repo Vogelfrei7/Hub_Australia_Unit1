@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Code-Karten</title>
+<link rel="stylesheet" href="../hub/assets/css/tokens.css">
+<style>
+  body { margin: 0; background: var(--cream); color: var(--navy); font-family: var(--font-body); }
+  .ctl { max-width: 900px; margin: 0 auto; padding: 20px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+  .ctl h1 { width: 100%; margin: 0; font-family: var(--font-hand); font-weight: 400; font-size: 40px; }
+  .ctl p { width: 100%; margin: 0; font-size: 14px; color: var(--text-muted); }
+  label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 700; }
+  input { min-height: 44px; padding: 0 10px; border-radius: 10px; border: 2px solid var(--line); font: 700 16px var(--font-body); width: 110px; }
+  button { min-height: 44px; padding: 0 18px; border-radius: 10px; border: none; background: var(--navy); color: #fff; font: 700 15px var(--font-body); cursor: pointer; }
+  .sheet { max-width: 900px; margin: 0 auto; padding: 0 16px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+  .card { background: var(--paper); border: 1.5px dashed var(--coast); border-radius: 12px; padding: 14px 16px; break-inside: avoid; }
+  .card .t { font-family: var(--font-hand); font-size: 24px; line-height: 1; }
+  .card .c { font: 700 24px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 2px; margin: 8px 0; }
+  .card .u { font-size: 11px; color: var(--text-muted); word-break: break-all; }
+  .card .h { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+  @media print { .ctl { display: none; } body { background: #fff; } .sheet { padding: 0; } }
+</style>
+</head>
+<body>
+<div class="ctl">
+  <h1>Code-Karten drucken</h1>
+  <p>Erzeugt zufällige, nicht erratbare Codes direkt im Browser. Nichts wird gespeichert oder gesendet.
+     Es gibt keine Zuordnungsliste: Die Karten werden verdeckt verteilt. Für jede Klasse eigene Karten drucken
+     und doppelte Codes vermeiden (Seite nicht mehrfach für dieselbe Klasse neu laden).</p>
+  <label>Anzahl <input id="n" type="number" min="1" max="60" value="30"></label>
+  <label>Klasse <input id="k" value="9a"></label>
+  <button id="go" type="button">Erzeugen</button>
+  <button id="pr" type="button">Drucken</button>
+</div>
+<div class="sheet" id="sheet"></div>
+<script>
+  const WORDS = ['KOALA', 'EMU', 'WOMBAT', 'DINGO', 'POSSUM', 'QUOLL', 'GECKO', 'PELICAN', 'NUMBAT', 'BILBY', 'GALAH', 'WALLABY', 'KOOKA', 'DUGONG', 'TURTLE', 'SHARK', 'RAY', 'CORAL', 'BOAB', 'WATTLE', 'GUM', 'REEF', 'SURF', 'DUNE', 'CANYON', 'OUTBACK', 'BUSH', 'CROC', 'IBIS', 'MAGPIE'];
+  const CH = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  const MAP = 'https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/';
+  const rnd = (n) => { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; };
+  function make(count) {
+    const out = new Set();
+    while (out.size < count) {
+      let s = ''; for (let i = 0; i < 4; i++) s += CH[rnd(CH.length)];
+      if (!/\d/.test(s)) continue; // mindestens eine Ziffer
+      out.add(`${WORDS[rnd(WORDS.length)]}-${s}`);
+    }
+    return [...out];
+  }
+  function render() {
+    const n = Math.max(1, Math.min(60, Number(document.getElementById('n').value) || 30));
+    const k = document.getElementById('k').value.trim();
+    document.getElementById('sheet').innerHTML = make(n).map((c) => `
+      <div class="card"><div class="t">Australia Road Trip${k ? ' · ' + k.replace(/[<>&"]/g, '') : ''}</div>
+      <div class="c">${c}</div><div class="u">${MAP}</div>
+      <div class="h">Dein persönlicher Code. Nicht weitergeben, keinen Namen eingeben.</div></div>`).join('');
+  }
+  document.getElementById('go').addEventListener('click', render);
+  document.getElementById('pr').addEventListener('click', () => window.print());
+  render();
+</script>
+</body>
+</html>
