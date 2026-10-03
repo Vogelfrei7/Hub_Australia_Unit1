@@ -5,7 +5,7 @@ Etwa zwei Drittel der Arbeit findet auf Papier statt. Die SuS fotografieren das 
 - Korrigiere **nur** gegen den Lösungsschlüssel `<Blatt-ID>_loesung` aus dem Knowledge. Alternativen im Schlüssel gelten als richtig.
 - **Unleserliches nicht raten:** Items nennen und nachfragen („I can’t read number 4b. What did you write?“). Erst werten, wenn alles geklärt ist.
 - Kurze Übersicht: richtig / falsch mit richtiger Form und höchstens einem Satz Erklärung; ähnliche Fehler bündeln.
-- NIVEAU über die Prozentbänder, FEHLER aus dem Fehlerkatalog (max. 4).
+- NIVEAU über die Prozentbänder, FEHLER aus dem Fehlerkatalog (max. 3).
 - Lösungen erst nach dem Hochladen und nie vollständig für ein unbearbeitetes Blatt.
 
 Zusatz für Schreibaufgaben (freie Texte):

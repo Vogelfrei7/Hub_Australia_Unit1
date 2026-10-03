@@ -1,6 +1,6 @@
 # Fehlerkatalog – Australia Road Trip (Headlight 5, Unit 1)
 
-> **Status: ENTWURF zur Abstimmung.** Die maschinenlesbare Fassung steht in `hub/config.json` → `errorCatalog`.
+> **Status: Grammatik-Kürzel abgestimmt (3.10.2026). Schreib-Kürzel vorläufig, werden aus dem ZP10-Raster abgeleitet.** Die maschinenlesbare Fassung steht in `hub/config.json` → `errorCatalog`.
 > Bei Änderungen bitte **beide** Stellen anpassen (Code-Kürzel müssen identisch sein).
 
 Gemeinsamer Katalog für **Grammar Coach** und **Writing Coach**. Die Coaches dürfen im Feld FEHLER
@@ -9,10 +9,10 @@ im Schreiben auf (W1–W3), erscheint auf der Map an dieser Station ein Tipp-Mar
 
 ## Regeln für die Vergabe
 
-1. Pro Abgabe höchstens **4 Kürzel**, die wichtigsten zuerst. Kein Kürzel für einen einmaligen Flüchtigkeitsfehler, wenn dieselbe Form sonst richtig ist.
+1. Pro Abgabe höchstens **3 Kürzel**, die wichtigsten zuerst (Ausnahme Check-in G0, siehe Regel 4). Kein Kürzel für einen einmaligen Flüchtigkeitsfehler, wenn dieselbe Form sonst richtig ist.
 2. Ein Kürzel pro Fehlertyp, auch wenn er mehrfach vorkommt.
 3. Keine Fehler: FEHLER = `-`.
-4. **Check-in G0:** Für **jede** Zeitform, in der mindestens ein Fehler vorkam, ein passendes Kürzel vergeben. Daraus berechnet die Map die Pflichtstationen. Eine Zeitform ohne Kürzel wird zur Express-Station.
+4. **Check-in G0:** Für **jede** Zeitform, in der mindestens ein Fehler vorkam (auch im Bestätigungs-Item), genau ein passendes Kürzel vergeben, also bis zu 5. Daraus berechnet die Map die Pflichtstationen. Eine Zeitform ohne Kürzel wird zur Express-Station.
 5. Passt kein spezielles Kürzel, das allgemeine Kürzel der Struktur nehmen (`SPR-USE`, `SP-IRREG`, `PP-FORM`, `GOING-BE`, `PROG-FORM`, `TENSE-MIX`).
 
 ## Grammatik

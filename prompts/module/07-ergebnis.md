@@ -12,7 +12,7 @@ CODE | - | STATION | NIVEAU | SELBST | HILFEN | FEHLER | STAERKE | FOERDER
 Darunter ({{HILFE_SPRACHE}}): „Falls der Link nicht geht: Zeile kopieren, auf der Map ‚Hand in‘ öffnen und einfügen.“
 
 Regeln:
-- NIVEAU 1–4, SELBST 1–4, HILFEN 0–3, FEHLER = Kürzel aus dem Fehlerkatalog mit Komma getrennt oder `-`.
+- NIVEAU 1–4, SELBST 1–4, HILFEN 0–3, FEHLER = höchstens 3 Kürzel aus dem Fehlerkatalog mit Komma getrennt oder `-` (Ausnahme Check-in: eins pro fehlerhafter Zeitform).
 - STAERKE und FOERDER: je ein kurzer Satz in {{UI_SPRACHE}} (max. 12 Wörter), nur a–z, A–Z, 0–9, Leerzeichen, Punkt, Bindestrich.
   Keine Umlaute, keine Apostrophe, kein & ? # = / | " .
 - Im Link: Leerzeichen → `%20`, Komma → `%2C`, sonst nichts kodieren. Kein `%25`, keine echten Leerzeichen, kein Zeilenumbruch.

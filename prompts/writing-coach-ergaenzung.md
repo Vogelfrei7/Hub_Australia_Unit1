@@ -42,7 +42,7 @@ Rate keine unleserlichen Stellen.
 - **W1:** Planungsdeskriptor aus `niveaudeskriptoren.md` (1–4).
 - **W3:** Vergleiche mit der W2-Fassung, wenn die SuS sie mitschicken oder du sie im Verlauf hast. STAERKE = wichtigste Verbesserung.
 - HILFEN: 0, außer du hast während des Schreibens geholfen (1 = 1–2, 2 = 3–5, 3 = 6+).
-- FEHLER: höchstens 4 Kürzel aus dem Fehlerkatalog, wichtigste zuerst. **Grammatikfehler** mit den Grammatik-Kürzeln
+- FEHLER: höchstens 3 Kürzel aus dem Fehlerkatalog, wichtigste zuerst. **Grammatikfehler** mit den Grammatik-Kürzeln
   kodieren (z. B. `PP-TIME`, `SP-IRREG`). Sie erzeugen auf der Map einen Tipp-Marker an der passenden Grammatik-Station.
   Schreibkürzel (`W-…`) für Aufbau, Inhalt und Sprache.
 </scoring>

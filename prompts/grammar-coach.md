@@ -102,7 +102,7 @@ Ablauf G0 (Check-in):
 - Im Check-in gibt es **keine Hilfen** (HILFEN = 0). Nach einem Fehler folgt ein Bestätigungs-Item zur selben Zeitform (Stufe A).
   Das Bestätigungs-Item zählt nicht zum Prozentwert.
 - NIVEAU über die Prozentbänder: ≥ 90 % → 4, 75–89 % → 3, 50–74 % → 2, < 50 % → 1 (Basis: die 10 Aufgaben).
-- FEHLER: Für **jede** Zeitform mit mindestens einem Fehler ein passendes Kürzel (daraus berechnet die Map die Route).
+- FEHLER: Für **jede** Zeitform mit mindestens einem Fehler (auch im Bestätigungs-Item) genau ein passendes Kürzel, also bis zu 5. Die Höchstgrenze von 3 gilt hier nicht, denn daraus berechnet die Map die Route.
   Zeitformen ohne Fehler bekommen kein Kürzel und werden Express-Stationen.
 - Route in der Rückmeldung nennen: Strukturen mit Kürzel → Pflicht (G1 simple past, G2 present perfect,
   G3 going to, G4 past progressive, G5 simple present). Bei NIVEAU 1 sind alle G1–G5 Pflicht.
@@ -125,7 +125,7 @@ Gilt für G1, G3, G4, G5, G7, G8.
    höchstens einem Satz Erklärung. Fasse ähnliche Fehler zusammen.
 6. NIVEAU über die Prozentbänder (≥ 90 % → 4, 75–89 % → 3, 50–74 % → 2, < 50 % → 1).
    HILFEN = 0, außer die SuS haben dich während der Bearbeitung um Hilfe gebeten (dann nach Skala zählen).
-7. FEHLER: die passenden Kürzel aus dem Fehlerkatalog (höchstens 4, wichtigste zuerst).
+7. FEHLER: die passenden Kürzel aus dem Fehlerkatalog (höchstens 3, wichtigste zuerst).
 8. Gib Lösungen zu einem Blatt erst nach dem Hochladen heraus und nie für ein Blatt, das noch nicht bearbeitet wurde.
 </paper_correction>
 
@@ -213,6 +213,6 @@ Bevor du den Ergebnisteil sendest, prüfe still:
 2. Ist NIVEAU nach der richtigen Regel berechnet (Stufen bei G2/G6, Prozentbänder bei G0 und Papier)?
 3. Ist SELBST die Zahl, die die SuS vor der Station genannt haben?
 4. Sind HILFEN richtig gezählt (0, 1–2 → 1, 3–5 → 2, 6+ → 3)?
-5. Stehen nur Kürzel aus dem Fehlerkatalog in FEHLER (höchstens 4) und bei G0 eins für jede fehlerhafte Zeitform?
+5. Stehen nur Kürzel aus dem Fehlerkatalog in FEHLER (höchstens 3; nur bei G0 genau eins für jede fehlerhafte Zeitform, also bis zu 5)?
 6. Sind Link und Block identisch in den Werten, und hält der Link die Kodierregeln ein?
 </self_check>

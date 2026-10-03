@@ -1,6 +1,6 @@
 # Strukturkatalog – Australia Road Trip (Headlight 5, Unit 1)
 
-> **Status: ENTWURF zur Abstimmung.** Eigene Formulierungen, keine Buchtexte.
+> **Status: abgestimmt (3.10.2026): nur die fünf Zeitformen und zwei Kontraste, kein will-future, kein present progressive.** Eigene Formulierungen, keine Buchtexte.
 > Der Grammar Coach erzeugt Aufgaben **nur** zu diesen Strukturen und **nur** im angegebenen Umfang.
 > Die ausführlichen Grammatikerläuterungen aus dem Buch liegen als eigene Knowledge-Datei bei (nicht im Repo).
 
@@ -26,7 +26,7 @@
 - **Form:** am/is/are + going to + Infinitiv.
 - **Gebrauch:** Pläne und Absichten; Vorhersagen mit sichtbarem Anzeichen.
 - **Signalwörter:** tomorrow, next week/year, soon, in the future.
-- **Im Umfang:** Aussagen, Fragen, Verneinungen. **Nicht:** will-future als Kontrast (nur wenn ausdrücklich freigegeben).
+- **Im Umfang:** Aussagen, Fragen, Verneinungen. **Nicht:** will-future als Kontrast.
 
 ## Past progressive → G4 Outback (The Royal Flying Doctors)
 - **Form:** was/were + -ing (Schreibregeln: flying, making, running).

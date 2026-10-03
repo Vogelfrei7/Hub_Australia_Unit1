@@ -1,6 +1,6 @@
 # Niveaudeskriptoren – Australia Road Trip
 
-> **Status: ENTWURF zur Abstimmung.** Gilt für beide Coaches. Die Map zeigt Niveaus als Sterne (1–4).
+> **Status: abgestimmt (3.10.2026).** Gilt für beide Coaches. Die Map zeigt Niveaus als Sterne (1–4).
 
 ## Gemeinsame Skalen
 
