@@ -123,23 +123,25 @@ a small ribbon at the bottom, simple central symbol, transparent background, no 
 
 ---
 
-## D) Optional: Postkarten für die Stationen (3:2)
+## D) Postkarten für die Stationen (das blaue Feld im Panel)
 
 ```
 Wide postcard illustration, 3:2 landscape format (1536×1024), same style, no text, no people's faces in close-up.
 ```
 
+**Wichtig:** Dateinamen beginnen mit `POST-`, damit sie sich nicht mit den Stempeln überschneiden.
+
 | Datei | Motiv |
 |---|---|
-| SPR.png | Gold Coast: sonniger Strand, Rettungsschwimmer-Turm, gelb-rote Flaggen, Surfer, Pelikan |
-| SP.png | Great Barrier Reef: Taucher über bunten Korallen, Fischschwarm |
-| PROG.png | Outback: kleines Flugzeug der Flying Doctors über roter Wüste |
-| PP.png | Perth: Schaffarm mit Windrad, weite Felder |
-| GOING.png | Melbourne: Straßenbahn vor Skyline, Café-Straße |
-| TEST.png | Blue Mountains: blaue Bergkette im Dunst |
-| W1.png | Alice Springs: rote Felsen, Eukalyptus, Sternenhimmel |
-| W2.png | Kata Tjuta: runde rote Felskuppeln im Abendlicht |
-| W3.png | Uluru bei Sonnenuntergang |
-
+| POST-START.png | Sydney Harbour mit Opernhaus und Harbour Bridge, ein Flugzeug landet, Morgenlicht – „Ankunft“ |
+| POST-SPR.png | Gold Coast: sonniger Strand, Rettungsschwimmer-Turm, gelb-rote Flaggen, Surfer, Pelikan |
+| POST-SP.png | Great Barrier Reef: Taucher über bunten Korallen, Fischschwarm |
+| POST-PROG.png | Outback: kleines Flugzeug der Flying Doctors über roter Wüste |
+| POST-PP.png | Perth: Schaffarm mit Windrad, weite Felder |
+| POST-GOING.png | Melbourne: Straßenbahn vor Skyline, Café-Straße |
+| POST-TEST.png | Blue Mountains: blaue Bergkette im Dunst |
+| POST-W1.png | Alice Springs: rote Bergkette, Eukalyptus, Sternenhimmel |
+| POST-W2.png | Kata Tjuta: runde rote Felskuppeln im Abendlicht |
+| POST-W3.png | Uluru bei Sonnenuntergang |
 **Dateiablage:** Avatare → `hub/assets/img/animals/`, Stempel → `hub/assets/img/stamps/`, Abzeichen → `hub/assets/img/badges/`,
-Postkarten → `hub/assets/img/`. Das Umwandeln und Einbinden übernehme ich.
+Postkarten (`POST-…`) → `hub/assets/img/`. Das Umwandeln und Einbinden übernehme ich.
