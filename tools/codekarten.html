@@ -14,13 +14,16 @@
   label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 700; }
   input { min-height: 44px; padding: 0 10px; border-radius: 10px; border: 2px solid var(--line); font: 700 16px var(--font-body); width: 110px; }
   button { min-height: 44px; padding: 0 18px; border-radius: 10px; border: none; background: var(--navy); color: #fff; font: 700 15px var(--font-body); cursor: pointer; }
-  .sheet { max-width: 980px; margin: 0 auto; padding: 0 16px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 10px; }
+  .sheet { max-width: 980px; margin: 0 auto; padding: 0 16px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 10px; }
   .card { background: #fff; border: 1.5px dashed var(--coast); border-radius: 12px; padding: 14px 16px; break-inside: avoid; display: flex; gap: 14px; align-items: center; }
   .pic { width: 64px; height: 64px; flex-shrink: 0; border-radius: 50%; background: var(--sky-light); display: flex; align-items: center; justify-content: center; font: 400 26px var(--font-hand); color: var(--navy); overflow: hidden; }
   .pic img { width: 100%; height: 100%; object-fit: cover; }
   .card .t { font-size: 12px; color: var(--text-muted); }
   .card .c { font: 700 22px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 2px; margin: 4px 0; }
   .card .u { font-size: 10.5px; color: var(--text-muted); word-break: break-all; }
+  .card > div:nth-child(2) { flex: 1; min-width: 0; }
+  .qr { width: 96px; flex-shrink: 0; text-align: center; font-size: 10px; font-weight: 700; color: var(--text-muted); line-height: 1.2; }
+  .qr svg { width: 96px; height: 96px; display: block; margin-bottom: 3px; }
   .list { max-width: 980px; margin: 0 auto; padding: 0 16px 40px; }
   .list table { width: 100%; border-collapse: collapse; background: #fff; }
   .list th, .list td { border: 1px solid #CDBC9E; padding: 7px 10px; text-align: left; font-size: 14px; }
@@ -28,6 +31,10 @@
   .warn { background: #FFF6D9; border: 1px solid #E8D28A; border-radius: 10px; padding: 8px 12px; font-size: 13px; }
   @media print {
     .ctl { display: none; } body { background: #fff; } .sheet, .list { padding: 0; }
+    .sheet { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+    .card { padding: 10px 12px; gap: 10px; } .pic { width: 46px; height: 46px; font-size: 20px; }
+    .card .c { font-size: 18px; } .qr, .qr svg { width: 82px; } .qr svg { height: 82px; }
+    .list th, .list td { padding: 5px 10px; font-size: 13px; } .list h2 { font-size: 18px; margin: 0 0 8px; }
     .list { break-before: page; }
     body.only-cards .list, body.only-list .sheet { display: none; }
   }
@@ -49,12 +56,15 @@
 </div>
 <div class="sheet" id="sheet"></div>
 <div class="list" id="list"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script>
   // 15 "wild & stark" und 15 "süß & kuschelig" – keine Australien-Tiere, damit die Codes für alle Reihen passen.
   var WILD = ['WOLF', 'BEAR', 'TIGER', 'LION', 'SHARK', 'EAGLE', 'FALCON', 'COBRA', 'VIPER', 'RHINO', 'GORILLA', 'JAGUAR', 'PANTHER', 'ORCA', 'LYNX'];
   var CUTE = ['PANDA', 'BUNNY', 'KITTEN', 'PUPPY', 'OTTER', 'HAMSTER', 'PENGUIN', 'FAWN', 'LAMB', 'ALPACA', 'HEDGEHOG', 'SQUIRREL', 'DOLPHIN', 'SEAL', 'FOX'];
   var CH = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
   var MAP = 'https://vogelfrei7.github.io/Hub_Australia_Unit1/';
+  var HUB = 'https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/?code=';   // QR öffnet die Karte mit eingetragenem Code
+  function qr(text) { var q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 3, margin: 0, scalable: true }); }
   var IMG = '../hub/assets/img/animals/';   // optional: eigene Tierbilder als <tier>.webp (klein geschrieben)
   function rnd(n) { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; }
   function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = rnd(i + 1); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
@@ -68,10 +78,11 @@
     var codes = animals.map(function (a) { return a + '-' + suffix(); });
     document.getElementById('sheet').innerHTML = codes.map(function (c) {
       var a = c.split('-')[0], nice = a.charAt(0) + a.slice(1).toLowerCase();
-      return '<div class="card"><div class="pic"><img src="' + IMG + a.toLowerCase() + '.webp" alt="" onerror="this.remove();this.parentNode.textContent=\'' + nice.charAt(0) + '\'"></div>' +
+      return '<div class="card"><div class="pic"><img src="' + IMG + a.toLowerCase() + '.webp" alt="" onerror="this.parentNode.textContent=\'' + nice.charAt(0) + '\'"></div>' +
         '<div><div class="t">Your learning code (Dein Lern-Code)' + (k ? ' · ' + esc(k) : '') + '</div>' +
         '<div class="c">' + c + '</div><div class="u">' + MAP + '</div>' +
-        '<div class="t">Keep it secret. Never type your name. (Nicht weitergeben, nie den Namen eintippen.)</div></div></div>';
+        '<div class="t">Keep it secret. Never type your name. (Nicht weitergeben, nie den Namen eintippen.)</div></div>' +
+        '<div class="qr" title="Scan me">' + qr(HUB + c) + '<span>Scan me<br>(Scannen)</span></div></div>';
     }).join('');
     document.getElementById('list').innerHTML = '<h2>Zuordnungsliste ' + esc(k) + ' (vertraulich, nur Papier)</h2><table><tr><th>Code</th><th>Name</th></tr>' +
       codes.slice().sort().map(function (c) { return '<tr><td><b>' + c + '</b></td><td class="n"></td></tr>'; }).join('') + '</table>';

@@ -1,8 +1,8 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
-  loadConfig, loadEvents, progress, getTraveller, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion,
-} from './core.js?v=2.1';
-import { openCodeDialog, openRules, copyText, headerHTML, wireCodePill } from './ui.js?v=2.1';
+  loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion,
+} from './core.js?v=2.2';
+import { openCodeDialog, openRules, copyText, headerHTML, wireCodePill } from './ui.js?v=2.2';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -16,6 +16,7 @@ main().catch((err) => {
 async function main() {
   cfg = await loadConfig();
   document.title = cfg.unit.title;
+  takeCodeFromQR();
   trav = getTraveller(cfg);
   if (isDemo() && new URLSearchParams(location.search).has('reset')) store.del(cfg, 'demoExtra');
   try { const j = sessionStorage.getItem('arh.just'); if (j) { view.just = JSON.parse(j); sessionStorage.removeItem('arh.just'); } } catch { /* */ }
@@ -32,6 +33,22 @@ async function main() {
   pr = progress(cfg, info.events);
   if (!view.sel) view.sel = pr.now.grammar || pr.now.writing || 'SPR';
   render();
+}
+
+// QR-Code der Code-Karte: …/hub/?code=TIGER-K7Q2 → Code übernehmen, dann aus der Adresszeile entfernen
+function takeCodeFromQR() {
+  const url = new URL(location.href);
+  const raw = url.searchParams.get('code');
+  if (!raw || isDemo()) return;
+  const code = normaliseCode(raw);
+  url.searchParams.delete('code');
+  history.replaceState(null, '', url.pathname + url.search + url.hash);
+  if (!cfg.codeRe.test(code)) return;
+  const current = getTraveller(cfg).code;
+  if (!current) setTraveller(cfg, code, cfg.courses.length === 1 ? cfg.courses[0] : null);
+  else if (current !== code && window.confirm(`Use the code ${code} on this iPad? (Diesen Code auf diesem iPad verwenden? Bisher: ${current})`)) {
+    setTraveller(cfg, code, getTraveller(cfg).course);
+  }
 }
 
 /* ---------- Seite ---------- */
