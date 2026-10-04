@@ -145,7 +145,8 @@
       "stamp": {
         "shape": "circle",
         "ink": "#1B2A55",
-        "icon": "opera"
+        "icon": "opera",
+        "image": "assets/img/stamps/START.webp"
       }
     },
     "SPR": {
@@ -231,7 +232,8 @@
       "stamp": {
         "shape": "rect",
         "ink": "#A9502B",
-        "icon": "sunWave"
+        "icon": "sunWave",
+        "image": "assets/img/stamps/SPR.webp"
       }
     },
     "SP": {
@@ -247,7 +249,8 @@
       "stamp": {
         "shape": "oval",
         "ink": "#2F7983",
-        "icon": "fish"
+        "icon": "fish",
+        "image": "assets/img/stamps/SP.webp"
       },
       "areas": [
         "IRREG",

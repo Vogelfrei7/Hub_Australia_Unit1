@@ -1,5 +1,5 @@
 // Gemeinsame UI-Bausteine: Kopfzeile, Code-Dialog, Regel-Fenster, Kopieren.
-import { esc, bold, normaliseCode, setTraveller, getTraveller, isDemo, link, UI } from './core.js?v=2.2';
+import { esc, bold, normaliseCode, setTraveller, getTraveller, isDemo, link, UI } from './core.js?v=2.3';
 
 export function copyText(text) {
   try {
@@ -106,7 +106,7 @@ export function headerHTML(cfg, { code, stamps, slots, page = 'map' }) {
     <nav class="actions" aria-label="Menu">
       ${isDemo() ? `<span class="demo-banner">Demo · <a href="${location.pathname}?demo=0">exit</a></span>` : ''}
       ${page !== 'how' ? `<a class="pill-btn soft" href="${link('how.html')}">${UI.help}<span>How it works <span class="de-inline">(So geht's)</span></span></a>` : ''}
-      ${code ? `<button type="button" class="pill-btn" id="code-pill" aria-label="Your code ${esc(code)}">${UI.person}<span>${esc(code)}</span></button>` : ''}
+      ${code ? `<button type="button" class="pill-btn" id="code-pill" aria-label="Your code ${esc(code)}"><img class="pill-avatar" src="assets/img/animals/${esc(code.split('-')[0].toLowerCase())}.webp" alt="" onerror="this.outerHTML='${UI.person.replace(/"/g, '&quot;')}'"><span>${esc(code)}</span></button>` : ''}
       ${page === 'map'
         ? `<a class="btn round" href="${link('passport.html')}">${UI.passport}<span>My passport <span class="de-inline">(Mein Pass)</span>${stamps != null ? ` · ${stamps}/${slots}` : ''}</span></a>`
         : `<a class="btn round" href="${link('index.html')}">${UI.back}<span>Map <span class="de-inline">(Karte)</span></span></a>`}

@@ -290,7 +290,9 @@ export function slotHTML(topic, { size = 130, state = 'later', route = null } = 
 
 export function badgeHTML(cfg, a, unlocked, size = 64) {
   return `<div class="badge ${unlocked ? 'on' : 'off'}" title="${esc(a.de)}">
-    <span class="badge-disc" style="width:${size}px;height:${size}px">${iconSVG(cfg, a.icon, { size: Math.round(size * 0.5), color: unlocked ? '#7A4E00' : '#A99A80', width: 2 })}</span>
+    <span class="badge-disc" style="width:${size}px;height:${size}px${a.image ? ';background:none;box-shadow:none;border:0' : ''}">${a.image
+    ? `<img src="${esc(a.image)}" alt="">`
+    : iconSVG(cfg, a.icon, { size: Math.round(size * 0.5), color: unlocked ? '#7A4E00' : '#A99A80', width: 2 })}</span>
     <span class="badge-name">${esc(a.name)}</span>
     <span class="badge-de">${esc(a.de)}</span>
   </div>`;

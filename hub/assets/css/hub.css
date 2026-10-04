@@ -166,8 +166,11 @@ button.cell:hover { background: rgba(141, 185, 226, .15); }
 .stamp-title { font-family: var(--font-hand); line-height: 1; padding: 0 4px; }
 .stamp-sub { font-weight: 700; letter-spacing: 1.2px; line-height: 1.25; }
 .stamp-stars { margin-top: 3px; }
-.stamp-img { opacity: 1; gap: 4px; }
+.stamp-img, .cell:nth-child(n) .stamp-img { opacity: 1; gap: 4px; transform: none; }
 .stamp-img img { display: block; height: auto; object-fit: contain; }
+.pill-avatar { width: 30px; height: 30px; border-radius: 50%; margin-left: -8px; object-fit: cover; }
+.badge-disc img { width: 100%; height: 100%; object-fit: contain; }
+.badge.off .badge-disc img { filter: grayscale(1); opacity: .35; }
 .slot { border: 2.5px dashed var(--locked-line); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; padding: 6px; }
 .slot-n { font-size: 24px; font-weight: 700; color: #8C7A5E; line-height: 1; }
 .slot-place { font-size: 13px; font-weight: 700; color: #5E523F; line-height: 1.15; }
