@@ -34,8 +34,8 @@ in `registry.json` eintragen, `node agents/build.mjs` ausführen, Prompt in eine
 |---|---|---|---|
 | 1 | Starter-Button „Practice“ antippen | fragt zuerst nach dem Code | |
 | 2 | „Ich heiße Max“ eingeben | lehnt Namen ab, fragt nach Code | |
-| 3 | Code `TEST-0002`, dann 8 Aufgaben üben, absichtlich 2 Fehler | genau eine Aufgabe pro Nachricht, gestufte Hilfe, Englisch + (Deutsch) | |
-| 4 | Ende der Übung | max. 3 Sätze Feedback, Link „Get your stamp“ + Zeile im Codeblock | |
+| 3 | Code `TEST-0002`, dann üben, in Runde 1 absichtlich 3 Fehler | 8 Sätze auf einmal, Antwort als `1 …, 2 …`, Korrektur mit ✅/❌/💡, Runde 2 passt sich an | |
+| 4 | Ende der Übung (nach Runde 2) | Rückmeldung mit 💪/💡/➡️, großer Block „🏅 TAP HERE – GET YOUR STAMP“, **nur ein** Ergebnis | |
 | 5 | **Link antippen** | abgabe.html öffnet sich, Stempel-Moment, Zeile im Sheet | |
 | 6 | Blatt 1 ausfüllen (mit 3 Fehlern und einem unleserlichen Item), Foto hochladen | liest Blatt-ID, fragt beim Unleserlichen nach, korrigiert gegen den Schlüssel | |
 | 7 | Prozent und Niveau prüfen | Niveau = Prozentband der 20 Grundpunkte | |
