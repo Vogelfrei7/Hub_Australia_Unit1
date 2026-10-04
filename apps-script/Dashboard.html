@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Klassen-Diagnostik</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+  :root {
+    --ink: #1B2A55; --muted: #4A5370; --line: #E3E6EE; --bg: #F5F6F9; --card: #FFFFFF;
+    --accent: #2C6E79; --accent-soft: #E3F1F2;
+    --l1: #F2C2A6; --l2: #F6E2C2; --l3: #CBE5E2; --l4: #86C1C6;
+    --plenum: #B5542E; --plenum-soft: #FBE8DF; --gruppe: #9A6B12; --gruppe-soft: #FBF1DC;
+    --blind: #4A5370; --blind-soft: #ECEEF3; --gut: #2C6E79; --gut-soft: #E3F1F2;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 "Atkinson Hyperlegible", system-ui, sans-serif; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 22px 20px 40px; }
+  header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; margin-bottom: 18px; }
+  h1 { margin: 0; font-size: 28px; }
+  h2 { margin: 0 0 12px; font-size: 19px; }
+  h3 { margin: 0 0 8px; font-size: 15px; }
+  .sub { color: var(--muted); font-size: 14px; }
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  button { font: inherit; min-height: 40px; padding: 0 14px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+  button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .grid { display: grid; gap: 16px; }
+  .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 16px; }
+  @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .kpi b { display: block; font-size: 32px; line-height: 1.1; }
+  .kpi span { color: var(--muted); font-size: 13px; }
+  .recs { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+  .rec { border-radius: 12px; padding: 12px 14px; }
+  .rec .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; margin-bottom: 6px; color: #fff; }
+  .rec p { margin: 2px 0; }
+  .rec .act { font-weight: 700; }
+  .rec.plenum { background: var(--plenum-soft); } .rec.plenum .tag { background: var(--plenum); }
+  .rec.gruppe { background: var(--gruppe-soft); } .rec.gruppe .tag { background: var(--gruppe); }
+  .rec.blind { background: var(--blind-soft); } .rec.blind .tag { background: var(--blind); }
+  .rec.gut { background: var(--gut-soft); } .rec.gut .tag { background: var(--gut); }
+  .chip { display: inline-block; font: 700 12px ui-monospace, Consolas, monospace; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; margin: 2px 3px 0 0; }
+  .tabs { display: flex; gap: 8px; margin: 22px 0 10px; flex-wrap: wrap; }
+  .topic { grid-template-columns: 1fr 1fr 1.4fr; }
+  @media (max-width: 1100px) { .topic { grid-template-columns: 1fr; } }
+  .barrow { display: grid; grid-template-columns: 110px 1fr 54px; gap: 8px; align-items: center; margin: 7px 0; font-size: 14px; }
+  .bar { height: 14px; background: var(--bg); border-radius: 7px; overflow: hidden; display: flex; }
+  .bar i { display: block; height: 100%; }
+  .stack { height: 34px; border-radius: 8px; overflow: hidden; display: flex; margin: 8px 0; }
+  .stack i { display: flex; align-items: center; justify-content: center; font-style: normal; font-weight: 700; font-size: 13px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--muted); }
+  .legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -2px; background: var(--c); }
+  .area { display: grid; grid-template-columns: minmax(150px, 1.1fr) 1fr 92px; gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .area:last-child { border-bottom: 0; }
+  .badge { font-size: 12px; color: var(--blind); background: var(--blind-soft); border-radius: 6px; padding: 2px 6px; white-space: nowrap; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; color: var(--muted); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; padding: 8px 6px; border-bottom: 2px solid var(--line); cursor: pointer; white-space: nowrap; }
+  td { padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr.kid { cursor: pointer; } tr.kid:hover td { background: #FAFBFD; }
+  .lvl { display: inline-flex; width: 28px; height: 24px; border-radius: 6px; align-items: center; justify-content: center; font-weight: 700; }
+  .l1 { background: var(--l1); } .l2 { background: var(--l2); } .l3 { background: var(--l3); } .l4 { background: var(--l4); }
+  .detail td { background: #FAFBFD; }
+  .tl { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tl div { border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 6px 10px; font-size: 13px; }
+  .note { color: var(--muted); font-size: 13px; margin-top: 18px; }
+  .demo { background: #FFF6D9; border: 1px solid #E8D28A; border-radius: 10px; padding: 8px 12px; margin-bottom: 14px; font-size: 14px; }
+  .empty { color: var(--muted); padding: 24px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Klassen-Diagnostik</h1>
+      <div class="sub" id="stand">Lade Daten …</div>
+    </div>
+    <div class="btns">
+      <button id="anon" type="button" aria-pressed="false">Präsentationsmodus (Codes ausblenden)</button>
+      <button id="reload" type="button">Aktualisieren</button>
+    </div>
+  </header>
+  <div id="demo"></div>
+  <div class="grid kpis" id="kpis"></div>
+  <section class="card">
+    <h2>Empfehlungen für die nächsten Stunden</h2>
+    <div class="recs" id="recs"></div>
+  </section>
+  <div class="tabs" id="tabs"></div>
+  <div id="topic"></div>
+  <p class="note">Nur für die Lehrkraft. Kinder erscheinen nur mit ihrem Code; im Präsentationsmodus als „Kind 01, 02 …“. Niveau 1–4: Terrakotta → Petrol.</p>
+</div>
+
+<script>
+var DATA = null, TOPIC = 0, ANON = false, SORT = 'need', OPEN = null, ALIAS = {};
+var TYPES = { plenum: 'Im Plenum', gruppe: 'Kleingruppe', blind: 'Blinder Fleck', gut: 'Läuft gut' };
+var STEP = { sheet: 'Arbeitsblatt', practice: 'Üben', extra: 'Extra', final: 'Final check' };
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function who(code) { return ANON ? (ALIAS[code] || 'Kind') : code; }
+function lvl(n) { return n ? '<span class="lvl l' + n + '">' + n + '</span>' : '<span class="sub">–</span>'; }
+function fmt(ts) { var d = new Date(ts); return isNaN(d) ? '' : d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }) + ' ' + d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }); }
+
+function load() {
+  document.getElementById('stand').textContent = 'Lade Daten …';
+  if (window.google && google.script && google.script.run) {
+    google.script.run.withSuccessHandler(render).withFailureHandler(function (e) {
+      document.getElementById('stand').textContent = 'Fehler: ' + e.message;
+    }).getDashboardData();
+  } else {
+    document.getElementById('demo').innerHTML = '<div class="demo"><b>Beispieldaten.</b> Diese Ansicht zeigt erfundene Daten (z. B. als Notfall für die Präsentation). Echte Daten gibt es im Sheet über „Road Trip → Dashboard öffnen“.</div>';
+    render(demoData());
+  }
+}
+
+function render(d) {
+  DATA = d;
+  var codes = d.kids.map(function (k) { return k.code; }).sort();
+  ALIAS = {}; codes.forEach(function (c, i) { ALIAS[c] = 'Kind ' + String(i + 1).padStart(2, '0'); });
+  document.getElementById('stand').textContent = 'Stand: ' + fmt(d.generated) + ' · ' + d.kpi.kids + ' Kinder mit Ergebnissen';
+  var k = d.kpi;
+  document.getElementById('kpis').innerHTML = [
+    ['Kinder aktiv', k.kids], ['Abgaben', k.submissions],
+    ['Ø aktuelles Niveau', k.avgLevel == null ? '–' : String(k.avgLevel).replace('.', ',')],
+    ['auf Niveau 3 oder 4', k.share3 == null ? '–' : k.share3 + ' %']
+  ].map(function (x) { return '<div class="card kpi"><b>' + esc(x[1]) + '</b><span>' + esc(x[0]) + '</span></div>'; }).join('');
+  renderRecs();
+  document.getElementById('tabs').innerHTML = d.topics.map(function (t, i) {
+    return '<button type="button" class="' + (i === TOPIC ? 'on' : '') + '" data-i="' + i + '">' + esc(t.name) + ' (' + t.kids + ')</button>';
+  }).join('');
+  document.querySelectorAll('#tabs button').forEach(function (b) { b.onclick = function () { TOPIC = +b.dataset.i; OPEN = null; render(DATA); }; });
+  renderTopic();
+}
+
+function renderRecs() {
+  var r = DATA.recommendations;
+  document.getElementById('recs').innerHTML = r.length ? r.map(function (x) {
+    return '<div class="rec ' + x.type + '"><span class="tag">' + TYPES[x.type] + '</span>' +
+      (DATA.topics.length > 1 ? '<p class="sub">' + esc(x.topic) + '</p>' : '') +
+      '<p>' + esc(x.text) + '</p><p class="act">' + esc(x.action) + '</p>' +
+      (x.codes ? '<p>' + x.codes.map(function (c) { return '<span class="chip">' + esc(who(c)) + '</span>'; }).join('') + '</p>' : '') + '</div>';
+  }).join('') : '<div class="empty">Noch zu wenige Daten für Empfehlungen.</div>';
+}
+
+function renderTopic() {
+  var t = DATA.topics[TOPIC];
+  var el = document.getElementById('topic');
+  if (!t) { el.innerHTML = '<div class="card empty">Noch keine Ergebnisse aus den Themen-Coaches.</div>'; return; }
+  var size = Object.keys(DATA.classSizes).reduce(function (s, k) { return s + DATA.classSizes[k]; }, 0) || t.kids;
+  var steps = ['sheet', 'practice', 'extra', 'final'].map(function (s) {
+    var v = t.steps[s]; var pct = size ? Math.round(100 * v / size) : 0;
+    return '<div class="barrow"><span>' + STEP[s] + '</span><div class="bar"><i style="width:' + pct + '%;background:var(--accent)"></i></div><b>' + v + '/' + size + '</b></div>';
+  }).join('');
+  var lv = t.levels; var tot = lv[1] + lv[2] + lv[3] + lv[4] || 1;
+  var stack = [1, 2, 3, 4].map(function (n) { var w = 100 * lv[n] / tot; return w ? '<i class="l' + n + '" style="width:' + w + '%">' + lv[n] + '</i>' : ''; }).join('');
+  var areas = t.areas.slice().sort(function (a, b) { return b.now - a.now; }).map(function (a) {
+    var pn = t.kids ? 100 * a.now / t.kids : 0, pr = t.kids ? 100 * a.resolved / t.kids : 0;
+    return '<div class="area"><span>' + esc(a.label) + '</span><div class="bar"><i style="width:' + pn + '%;background:var(--plenum)"></i><i style="width:' + pr + '%;background:var(--l3)"></i></div>' +
+      '<span>' + a.now + ' offen' + (a.unchecked ? ' <span class="badge" title="Fehler auf dem Blatt, noch nicht geübt">' + a.unchecked + ' ungeübt</span>' : '') + '</span></div>';
+  }).join('');
+
+  var rows = t.rows.slice();
+  var need = function (r) { return (r.current || 0) * 10 - r.open.length; };
+  if (SORT === 'need') rows.sort(function (a, b) { return need(a) - need(b); });
+  else if (SORT === 'code') rows.sort(function (a, b) { return who(a.code) < who(b.code) ? -1 : 1; });
+  else rows.sort(function (a, b) { return (b[SORT] || 0) - (a[SORT] || 0); });
+
+  var table = rows.map(function (r) {
+    var line = '<tr class="kid" data-c="' + esc(r.code) + '"><td><b>' + esc(who(r.code)) + '</b></td><td>' + '⭐'.repeat(r.stars) + '<span class="sub">' + '☆'.repeat(3 - r.stars) + '</span></td>' +
+      '<td>' + lvl(r.sheet) + '</td><td>' + lvl(r.practice) + '</td><td>' + (r.extra ? '✓' : '') + '</td><td>' + lvl(r.final) + '</td>' +
+      '<td>' + (r.trend == null ? '' : r.trend > 0 ? '↑ +' + r.trend : r.trend < 0 ? '↓ ' + r.trend : '→') + '</td>' +
+      '<td>' + (r.open.length ? r.open.map(esc).join('<br>') : '<span class="sub">–</span>') + '</td><td>' + esc(r.next) + '</td></tr>';
+    if (OPEN === r.code) {
+      line += '<tr class="detail"><td colspan="9"><div class="tl">' + r.attempts.map(function (a) {
+        return '<div><b>' + STEP[a.kind] + '</b> · ' + fmt(a.ts) + '<br>Niveau ' + lvl(a.n) + ' · Hilfen ' + a.h + (a.f.length ? '<br>' + a.f.map(esc).join(', ') : '') + '</div>';
+      }).join('') + '</div></td></tr>';
+    }
+    return line;
+  }).join('');
+
+  el.innerHTML =
+    '<div class="grid topic">' +
+      '<section class="card"><h3>Fortschritt: ' + esc(t.name) + '</h3>' + steps +
+        '<p class="sub" style="margin:8px 0 0">' + (Object.keys(DATA.classSizes).length ? 'von ' + size + ' Kindern der Klasse' : 'von ' + t.kids + ' Kindern mit Ergebnissen') + '</p></section>' +
+      '<section class="card"><h3>Aktueller Stand (Niveau)</h3><div class="stack">' + stack + '</div>' +
+        '<div class="legend"><span style="--c:var(--l1)">1</span><span style="--c:var(--l2)">2</span><span style="--c:var(--l3)">3</span><span style="--c:var(--l4)">4</span></div>' +
+        (t.compared ? '<p style="margin:12px 0 0"><b>' + t.improved + ' von ' + t.compared + '</b> Kindern sind beim Üben besser als auf dem Blatt.</p>' : '') + '</section>' +
+      '<section class="card"><h3>Fehlerbereiche</h3>' + areas +
+        '<div class="legend" style="margin-top:8px"><span style="--c:var(--plenum)">noch offen</span><span style="--c:var(--l3)">behoben</span></div></section>' +
+    '</div>' +
+    '<section class="card" style="margin-top:16px"><h3>Kinder</h3><div style="overflow-x:auto"><table><thead><tr>' +
+      ['code:Kind', 'stars:Sterne', 'sheet:Blatt', 'practice:Üben', 'extra:Extra', 'final:Final', 'trend:Trend', 'open:Offene Bereiche', 'need:Nächster Schritt'].map(function (h) {
+        var p = h.split(':'); return '<th data-s="' + p[0] + '">' + p[1] + (SORT === p[0] ? ' ▾' : '') + '</th>';
+      }).join('') + '</tr></thead><tbody>' + table + '</tbody></table></div></section>';
+
+  el.querySelectorAll('th').forEach(function (th) { th.onclick = function () { SORT = th.dataset.s === 'open' ? 'need' : th.dataset.s; renderTopic(); }; });
+  el.querySelectorAll('tr.kid').forEach(function (tr) { tr.onclick = function () { OPEN = OPEN === tr.dataset.c ? null : tr.dataset.c; renderTopic(); }; });
+}
+
+document.getElementById('anon').onclick = function () {
+  ANON = !ANON; this.classList.toggle('on', ANON); this.setAttribute('aria-pressed', ANON);
+  if (DATA) { renderRecs(); renderTopic(); }
+};
+document.getElementById('reload').onclick = load;
+
+// Erfundene Daten für die Vorschau und als Notfall in der Präsentation
+function demoData() {
+  var labels = { S: 'he/she/it: -s und Schreibung', NEG: "Verneinung: don't/doesn't + Grundform", Q: 'Ja-/Nein-Fragen und Kurzantworten', WH: 'Fragen mit Fragewort / Who', USE: 'Gebrauch und Signalwörter' };
+  var words = ['KOALA', 'EMU', 'WOMBAT', 'DINGO', 'GECKO', 'BILBY', 'GALAH', 'REEF', 'SURF', 'CORAL', 'IBIS', 'CROC'];
+  var rows = [], seed = 7;
+  function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  var areaNow = { S: [], NEG: [], Q: [], WH: [], USE: [] }, areaEver = { S: 0, NEG: 0, Q: 0, WH: 0, USE: 0 }, unchecked = { S: [], NEG: [], Q: [], WH: [], USE: [] };
+  var levels = { 1: 0, 2: 0, 3: 0, 4: 0 }, steps = { sheet: 0, practice: 0, extra: 0, final: 0 }, improved = 0, compared = 0;
+  for (var i = 0; i < 24; i++) {
+    var code = words[i % words.length] + '-' + (1000 + Math.floor(rnd() * 8999)).toString(36).toUpperCase().slice(0, 4).padEnd(4, '7');
+    var sheet = 1 + Math.floor(rnd() * 4), hasP = rnd() > 0.25, practice = hasP ? Math.min(4, Math.max(1, sheet + Math.floor(rnd() * 3) - 0)) : null;
+    var f = []; if (rnd() < 0.55) f.push('NEG'); if (rnd() < 0.35) f.push('S'); if (rnd() < 0.2) f.push('Q'); if (sheet < 4 && rnd() < 0.5) f.push('WH');
+    var now = hasP ? f.filter(function () { return rnd() < 0.45; }) : f;
+    f.forEach(function (a) { areaEver[a]++; if (!hasP) unchecked[a].push(code); });
+    now.forEach(function (a) { areaNow[a].push(code); });
+    var cur = practice || sheet; levels[cur]++; steps.sheet++; if (hasP) { steps.practice++; compared++; if (practice > sheet) improved++; }
+    var extra = hasP && rnd() < 0.3; if (extra) steps.extra++;
+    rows.push({ code: code, kurs: '09c', sheet: sheet, practice: practice, final: null, extra: extra, current: cur, stars: 1 + (hasP ? 1 : 0) + (extra ? 1 : 0),
+      open: now.map(function (a) { return labels[a]; }), next: !hasP ? 'Üben' : cur <= 2 ? 'noch eine Übungsrunde' : cur === 3 ? 'optional: Extra' : 'fertig',
+      trend: hasP ? practice - sheet : null,
+      attempts: [{ kind: 'sheet', n: sheet, h: 0, f: f.map(function (a) { return labels[a]; }), ts: '2026-10-06T08:' + (10 + i) + ':00Z' }].concat(hasP ? [{ kind: 'practice', n: practice, h: Math.floor(rnd() * 3), f: now.map(function (a) { return labels[a]; }), ts: '2026-10-06T09:' + (10 + i) + ':00Z' }] : []) });
+  }
+  var areas = Object.keys(labels).map(function (a) { return { code: a, label: labels[a], now: areaNow[a].length, ever: areaEver[a], resolved: areaEver[a] - areaNow[a].length, unchecked: unchecked[a].length, nowCodes: areaNow[a], uncheckedCodes: unchecked[a] }; });
+  var recs = [];
+  areas.forEach(function (a) {
+    if (a.now / 24 >= 0.4) recs.push({ type: 'plenum', topic: 'Simple present', text: a.label + ': ' + a.now + ' von 24 Kindern haben hier noch Fehler.', action: 'Im Plenum wiederholen (kurze Regel + gemeinsame Übung).' });
+    else if (a.now >= 2) recs.push({ type: 'gruppe', topic: 'Simple present', text: a.label + ': ' + a.now + ' Kinder.', action: 'Kleingruppe bilden mit:', codes: a.nowCodes });
+    if (a.unchecked >= 2) recs.push({ type: 'blind', topic: 'Simple present', text: a.label + ': ' + a.unchecked + ' Kinder hatten Fehler auf dem Blatt, haben aber noch nicht geübt.', action: 'Diese Kinder zuerst zum Üben schicken.', codes: a.uncheckedCodes });
+    if (a.ever === 0) recs.push({ type: 'gut', topic: 'Simple present', text: a.label + ': bei keinem Kind Fehler.', action: 'Sitzt. Kann im Test vorausgesetzt werden.' });
+  });
+  recs.push({ type: 'gut', topic: 'Simple present', text: improved + ' von ' + compared + ' Kindern sind beim Üben besser als auf dem Arbeitsblatt.', action: 'Lernzuwachs durch das adaptive Üben.' });
+  var order = { plenum: 0, blind: 1, gruppe: 2, gut: 3 }; recs.sort(function (a, b) { return order[a.type] - order[b.type]; });
+  var all = rows.map(function (r) { return r.current; });
+  return { generated: new Date().toISOString(), classSizes: { '09c': 26 }, recommendations: recs,
+    kids: rows.map(function (r) { return { code: r.code }; }),
+    kpi: { kids: 24, submissions: 24 + compared, avgLevel: Math.round(10 * all.reduce(function (s, x) { return s + x; }, 0) / 24) / 10, share3: Math.round(100 * all.filter(function (x) { return x >= 3; }).length / 24) },
+    topics: [{ id: 'SPR', name: 'Simple present', kids: 24, steps: steps, levels: levels, areas: areas, improved: improved, compared: compared, manyHelps: [], rows: rows }] };
+}
+
+load();
+</script>
+</body>
+</html>

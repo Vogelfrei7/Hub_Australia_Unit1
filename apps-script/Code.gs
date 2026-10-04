@@ -38,6 +38,11 @@ var SETTINGS = {
 function doGet(e) {
   var p = (e && e.parameter) || {};
   if (p.ping) return json_({ ok: true, ping: true, at: new Date().toISOString() });
+  if (p.view === 'dashboard') {
+    if (!isOwner_()) return HtmlService.createHtmlOutput('<p style="font-family:sans-serif">Kein Zugriff.</p>');
+    return HtmlService.createHtmlOutputFromFile('Dashboard').setTitle('Klassen-Diagnostik')
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+  }
   var code = String(p.code || '').trim().toUpperCase();
   if (!SETTINGS.CODE_RE.test(code)) return json_({ ok: false, error: 'bad-code' });
   var events = readEvents_().filter(function (r) { return r.code === code; }).map(function (r) {
@@ -117,6 +122,7 @@ function loadConfig_() {
 
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('Road Trip')
+    .addItem('Dashboard öffnen', 'openDashboard')
     .addItem('Auswertung aktualisieren', 'refreshAnalysis')
     .addItem('Formular-Konfiguration anzeigen (entry-IDs)', 'showFormConfig')
     .addSeparator()
@@ -459,3 +465,115 @@ function writeCalibration_(list) {
 }
 
 function round1_(x) { return Math.round(x * 10) / 10; }
+
+/* ===================== Lehrer-Dashboard ===================== */
+
+// Nur die Lehrkraft (Besitzerin/Besitzer des Scripts) darf Klassendaten sehen.
+function isOwner_() {
+  try {
+    var me = Session.getEffectiveUser().getEmail();
+    var user = Session.getActiveUser().getEmail();
+    return !!user && user === me;
+  } catch (e) { return false; }
+}
+
+function openDashboard() {
+  var html = HtmlService.createHtmlOutputFromFile('Dashboard').setWidth(1400).setHeight(900);
+  SpreadsheetApp.getUi().showModalDialog(html, 'Klassen-Diagnostik');
+}
+
+// Liefert alle Kennzahlen für Dashboard.html. Allgemein: arbeitet mit jedem Thema aus config.topics.
+function getDashboardData() {
+  if (!isOwner_()) throw new Error('Kein Zugriff');
+  var cfg = loadConfig_();
+  var events = readEvents_().filter(function (e) { return stepInfo_(cfg, e.station); });
+  events.sort(function (a, b) { return String(a.ts) < String(b.ts) ? -1 : 1; });
+
+  var topics = {};
+  var codes = {};
+  events.forEach(function (e) {
+    var si = stepInfo_(cfg, e.station);
+    var t = topics[si.topicId] || (topics[si.topicId] = { id: si.topicId, name: si.topic.name, labels: si.topic.areaLabels || {}, areas: si.topic.areas || [], kids: {} });
+    var k = t.kids[e.code] || (t.kids[e.code] = { code: e.code, kurs: e.kurs, attempts: [] });
+    k.attempts.push({ kind: si.kind, step: e.station, n: e.n, h: e.h, f: e.f, ts: e.ts });
+    var c = codes[e.code] || (codes[e.code] = { code: e.code, kurs: e.kurs, last: e.ts, count: 0 });
+    c.last = e.ts; c.count++;
+  });
+
+  var bestOf = function (list) { return list.reduce(function (b, a) { return !b || a.n > b.n ? a : b; }, null); };
+  var out = { generated: new Date().toISOString(), classSizes: cfg.classSizes || {}, topics: [], kids: [], recommendations: [] };
+  var allCurrent = [];
+
+  Object.keys(topics).forEach(function (tid) {
+    var t = topics[tid];
+    var steps = { sheet: 0, practice: 0, extra: 0, final: 0 };
+    var levels = { 1: 0, 2: 0, 3: 0, 4: 0 };
+    var area = {};
+    t.areas.forEach(function (a) { area[a] = { code: a, label: t.labels[a] || a, now: [], ever: [], unchecked: [] }; });
+    var kidRows = [];
+    var improved = 0; var compared = 0; var manyHelps = [];
+
+    Object.keys(t.kids).forEach(function (code) {
+      var k = t.kids[code];
+      var by = function (kind) { return k.attempts.filter(function (a) { return a.kind === kind; }); };
+      var sheet = bestOf(by('sheet')); var practice = bestOf(by('practice')); var final = bestOf(by('final'));
+      var extra = by('extra').length > 0 || by('practice').length > 1;
+      if (sheet) steps.sheet++; if (practice) steps.practice++; if (extra) steps.extra++; if (final) steps.final++;
+      var digital = k.attempts.filter(function (a) { return a.kind === 'practice' || a.kind === 'final'; });
+      var latest = k.attempts[k.attempts.length - 1];
+      var current = digital.length ? digital[digital.length - 1].n : (sheet ? sheet.n : latest.n);
+      levels[current] = (levels[current] || 0) + 1;
+      allCurrent.push(current);
+      if (sheet && practice) { compared++; if (practice.n > sheet.n) improved++; }
+      if (k.attempts.some(function (a) { return a.h >= 3; })) manyHelps.push(code);
+      latest.f.forEach(function (c) { if (area[c]) area[c].now.push(code); });
+      var ever = {};
+      k.attempts.forEach(function (a) { a.f.forEach(function (c) { ever[c] = true; }); });
+      Object.keys(ever).forEach(function (c) { if (area[c]) area[c].ever.push(code); });
+      // Blinde Flecken: Fehler im Arbeitsblatt, danach noch nicht digital geübt
+      var lastSheetIdx = -1;
+      k.attempts.forEach(function (a, i) { if (a.kind === 'sheet' || a.kind === 'extra') lastSheetIdx = i; });
+      var practicedAfter = k.attempts.some(function (a, i) { return i > lastSheetIdx && (a.kind === 'practice' || a.kind === 'final'); });
+      if (lastSheetIdx >= 0 && !practicedAfter) k.attempts[lastSheetIdx].f.forEach(function (c) { if (area[c]) area[c].unchecked.push(code); });
+      var next = !sheet ? 'Arbeitsblatt' : !practice ? 'Üben' : current <= 2 ? 'noch eine Übungsrunde' : current === 3 ? 'optional: Extra' : 'fertig';
+      kidRows.push({
+        code: code, kurs: k.kurs, sheet: sheet ? sheet.n : null, practice: practice ? practice.n : null, final: final ? final.n : null,
+        extra: extra, current: current, stars: (sheet ? 1 : 0) + (practice ? 1 : 0) + (extra ? 1 : 0),
+        open: latest.f.map(function (c) { return t.labels[c] || c; }), next: next,
+        trend: sheet && practice ? practice.n - sheet.n : null,
+        attempts: k.attempts.map(function (a) { return { step: a.step, kind: a.kind, n: a.n, h: a.h, f: a.f.map(function (c) { return t.labels[c] || c; }), ts: a.ts }; })
+      });
+    });
+
+    var n = kidRows.length;
+    var areaList = t.areas.map(function (a) { return area[a]; }).map(function (a) {
+      return { code: a.code, label: a.label, now: a.now.length, ever: a.ever.length, resolved: a.ever.length - a.now.length, unchecked: a.unchecked.length, nowCodes: a.now, uncheckedCodes: a.unchecked };
+    });
+    out.topics.push({ id: tid, name: t.name, kids: n, steps: steps, levels: levels, areas: areaList, improved: improved, compared: compared, manyHelps: manyHelps, rows: kidRows });
+
+    // Empfehlungen für die nächsten Stunden
+    areaList.forEach(function (a) {
+      var pct = n ? a.now / n : 0;
+      if (n >= 3 && pct >= 0.4) out.recommendations.push({ type: 'plenum', topic: t.name, text: a.label + ': ' + a.now + ' von ' + n + ' Kindern haben hier noch Fehler.', action: 'Im Plenum wiederholen (kurze Regel + gemeinsame Übung).' });
+      else if (a.now >= 2) out.recommendations.push({ type: 'gruppe', topic: t.name, text: a.label + ': ' + a.now + ' Kinder.', action: 'Kleingruppe bilden mit:', codes: a.nowCodes });
+      if (a.unchecked >= 2) out.recommendations.push({ type: 'blind', topic: t.name, text: a.label + ': ' + a.unchecked + ' Kinder hatten Fehler auf dem Blatt, haben aber noch nicht geübt.', action: 'Diese Kinder zuerst zum Üben schicken.', codes: a.uncheckedCodes });
+      if (n >= 3 && a.ever >= 2 && a.now === 0) out.recommendations.push({ type: 'gut', topic: t.name, text: a.label + ': Fehler bei ' + a.ever + ' Kindern – inzwischen alle behoben.', action: 'Das Üben wirkt. Kein weiterer Bedarf.' });
+      if (n >= 5 && a.ever === 0) out.recommendations.push({ type: 'gut', topic: t.name, text: a.label + ': bei keinem Kind Fehler.', action: 'Sitzt. Kann im Test vorausgesetzt werden.' });
+    });
+    var noPractice = kidRows.filter(function (r) { return r.sheet !== null && r.practice === null; }).length;
+    if (noPractice >= 3) out.recommendations.push({ type: 'blind', topic: t.name, text: noPractice + ' Kinder haben das Arbeitsblatt, aber noch keine Übung.', action: 'Zeit für den digitalen Schritt einplanen.' });
+    if (manyHelps.length) out.recommendations.push({ type: 'gruppe', topic: t.name, text: manyHelps.length + ' Kinder brauchten viele Hilfen.', action: 'Kurz persönlich nachfragen bei:', codes: manyHelps });
+    if (compared >= 3) out.recommendations.push({ type: 'gut', topic: t.name, text: improved + ' von ' + compared + ' Kindern sind beim Üben besser als auf dem Arbeitsblatt.', action: 'Lernzuwachs durch das adaptive Üben.' });
+  });
+
+  out.kids = Object.keys(codes).map(function (c) { return codes[c]; });
+  out.kpi = {
+    kids: out.kids.length,
+    submissions: events.length,
+    avgLevel: allCurrent.length ? round1_(allCurrent.reduce(function (s, x) { return s + x; }, 0) / allCurrent.length) : null,
+    share3: allCurrent.length ? Math.round(100 * allCurrent.filter(function (x) { return x >= 3; }).length / allCurrent.length) : null
+  };
+  var order = { plenum: 0, blind: 1, gruppe: 2, gut: 3 };
+  out.recommendations.sort(function (a, b) { return order[a.type] - order[b.type]; });
+  return JSON.parse(JSON.stringify(out));
+}

@@ -34,6 +34,10 @@ for (const a of agents.filter((x) => x.meta)) {
     DEFAULT_SHEET: a.meta.default_sheet,
     RESULT_URL: registry.resultUrl,
     AGENT_TABLE: table,
+    FINAL_CHECK_RULE: registry.finalCheckOpen
+      ? 'Der Final check ist **freigeschaltet**.'
+      : `Der Final check ist **noch gesperrt**. Wählt ein Kind ihn (Button, „3“ oder Startcode mit FINAL), antworte nur: „🏁 Final check opens on ${registry.finalCheckDate}. Until then: practise with me! (Bis dahin: übe mit mir!)“ und zeig das Menü „What next?“ ohne Option 3.`,
+    FINAL_CHECK_MENU: registry.finalCheckOpen ? '' : ` – 🔒 opens ${registry.finalCheckDate}`,
     TOPIC: a.body,
   };
   let out = core.replace(/\{\{(\w+)\}\}/g, (all, k) => {

@@ -79,3 +79,22 @@ Neue `config.json` (Stationen, Koordinaten, Karte, Routen, Fehlerkatalog, Texte,
 neue Illustrationen, neues Formular/Sheet (oder dasselbe mit neuer Station-ID-Präfix). Kein Code nötig.
 Die Prompt-Module in `prompts/module/` mit den Platzhaltern füllen.
 Hinweis: `config.id` ändern, damit sich der Speicher auf den iPads nicht mit dieser Unit mischt.
+
+## 9. Lehrer-Dashboard (Klassen-Diagnostik)
+
+Das Dashboard läuft im Apps Script und ist **nur mit deinem Google-Login** sichtbar. Es liest die Themen aus `config.json`,
+funktioniert also für jedes neue Thema ohne Änderung.
+
+1. Apps-Script-Editor → links **Dateien +** → **HTML** → Name genau `Dashboard` → Inhalt von `apps-script/Dashboard.html` einfügen → speichern.
+2. `Code.gs` durch die aktuelle Fassung ersetzen → speichern.
+3. **Im Sheet öffnen:** Sheet neu laden → **Road Trip → Dashboard öffnen** (großes Fenster im Sheet).
+4. **Als eigene Seite (für den Beamer):** Bereitstellen → **Neue Bereitstellung** → Web-App
+   - Ausführen als: **Nutzer, der auf die Web-App zugreift**
+   - Zugriff: **Nur ich selbst**
+   - URL + `?view=dashboard` als Lesezeichen speichern.
+   Die bestehende Bereitstellung „Map v1“ (Zugriff: Jeder) **nicht** ändern – sie liefert der Map die Daten. Das Dashboard
+   ist dort zusätzlich gesperrt (Prüfung auf deinen Login).
+5. **Präsentationsmodus:** Knopf oben rechts ersetzt alle Codes durch „Kind 01, 02 …“.
+6. **Notfall ohne Netz:** `apps-script/Dashboard.html` lokal im Browser öffnen → zeigt Beispieldaten.
+
+Optional: In `config.json` `"classSizes": { "09c": 26 }` eintragen – dann zeigt das Dashboard „x von 26 Kindern“.

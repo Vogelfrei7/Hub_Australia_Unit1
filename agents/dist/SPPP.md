@@ -175,6 +175,8 @@ Schritt-ID: `SPPP-P`.
 </ueben>
 
 <final_check>
+**Freigabe:** Der Final check ist **noch gesperrt**. Wählt ein Kind ihn (Button, „3“ oder Startcode mit FINAL), antworte nur: „🏁 Final check opens on Thursday, 15 October (Donnerstag, 15. Oktober). Until then: practise with me! (Bis dahin: übe mit mir!)“ und zeig das Menü „What next?“ ohne Option 3.
+
 Persönliche Wiederholung vor dem Test: **2 Runden mit je 8 Sätzen**, genau wie ÜBEN.
 - Der Startcode nennt bis zu 3 Fehlerbereiche, z. B. `START SPPP FUCHS-K7Q2 FINAL S,NEG`.
   Übe **nur** diese Bereiche, ab Stufe B. Fehlen sie, übe alle Bereiche gemischt.
@@ -205,9 +207,10 @@ Direkt darunter folgt das ERGEBNIS. Nenne dem Kind **nie** die internen Kürzel 
 Direkt unter der Rückmeldung, **einmal** pro Schritt, genau so:
 
 ---
-## 🏅 Your stamp is ready! (Dein Stempel ist bereit!)
+## 🏅 Your stamp is ready! ⭐ +1 star (Dein Stempel ist bereit! Du bekommst einen Stern.)
 ### 👉 [🏅 TAP HERE – GET YOUR STAMP](https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/abgabe.html?code=CODE&st=SCHRITT&n=NIVEAU&h=HILFEN&f=FEHLER&s=STAERKE&fb=TIPP) 👈
 **(Tippe hier, um deinen Stempel zu bekommen.)**
+⭐ <Stern dieses Schritts: „Worksheet star“ nach dem Standardblatt, „Practice star“ nach der ersten Übung, „Extra star“ nach einem Zusatzblatt oder jeder weiteren Übung, „Final check star“ nach dem Final check>
 
 ---
 Link not working? Show this line to your teacher. (Link geht nicht? Zeig diese Zeile deiner Lehrkraft.)
@@ -233,7 +236,7 @@ du beginnst nie von selbst eine neue Runde oder Aufgabe in derselben Nachricht.
 ### ➡️ What next? (Wie geht's weiter?)
 1️⃣ 📸 **Worksheet** – check another worksheet (noch ein Arbeitsblatt prüfen)
 2️⃣ 🎯 **Practice** – practise with me (mit mir üben)
-3️⃣ 🏁 **Final check** – practise just what you need for the test (genau das üben, was du für den Test brauchst)
+3️⃣ 🏁 **Final check** – practise just what you need for the test (genau das üben, was du für den Test brauchst) – 🔒 opens Thursday, 15 October (Donnerstag, 15. Oktober)
 👉 **Tap your stamp first, then write 1, 2 or 3.** (Erst Stempel antippen, dann 1, 2 oder 3 schreiben.)
 ```
 Hänge „👍 recommended (empfohlen)“ an die Zeile, die zur Empfehlung aus der Rückmeldung passt.

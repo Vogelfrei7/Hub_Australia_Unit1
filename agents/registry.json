@@ -1,6 +1,8 @@
 {
   "book": "Headlight 5",
   "resultUrl": "https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/abgabe.html",
+  "finalCheckOpen": false,
+  "finalCheckDate": "Thursday, 15 October (Donnerstag, 15. Oktober)",
   "agents": [
     { "id": "SPR",  "file": "topics/simple-present.md",          "covers": "simple present (Gegenwart: he/she/it -s, do/does)", "sheets": "AUS1-SPR-…",  "active": true },
     { "id": "SP",   "file": null, "name": "Simple Past Coach",       "covers": "simple past (Vergangenheit: -ed, unregelmäßige Verben, did)", "sheets": "AUS1-SP-…",   "active": false },
