@@ -10,6 +10,8 @@ knowledge/buch/
 originale/
 
 # Rohbilder (nur die konvertierten WebP kommen ins Repo)
+Bilder_roh/
+hub/assets/img/**/*.png
 hub/assets/img/*.png
 hub/assets/img/*.jpg
 hub/assets/img/*.jpeg
