@@ -195,6 +195,26 @@ button.cell:hover { background: rgba(141, 185, 226, .15); }
 .next-box { width: 100%; padding: 14px 16px; border-radius: 14px; border: 2.5px solid var(--navy); display: flex; gap: 12px; align-items: center; }
 .save-state { font-size: 13px; color: var(--text-muted); text-align: center; }
 
+/* ---------- Check-in ---------- */
+.checkin { max-width: 760px; align-items: stretch; }
+.checkin > h1, .checkin > .brush, .checkin > .stamp-land { align-self: center; }
+.ci-facts { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; }
+.ci-top { display: flex; justify-content: space-between; align-items: baseline; font-size: 15px; color: var(--text-muted); }
+.ci-top b { font-family: var(--font-hand); font-weight: 400; font-size: 28px; color: var(--navy); }
+.ci-bar { height: 10px; border-radius: 5px; background: #EADFCB; overflow: hidden; }
+.ci-bar i { display: block; height: 100%; background: var(--navy); border-radius: 5px; }
+.ci-list { display: flex; flex-direction: column; gap: 12px; }
+.ci-item { border: 1.5px solid var(--line); border-radius: 14px; padding: 12px 14px; margin: 0; background: #fff; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ci-q, .ci-item label { font-size: 17px; line-height: 1.45; padding: 0; margin: 0; }
+.ci-n { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 14px; font-weight: 700; align-items: center; justify-content: center; margin-right: 6px; vertical-align: 1px; }
+.ci-gap { display: inline-block; min-width: 60px; border-bottom: 2.5px solid var(--navy); text-align: center; font-weight: 700; padding: 0 4px; }
+.ci-hint { color: var(--text-muted); font-weight: 700; }
+.ci-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.ci-opt { min-height: 46px; min-width: 70px; padding: 0 16px; border-radius: 12px; border: 2px solid var(--line); background: var(--paper); font-size: 17px; font-weight: 700; cursor: pointer; }
+.ci-opt.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+.ci-input { font-weight: 400; letter-spacing: 0; }
+.ci-nav { display: flex; justify-content: space-between; gap: 10px; }
+
 /* ---------- So geht's ---------- */
 .how-grid { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 14px; }
 @media (min-width: 700px) { .how-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

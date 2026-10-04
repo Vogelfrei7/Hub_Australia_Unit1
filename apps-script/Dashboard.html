@@ -112,7 +112,7 @@
 <script>
 var DATA = null, TOPIC = 0, ANON = false, SORT = 'need', OPEN = null, ALIAS = {};
 var TYPES = { plenum: 'Im Plenum', gruppe: 'Kleingruppe', blind: 'Blinder Fleck', gut: 'Läuft gut' };
-var STEP = { sheet: 'Arbeitsblatt', practice: 'Üben', extra: 'Extra', final: 'Final check' };
+var STEP = { baseline: 'Check-in', sheet: 'Arbeitsblatt', practice: 'Üben', extra: 'Extra', final: 'Final check' };
 
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 function who(code) { return ANON ? (ALIAS[code] || 'Kind') : code; }
@@ -167,7 +167,7 @@ function renderTopic() {
   var el = document.getElementById('topic');
   if (!t) { el.innerHTML = '<div class="card empty">Noch keine Ergebnisse aus den Themen-Coaches.</div>'; return; }
   var size = Object.keys(DATA.classSizes).reduce(function (s, k) { return s + DATA.classSizes[k]; }, 0) || t.kids;
-  var steps = ['sheet', 'practice', 'extra', 'final'].map(function (s) {
+  var steps = ['baseline', 'sheet', 'practice', 'extra', 'final'].map(function (s) {
     var v = t.steps[s]; var pct = size ? Math.round(100 * v / size) : 0;
     return '<div class="barrow"><span>' + STEP[s] + '</span><div class="bar"><i style="width:' + pct + '%;background:var(--accent)"></i></div><b>' + v + '/' + size + '</b></div>';
   }).join('');
@@ -187,11 +187,11 @@ function renderTopic() {
 
   var table = rows.map(function (r) {
     var line = '<tr class="kid" data-c="' + esc(r.code) + '"><td><b>' + esc(who(r.code)) + '</b></td><td>' + '⭐'.repeat(r.stars) + '<span class="sub">' + '☆'.repeat(3 - r.stars) + '</span></td>' +
-      '<td>' + lvl(r.sheet) + '</td><td>' + lvl(r.practice) + '</td><td>' + (r.extra ? '✓' : '') + '</td><td>' + lvl(r.final) + '</td>' +
+      '<td>' + lvl(r.base) + '</td><td>' + lvl(r.sheet) + '</td><td>' + lvl(r.practice) + '</td><td>' + (r.extra ? '✓' : '') + '</td><td>' + lvl(r.final) + '</td>' +
       '<td>' + (r.trend == null ? '' : r.trend > 0 ? '↑ +' + r.trend : r.trend < 0 ? '↓ ' + r.trend : '→') + '</td>' +
       '<td>' + (r.open.length ? r.open.map(esc).join('<br>') : '<span class="sub">–</span>') + '</td><td>' + esc(r.next) + '</td></tr>';
     if (OPEN === r.code) {
-      line += '<tr class="detail"><td colspan="9"><div class="tl">' + r.attempts.map(function (a) {
+      line += '<tr class="detail"><td colspan="10"><div class="tl">' + r.attempts.map(function (a) {
         return '<div><b>' + STEP[a.kind] + '</b> · ' + fmt(a.ts) + '<br>Niveau ' + lvl(a.n) + ' · Hilfen ' + a.h + (a.f.length ? '<br>' + a.f.map(esc).join(', ') : '') + '</div>';
       }).join('') + '</div></td></tr>';
     }
@@ -204,12 +204,13 @@ function renderTopic() {
         '<p class="sub" style="margin:8px 0 0">' + (Object.keys(DATA.classSizes).length ? 'von ' + size + ' Kindern der Klasse' : 'von ' + t.kids + ' Kindern mit Ergebnissen') + '</p></section>' +
       '<section class="card"><h3>Aktueller Stand (Niveau)</h3><div class="stack">' + stack + '</div>' +
         '<div class="legend"><span style="--c:var(--l1)">1</span><span style="--c:var(--l2)">2</span><span style="--c:var(--l3)">3</span><span style="--c:var(--l4)">4</span></div>' +
-        (t.compared ? '<p style="margin:12px 0 0"><b>' + t.improved + ' von ' + t.compared + '</b> Kindern sind beim Üben besser als auf dem Blatt.</p>' : '') + '</section>' +
+        (t.growth ? '<p style="margin:12px 0 0;font-size:16px">Seit dem Check-in: <b>Ø ' + String(t.growth.base).replace('.', ',') + ' → ' + String(t.growth.now).replace('.', ',') + '</b><br><span class="sub">' + t.growth.up + ' von ' + t.growth.kids + ' Kindern verbessert</span></p>' : '') +
+        (t.compared ? '<p style="margin:8px 0 0"><b>' + t.improved + ' von ' + t.compared + '</b> Kindern sind beim Üben besser als auf dem Blatt.</p>' : '') + '</section>' +
       '<section class="card"><h3>Fehlerbereiche</h3>' + areas +
         '<div class="legend" style="margin-top:8px"><span style="--c:var(--plenum)">noch offen</span><span style="--c:var(--l3)">behoben</span></div></section>' +
     '</div>' +
     '<section class="card" style="margin-top:16px"><h3>Kinder</h3><div style="overflow-x:auto"><table><thead><tr>' +
-      ['code:Kind', 'stars:Sterne', 'sheet:Blatt', 'practice:Üben', 'extra:Extra', 'final:Final', 'trend:Trend', 'open:Offene Bereiche', 'need:Nächster Schritt'].map(function (h) {
+      ['code:Kind', 'stars:Sterne', 'base:Start', 'sheet:Blatt', 'practice:Üben', 'extra:Extra', 'final:Final', 'trend:Trend', 'open:Offene Bereiche', 'need:Nächster Schritt'].map(function (h) {
         var p = h.split(':'); return '<th data-s="' + p[0] + '">' + p[1] + (SORT === p[0] ? ' ▾' : '') + '</th>';
       }).join('') + '</tr></thead><tbody>' + table + '</tbody></table></div></section>';
 
@@ -315,7 +316,7 @@ function demoData() {
   var rows = [], seed = 7;
   function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
   var areaNow = { S: [], NEG: [], Q: [], WH: [], USE: [] }, areaEver = { S: 0, NEG: 0, Q: 0, WH: 0, USE: 0 }, unchecked = { S: [], NEG: [], Q: [], WH: [], USE: [] };
-  var levels = { 1: 0, 2: 0, 3: 0, 4: 0 }, steps = { sheet: 0, practice: 0, extra: 0, final: 0 }, improved = 0, compared = 0;
+  var levels = { 1: 0, 2: 0, 3: 0, 4: 0 }, steps = { baseline: 0, sheet: 0, practice: 0, extra: 0, final: 0 }, improved = 0, compared = 0, gB = 0, gC = 0, gU = 0;
   for (var i = 0; i < 24; i++) {
     var code = words[i % words.length] + '-' + (1000 + Math.floor(rnd() * 8999)).toString(36).toUpperCase().slice(0, 4).padEnd(4, '7');
     var sheet = 1 + Math.floor(rnd() * 4), hasP = rnd() > 0.25, practice = hasP ? Math.min(4, Math.max(1, sheet + Math.floor(rnd() * 3) - 0)) : null;
@@ -323,9 +324,10 @@ function demoData() {
     var now = hasP ? f.filter(function () { return rnd() < 0.45; }) : f;
     f.forEach(function (a) { areaEver[a]++; if (!hasP) unchecked[a].push(code); });
     now.forEach(function (a) { areaNow[a].push(code); });
-    var cur = practice || sheet; levels[cur]++; steps.sheet++; if (hasP) { steps.practice++; compared++; if (practice > sheet) improved++; }
+    var cur = practice || sheet; levels[cur]++; steps.sheet++; steps.baseline++;
+    var base = Math.max(1, Math.min(cur, sheet - (rnd() < 0.55 ? 1 : 0))); gB += base; gC += cur; if (cur > base) gU++; if (hasP) { steps.practice++; compared++; if (practice > sheet) improved++; }
     var extra = hasP && rnd() < 0.3; if (extra) steps.extra++;
-    rows.push({ code: code, kurs: '09c', sheet: sheet, practice: practice, final: null, extra: extra, current: cur, stars: 1 + (hasP ? 1 : 0) + (extra ? 1 : 0),
+    rows.push({ code: code, kurs: '09c', base: base, sheet: sheet, practice: practice, final: null, extra: extra, current: cur, stars: 1 + (hasP ? 1 : 0) + (extra ? 1 : 0),
       open: now.map(function (a) { return labels[a]; }), next: !hasP ? 'Üben' : cur <= 2 ? 'noch eine Übungsrunde' : cur === 3 ? 'optional: Extra' : 'fertig',
       trend: hasP ? practice - sheet : null,
       attempts: [{ kind: 'sheet', n: sheet, h: 0, f: f.map(function (a) { return labels[a]; }), ts: '2026-10-06T08:' + (10 + i) + ':00Z' }].concat(hasP ? [{ kind: 'practice', n: practice, h: Math.floor(rnd() * 3), f: now.map(function (a) { return labels[a]; }), ts: '2026-10-06T09:' + (10 + i) + ':00Z' }] : []) });
@@ -344,7 +346,7 @@ function demoData() {
   return { generated: new Date().toISOString(), classSizes: { '09c': 26 }, recommendations: recs,
     kids: rows.map(function (r) { return { code: r.code }; }),
     kpi: { kids: 24, submissions: 24 + compared, avgLevel: Math.round(10 * all.reduce(function (s, x) { return s + x; }, 0) / 24) / 10, share3: Math.round(100 * all.filter(function (x) { return x >= 3; }).length / 24) },
-    topics: [{ id: 'SPR', name: 'Simple present', kids: 24, steps: steps, levels: levels, areas: areas, improved: improved, compared: compared, manyHelps: [], rows: rows }] };
+    topics: [{ id: 'SPR', name: 'Simple present', kids: 24, steps: steps, levels: levels, areas: areas, improved: improved, compared: compared, growth: { kids: 24, base: Math.round(10 * gB / 24) / 10, now: Math.round(10 * gC / 24) / 10, up: gU }, manyHelps: [], rows: rows }] };
 }
 
 load();

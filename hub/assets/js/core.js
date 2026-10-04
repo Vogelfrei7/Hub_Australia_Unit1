@@ -86,8 +86,16 @@ export function signature(e) {
 // Apps Script (live) → Cache → leer. Lokal gesendete, noch nicht im Sheet sichtbare Abgaben werden ergänzt.
 export async function loadEvents(cfg, code) {
   if (isDemo()) {
+    // ?demo=1&fresh=1 → Demo ohne Beispieldaten (zeigt den Weg eines Kindes von Anfang an); ?reset=1 löscht Demo-Abgaben
+    const q = new URLSearchParams(location.search);
+    try {
+      if (q.has('fresh')) sessionStorage.setItem('arh.fresh', q.get('fresh') === '0' ? '0' : '1');
+      if (q.has('reset')) store.del(cfg, 'demoExtra');
+    } catch { /* */ }
+    let fresh = false;
+    try { fresh = sessionStorage.getItem('arh.fresh') === '1'; } catch { /* */ }
     const extra = (store.get(cfg, 'demoExtra', []) || []).map(normaliseEvent);
-    return { events: cfg.demo.events.map(normaliseEvent).concat(extra), source: 'demo' };
+    return { events: (fresh ? [] : cfg.demo.events.map(normaliseEvent)).concat(extra), source: 'demo' };
   }
   const cacheName = `cache.${code}`;
   let server = null;
@@ -130,14 +138,14 @@ export function addPending(cfg, code, ev) {
   store.set(cfg, `pending.${code}`, list);
 }
 
-/* ---------- Schritt-IDs: <THEMA>-W1 (Blatt), -W2 … (Zusatzblatt), -P (Üben), -F (Final check) ---------- */
+/* ---------- Schritt-IDs: <THEMA>-B (Check-in/Startwert), -W1 (Blatt), -W2 … (Zusatzblatt), -P (Üben), -F (Final check) ---------- */
 
 export function stepInfo(cfg, id) {
-  const m = String(id || '').toUpperCase().match(/^([A-Z]{2,6})-(W(\d)|P|F)$/);
+  const m = String(id || '').toUpperCase().match(/^([A-Z]{2,6})-(W(\d)|P|F|B)$/);
   const topic = m && cfg.topics[m[1]];
   if (!topic) return null;
-  const kind = m[2] === 'P' ? 'practice' : m[2] === 'F' ? 'final' : m[3] === '1' ? 'sheet' : 'extra';
-  const label = { sheet: 'Worksheet', extra: `Worksheet ${m[3]}`, practice: 'Practice', final: 'Final check' }[kind];
+  const kind = m[2] === 'P' ? 'practice' : m[2] === 'F' ? 'final' : m[2] === 'B' ? 'baseline' : m[3] === '1' ? 'sheet' : 'extra';
+  const label = { sheet: 'Worksheet', extra: `Worksheet ${m[3]}`, practice: 'Practice', final: 'Final check', baseline: 'Check-in' }[kind];
   return { id: String(id).toUpperCase(), topicId: m[1], topic, kind, label };
 }
 
@@ -146,22 +154,31 @@ export function stepInfo(cfg, id) {
 export function progress(cfg, rawEvents) {
   const events = rawEvents.map((e) => ({ ...e, si: stepInfo(cfg, e.station) })).filter((e) => e.si).sort((a, b) => a.ts - b.ts);
   const topics = {};
-  for (const id of Object.keys(cfg.topics)) topics[id] = { id, w1: null, p: null, final: null, extra: false, attempts: [], last: null };
+  for (const id of Object.keys(cfg.topics)) topics[id] = { id, w1: null, p: null, final: null, base: null, extra: false, attempts: [], last: null };
   const better = (a, b) => !b || a.n > b.n || (a.n === b.n && a.h < b.h);
+  const sheets = {}; const practices = {};
   for (const e of events) {
     const t = topics[e.si.topicId];
+    if (e.si.kind === 'baseline') { if (!t.base) t.base = e; continue; }   // erster Check-in zählt als Startwert
     t.attempts.push(e);
     t.last = e;
-    if (e.si.kind === 'sheet' && better(e, t.w1)) t.w1 = e;
-    if (e.si.kind === 'extra') t.extra = true;
-    if (e.si.kind === 'practice') { if (t.p) t.extra = true; if (better(e, t.p)) t.p = e; }
+    if (e.si.kind === 'sheet' || e.si.kind === 'extra') {
+      (sheets[t.id] ||= new Set()).add(e.si.id);
+      if (better(e, t.w1)) t.w1 = e;                                       // weißes ODER goldenes Blatt = Arbeitsblatt-Stern
+    }
+    if (e.si.kind === 'practice') { practices[t.id] = (practices[t.id] || 0) + 1; if (better(e, t.p)) t.p = e; }
     if (e.si.kind === 'final' && better(e, t.final)) t.final = e;
   }
+  const checkinDone = Object.values(topics).some((t) => t.base);
   for (const t of Object.values(topics)) {
+    t.extra = (sheets[t.id]?.size || 0) >= 2 || (practices[t.id] || 0) >= 2;   // zweites Blatt oder zweite Übung
     t.stars = (t.w1 ? 1 : 0) + (t.p ? 1 : 0) + (t.extra ? 1 : 0);
     t.complete = !!(t.w1 && t.p);
     t.stamp = t.stars > 0;
+    t.gold = !!(t.base && cfg.checkin && t.base.n >= cfg.checkin.goldFrom);  // Empfehlung: gleich das goldene Blatt
   }
+  const start = cfg.checkin && topics.START;
+  if (start) { start.complete = checkinDone; start.stamp = checkinDone; start.stars = 0; start.checkin = true; }
 
   // Zustand je Station: done · now · later · soon. Genau ein "now" pro Route; "soon"-Stationen blockieren nicht.
   const status = {};

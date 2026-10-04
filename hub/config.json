@@ -7,11 +7,14 @@
     "passportTitle": "My Passport"
   },
   "baseUrl": "https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/",
-  "courses": ["09c"],
-  "classSizes": { "09c": 29 },
+  "courses": [
+    "09c"
+  ],
+  "classSizes": {
+    "09c": 29
+  },
   "codePattern": "^[A-Z]{3,8}-[A-Z0-9]{4}$",
   "codeExample": "TIGER-K7Q2",
-
   "backend": {
     "appsScriptUrl": "https://script.google.com/macros/s/AKfycbzAivk36uh69nqofdTPMxWjjovB2ZwHhc7cIHcbsxJz-ALQe-22Dy5HhluuTovkgIF9/exec",
     "timeoutMs": 8000,
@@ -30,93 +33,491 @@
       }
     }
   },
-
   "routes": [
     {
-      "id": "grammar", "name": "Grammar Road", "nameDe": "Grammatik", "hint": "along the coast",
-      "color": "#1B2A55", "soft": "#DCEAF5", "shape": "circle",
-      "stops": ["START", "SPR", "SP", "PROG", "PP", "GOING", "TEST"],
-      "path": [[868, 610], [905, 470], [885, 265], [690, 330], [480, 215], [250, 300], [150, 440], [140, 570], [755, 680], [770, 560]],
-      "label": { "x": 535, "y": 92 }
+      "id": "grammar",
+      "name": "Grammar Road",
+      "nameDe": "Grammatik",
+      "hint": "along the coast",
+      "color": "#1B2A55",
+      "soft": "#DCEAF5",
+      "shape": "circle",
+      "stops": [
+        "START",
+        "SPR",
+        "SP",
+        "PROG",
+        "PP",
+        "GOING",
+        "TEST"
+      ],
+      "path": [
+        [
+          868,
+          610
+        ],
+        [
+          905,
+          470
+        ],
+        [
+          885,
+          265
+        ],
+        [
+          690,
+          330
+        ],
+        [
+          480,
+          215
+        ],
+        [
+          250,
+          300
+        ],
+        [
+          150,
+          440
+        ],
+        [
+          140,
+          570
+        ],
+        [
+          755,
+          680
+        ],
+        [
+          770,
+          560
+        ]
+      ],
+      "label": {
+        "x": 535,
+        "y": 92
+      }
     },
     {
-      "id": "writing", "name": "Writing Track", "nameDe": "Schreiben", "hint": "in the desert",
-      "color": "#C2410C", "soft": "#FDE6D8", "shape": "square",
-      "stops": ["W1", "W2", "W3"],
-      "path": [[560, 400], [420, 470], [500, 520]],
-      "label": { "x": 420, "y": 375 }
+      "id": "writing",
+      "name": "Writing Track",
+      "nameDe": "Schreiben",
+      "hint": "in the desert",
+      "color": "#C2410C",
+      "soft": "#FDE6D8",
+      "shape": "square",
+      "stops": [
+        "W1",
+        "W2",
+        "W3"
+      ],
+      "path": [
+        [
+          560,
+          400
+        ],
+        [
+          420,
+          470
+        ],
+        [
+          500,
+          520
+        ]
+      ],
+      "label": {
+        "x": 420,
+        "y": 375
+      }
     }
   ],
-
   "topics": {
     "START": {
-      "route": "grammar", "number": "Start", "place": "Sydney", "name": "Check-in", "topic": "Arrival: Life down under",
-      "x": 868, "y": 610, "label": "below", "status": "soon", "optional": true,
-      "stamp": { "shape": "circle", "ink": "#1B2A55", "icon": "opera" }
+      "route": "grammar",
+      "number": "Start",
+      "place": "Sydney",
+      "name": "Check-in",
+      "topic": "What can you do already?",
+      "x": 868,
+      "y": 610,
+      "label": "below",
+      "status": "active",
+      "stamp": {
+        "shape": "circle",
+        "ink": "#1B2A55",
+        "icon": "opera"
+      }
     },
     "SPR": {
-      "route": "grammar", "number": "1", "place": "Gold Coast", "name": "Simple present", "topic": "Beach rules & animals",
-      "x": 905, "y": 470, "label": "left", "status": "active",
-      "coach": { "name": "Simple Present Coach", "input": "https://agent.sidekick.ki/input/99792-08935/CIA-6C19A?colorMode=0" },
-      "sheets": { "W1": "AUS1-SPR-1", "W2": "AUS1-SPR-2" },
-      "areas": ["S", "NEG", "Q", "WH", "USE"],
-      "areaLabels": { "S": "he/she/it: -s und Schreibung", "NEG": "Verneinung: don't/doesn't + Grundform", "Q": "Ja-/Nein-Fragen und Kurzantworten", "WH": "Fragen mit Fragewort / Who", "USE": "Gebrauch und Signalwörter" },
-      "rules": [
-        { "title": "When?", "de": "Wann?", "text": "Things that happen **again and again** – or **never**.", "textDe": "Was immer wieder oder nie passiert.", "ex": "I **always** swim between the flags." },
-        { "title": "he / she / it → -s", "de": "he/she/it: ein -s an das Verb", "text": "Watch the spelling: go → **goes**, watch → **watches**, try → **tries**.", "textDe": "Achte auf die Schreibung.", "ex": "Mia **likes** surfing." },
-        { "title": "Not", "de": "Verneinung", "text": "**don't / doesn't** + base form", "textDe": "don't/doesn't + Grundform", "ex": "Tom **doesn't like** sharks." },
-        { "title": "Questions", "de": "Ja-/Nein-Fragen", "text": "**Do / Does** + base form? Short answer: Yes, I **do**. / No, he **doesn't**.", "textDe": "Frage mit Do/Does, Kurzantwort mit do/does.", "ex": "**Does** Ava **surf**? – Yes, she **does**." },
-        { "title": "Question words", "de": "Fragen mit Fragewort", "text": "Question word + **do / does** + base form", "textDe": "Fragewort + do/does + Grundform", "ex": "Why **do** they **love** the beach?" },
-        { "title": "Signal words", "de": "Signalwörter", "text": "always · usually · often · sometimes · never · every day · on Mondays", "textDe": "Diese Wörter zeigen: simple present!", "ex": "We **often** **play** volleyball." }
+      "route": "grammar",
+      "number": "1",
+      "place": "Gold Coast",
+      "name": "Simple present",
+      "topic": "Beach rules & animals",
+      "x": 905,
+      "y": 470,
+      "label": "left",
+      "status": "active",
+      "coach": {
+        "name": "Simple Present Coach",
+        "input": "https://agent.sidekick.ki/input/99792-08935/CIA-6C19A?colorMode=0"
+      },
+      "sheets": {
+        "W1": "AUS1-SPR-1",
+        "W2": "AUS1-SPR-2"
+      },
+      "areas": [
+        "S",
+        "NEG",
+        "Q",
+        "WH",
+        "USE"
       ],
-      "challenge": { "title": "Challenge: Who?", "text": "Who asks for the **subject** (wer?): no do/does → **Who likes** Ben? · Who asks for the **object** (wen?): with do/does → **Who does** Ben like?" },
-      "stamp": { "shape": "rect", "ink": "#A9502B", "icon": "sunWave" }
+      "areaLabels": {
+        "S": "he/she/it: -s und Schreibung",
+        "NEG": "Verneinung: don't/doesn't + Grundform",
+        "Q": "Ja-/Nein-Fragen und Kurzantworten",
+        "WH": "Fragen mit Fragewort / Who",
+        "USE": "Gebrauch und Signalwörter"
+      },
+      "rules": [
+        {
+          "title": "When?",
+          "de": "Wann?",
+          "text": "Things that happen **again and again** – or **never**.",
+          "textDe": "Was immer wieder oder nie passiert.",
+          "ex": "I **always** swim between the flags."
+        },
+        {
+          "title": "he / she / it → -s",
+          "de": "he/she/it: ein -s an das Verb",
+          "text": "Watch the spelling: go → **goes**, watch → **watches**, try → **tries**.",
+          "textDe": "Achte auf die Schreibung.",
+          "ex": "Mia **likes** surfing."
+        },
+        {
+          "title": "Not",
+          "de": "Verneinung",
+          "text": "**don't / doesn't** + base form",
+          "textDe": "don't/doesn't + Grundform",
+          "ex": "Tom **doesn't like** sharks."
+        },
+        {
+          "title": "Questions",
+          "de": "Ja-/Nein-Fragen",
+          "text": "**Do / Does** + base form? Short answer: Yes, I **do**. / No, he **doesn't**.",
+          "textDe": "Frage mit Do/Does, Kurzantwort mit do/does.",
+          "ex": "**Does** Ava **surf**? – Yes, she **does**."
+        },
+        {
+          "title": "Question words",
+          "de": "Fragen mit Fragewort",
+          "text": "Question word + **do / does** + base form",
+          "textDe": "Fragewort + do/does + Grundform",
+          "ex": "Why **do** they **love** the beach?"
+        },
+        {
+          "title": "Signal words",
+          "de": "Signalwörter",
+          "text": "always · usually · often · sometimes · never · every day · on Mondays",
+          "textDe": "Diese Wörter zeigen: simple present!",
+          "ex": "We **often** **play** volleyball."
+        }
+      ],
+      "challenge": {
+        "title": "Challenge: Who?",
+        "text": "Who asks for the **subject** (wer?): no do/does → **Who likes** Ben? · Who asks for the **object** (wen?): with do/does → **Who does** Ben like?"
+      },
+      "stamp": {
+        "shape": "rect",
+        "ink": "#A9502B",
+        "icon": "sunWave"
+      }
     },
-    "SP":    { "route": "grammar", "number": "2", "place": "Great Barrier Reef", "name": "Simple past", "topic": "What happened to the reef?", "x": 885, "y": 265, "label": "below", "status": "soon", "stamp": { "shape": "oval", "ink": "#2F7983", "icon": "fish" } },
-    "PROG":  { "route": "grammar", "number": "3", "place": "Outback", "name": "Past progressive", "topic": "The Royal Flying Doctors", "x": 690, "y": 330, "label": "above", "status": "soon", "stamp": { "shape": "circle", "ink": "#A9502B", "icon": "doctorPlane" } },
-    "PP":    { "route": "grammar", "number": "4", "place": "Perth", "name": "Present perfect", "topic": "Life on a sheep station", "x": 140, "y": 570, "label": "right", "status": "soon", "stamp": { "shape": "circle", "ink": "#1B2A55", "icon": "sheep" } },
-    "GOING": { "route": "grammar", "number": "5", "place": "Melbourne", "name": "going to-future", "topic": "Sydney or Melbourne? Your plans", "x": 755, "y": 680, "label": "below", "status": "soon", "stamp": { "shape": "rect", "ink": "#4F7449", "icon": "tram" } },
-    "TEST":  { "route": "grammar", "number": "Test", "place": "Blue Mountains", "name": "Practice test", "topic": "A bush fire story", "x": 770, "y": 560, "label": "left", "status": "soon", "stamp": { "shape": "rect", "ink": "#A9502B", "icon": "mountainFire" } },
-    "W1":    { "route": "writing", "number": "1", "place": "Alice Springs", "name": "Plan your article", "topic": "Aboriginal Australians", "x": 560, "y": 400, "label": "right", "status": "soon", "stamp": { "shape": "circle", "ink": "#C2410C", "icon": "notebook" } },
-    "W2":    { "route": "writing", "number": "2", "place": "Kata Tjuta", "name": "Write your article", "topic": "Is Australia worth visiting?", "x": 420, "y": 470, "label": "left", "status": "soon", "stamp": { "shape": "circle", "ink": "#C2410C", "icon": "domes" } },
-    "W3":    { "route": "writing", "number": "3", "place": "Uluru", "name": "Final draft – your goal!", "topic": "Make your article better", "x": 500, "y": 520, "label": "below", "status": "soon", "goal": true, "stamp": { "shape": "oval", "ink": "#C2410C", "icon": "uluru" } }
+    "SP": {
+      "route": "grammar",
+      "number": "2",
+      "place": "Great Barrier Reef",
+      "name": "Simple past",
+      "topic": "What happened to the reef?",
+      "x": 885,
+      "y": 265,
+      "label": "below",
+      "status": "soon",
+      "stamp": {
+        "shape": "oval",
+        "ink": "#2F7983",
+        "icon": "fish"
+      },
+      "areas": [
+        "IRREG",
+        "ED",
+        "DID"
+      ],
+      "areaLabels": {
+        "IRREG": "unregelmäßige Verben",
+        "ED": "regelmäßige -ed-Formen und Schreibung",
+        "DID": "did + Grundform in Fragen und Verneinung"
+      }
+    },
+    "PROG": {
+      "route": "grammar",
+      "number": "3",
+      "place": "Outback",
+      "name": "Past progressive",
+      "topic": "The Royal Flying Doctors",
+      "x": 690,
+      "y": 330,
+      "label": "above",
+      "status": "soon",
+      "stamp": {
+        "shape": "circle",
+        "ink": "#A9502B",
+        "icon": "doctorPlane"
+      },
+      "areas": [
+        "FORM",
+        "WAS",
+        "USE"
+      ],
+      "areaLabels": {
+        "FORM": "was/were + -ing",
+        "WAS": "was oder were",
+        "USE": "Hintergrund (while) vs. Handlung (when)"
+      }
+    },
+    "PP": {
+      "route": "grammar",
+      "number": "4",
+      "place": "Perth",
+      "name": "Present perfect",
+      "topic": "Life on a sheep station",
+      "x": 140,
+      "y": 570,
+      "label": "right",
+      "status": "soon",
+      "stamp": {
+        "shape": "circle",
+        "ink": "#1B2A55",
+        "icon": "sheep"
+      },
+      "areas": [
+        "FORM",
+        "HAS",
+        "USE",
+        "SINCE"
+      ],
+      "areaLabels": {
+        "FORM": "have/has + 3. Form",
+        "HAS": "has bei he/she/it",
+        "USE": "ever, never, already, yet, just",
+        "SINCE": "since oder for"
+      }
+    },
+    "GOING": {
+      "route": "grammar",
+      "number": "5",
+      "place": "Melbourne",
+      "name": "going to-future",
+      "topic": "Sydney or Melbourne? Your plans",
+      "x": 755,
+      "y": 680,
+      "label": "below",
+      "status": "soon",
+      "stamp": {
+        "shape": "rect",
+        "ink": "#4F7449",
+        "icon": "tram"
+      },
+      "areas": [
+        "BE",
+        "INF",
+        "NEG"
+      ],
+      "areaLabels": {
+        "BE": "am/is/are vor going to",
+        "INF": "Grundform nach going to",
+        "NEG": "Fragen und Verneinung mit going to"
+      }
+    },
+    "TEST": {
+      "route": "grammar",
+      "number": "Test",
+      "place": "Blue Mountains",
+      "name": "Practice test",
+      "topic": "A bush fire story",
+      "x": 770,
+      "y": 560,
+      "label": "left",
+      "status": "soon",
+      "stamp": {
+        "shape": "rect",
+        "ink": "#A9502B",
+        "icon": "mountainFire"
+      }
+    },
+    "W1": {
+      "route": "writing",
+      "number": "1",
+      "place": "Alice Springs",
+      "name": "Plan your article",
+      "topic": "Aboriginal Australians",
+      "x": 560,
+      "y": 400,
+      "label": "right",
+      "status": "soon",
+      "stamp": {
+        "shape": "circle",
+        "ink": "#C2410C",
+        "icon": "notebook"
+      }
+    },
+    "W2": {
+      "route": "writing",
+      "number": "2",
+      "place": "Kata Tjuta",
+      "name": "Write your article",
+      "topic": "Is Australia worth visiting?",
+      "x": 420,
+      "y": 470,
+      "label": "left",
+      "status": "soon",
+      "stamp": {
+        "shape": "circle",
+        "ink": "#C2410C",
+        "icon": "domes"
+      }
+    },
+    "W3": {
+      "route": "writing",
+      "number": "3",
+      "place": "Uluru",
+      "name": "Final draft – your goal!",
+      "topic": "Make your article better",
+      "x": 500,
+      "y": 520,
+      "label": "below",
+      "status": "soon",
+      "goal": true,
+      "stamp": {
+        "shape": "oval",
+        "ink": "#C2410C",
+        "icon": "uluru"
+      }
+    }
   },
-
   "bonus": {
-    "FINAL": { "name": "Final check", "place": "Sydney Harbour", "x": 955, "y": 740, "label": "none", "opens": "Thursday, 15 October", "opensDe": "Donnerstag, 15. Oktober", "status": "soon" }
+    "FINAL": {
+      "name": "Final check",
+      "place": "Sydney Harbour",
+      "x": 955,
+      "y": 740,
+      "label": "none",
+      "opens": "Thursday, 15 October",
+      "opensDe": "Donnerstag, 15. Oktober",
+      "status": "soon"
+    }
   },
-
   "steps": [
-    { "id": "W1", "star": "Worksheet", "de": "Arbeitsblatt", "medium": "paper" },
-    { "id": "P", "star": "Practice", "de": "Üben mit dem Coach", "medium": "digital" },
-    { "id": "EXTRA", "star": "Extra", "de": "Zusatz: Blatt 2 oder noch eine Übung", "medium": "both", "optional": true }
+    {
+      "id": "W1",
+      "star": "Worksheet",
+      "de": "Arbeitsblatt",
+      "medium": "paper"
+    },
+    {
+      "id": "P",
+      "star": "Practice",
+      "de": "Üben mit dem Coach",
+      "medium": "digital"
+    },
+    {
+      "id": "EXTRA",
+      "star": "Extra",
+      "de": "Zusatz: Blatt 2 oder noch eine Übung",
+      "medium": "both",
+      "optional": true
+    }
   ],
-
   "achievements": [
-    { "id": "levelup", "name": "Level up!", "de": "Beim Üben besser als auf dem Blatt", "icon": "rocket" },
-    { "id": "allfive", "name": "All 5 tenses", "de": "Alle fünf Zeiten geschafft", "icon": "trophy" },
-    { "id": "stars", "name": "Star collector", "de": "Bei allen fünf Zeiten 3 Sterne", "icon": "star" }
+    {
+      "id": "levelup",
+      "name": "Level up!",
+      "de": "Beim Üben besser als auf dem Blatt",
+      "icon": "rocket"
+    },
+    {
+      "id": "allfive",
+      "name": "All 5 tenses",
+      "de": "Alle fünf Zeiten geschafft",
+      "icon": "trophy"
+    },
+    {
+      "id": "stars",
+      "name": "Star collector",
+      "de": "Bei allen fünf Zeiten 3 Sterne",
+      "icon": "star"
+    }
   ],
-
   "theme": {},
-
   "icons": {
-    "opera":        { "viewBox": "0 0 40 30", "body": "<path d='M3 25h34'/><path d='M7 25c0-8 4-15 11-18-2 6-1 12 2 18'/><path d='M16 25c0-6 3-11 8-13-1 5 0 9 3 13'/><path d='M25 25c0-4 2-7 6-8-1 3 0 6 2 8'/>" },
-    "mountainFire": { "viewBox": "0 0 42 28", "body": "<path d='M2 26l11-15 7 8 6-7 14 14z'/><path d='M30 3c1.5 2.5 4 4 4 7a4 4 0 0 1-8 0c0-3 2.5-4.5 4-7z'/>" },
-    "sunWave":      { "viewBox": "0 0 40 30", "body": "<circle cx='28' cy='9' r='4.5'/><path d='M28 1.5v1.5M35.5 9H34M33.3 3.7l-1 1M22.7 3.7l1 1'/><path d='M2 19c3 0 3-2.5 6-2.5s3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5'/><path d='M2 25c3 0 3-2.5 6-2.5s3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5'/><path d='M7 15c1.5-5 5-8 10-8'/>" },
-    "fish":         { "viewBox": "0 0 40 24", "body": "<path d='M3 12c5-7 15-9 23-2 3-2 6-4 10-5-2 4-2 10 0 14-4-1-7-3-10-5-8 7-18 5-23-2z'/><circle cx='11' cy='11' r='1.4'/>" },
-    "doctorPlane":  { "viewBox": "0 0 24 15", "body": "<path d='M1 9l20-5c1.5-.4 2.5.8 1.5 1.8L19 8l-9 2.5-3 4H5l1.5-3.5L3 12 1.5 11z'/><path d='M9 5l2 2'/>" },
-    "sheep":        { "viewBox": "0 0 24 24", "body": "<path d='M6.5 15.5a3 3 0 0 1-.3-6 3.5 3.5 0 0 1 6.3-2 3.5 3.5 0 0 1 5.8 2.3 2.8 2.8 0 0 1-.8 5.7z'/><path d='M18.2 9.6l3.3-.6v3.6l-2.6.6'/><path d='M8 15.5v4M11 15.5v4M14 15.5v4M17 15.5v4'/>" },
-    "tram":         { "viewBox": "0 0 24 24", "body": "<path d='M6 6h12a2 2 0 0 1 2 2v9H4V8a2 2 0 0 1 2-2z'/><path d='M7 9h4v3H7zM13 9h4v3h-4z'/><path d='M12 6V3M9 3h6'/><circle cx='8' cy='19.5' r='1.5'/><circle cx='16' cy='19.5' r='1.5'/>" },
-    "notebook":     { "viewBox": "0 0 24 24", "body": "<path d='M5 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5z'/><path d='M8 3v18M11 8h4M11 12h4'/><path d='M20.5 6.5l1 1-6 6-1.5.5.5-1.5z'/>" },
-    "uluru":        { "viewBox": "0 0 46 20", "body": "<path d='M2 18c3-8 8-12 21-12s18 4 21 12z'/><path d='M14 18v-5M23 18v-7M32 18v-5'/>" },
-    "domes":        { "viewBox": "0 0 24 24", "body": "<path d='M1 19h22'/><path d='M2.5 19c.8-5 2.6-7.5 4.6-7.5S10 14 10.6 16c.8-6 2.8-9 5-9s4.4 4 5.4 12'/>" },
-    "rocket":       { "viewBox": "0 0 24 24", "body": "<path d='M12 2c3.5 2.5 5 6 5 10l-2.5 4h-5L7 12c0-4 1.5-7.5 5-10z'/><circle cx='12' cy='9' r='1.8'/><path d='M7 12l-3 3 1 3 3.5-2M17 12l3 3-1 3-3.5-2M10 19l2 3 2-3'/>" },
-    "trophy":       { "viewBox": "0 0 24 24", "body": "<path d='M7 3h10v6a5 5 0 0 1-10 0z'/><path d='M7 5H3.5a3 3 0 0 0 3.5 4M17 5h3.5a3 3 0 0 1-3.5 4'/><path d='M12 14v4M8 21h8M9.5 18h5'/>" },
-    "star":         { "viewBox": "0 0 24 24", "body": "<path d='M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z'/>" },
-    "flag":         { "viewBox": "0 0 24 24", "body": "<path d='M5 22V3'/><path d='M5 4h12l-2.5 4L17 12H5'/>" }
+    "opera": {
+      "viewBox": "0 0 40 30",
+      "body": "<path d='M3 25h34'/><path d='M7 25c0-8 4-15 11-18-2 6-1 12 2 18'/><path d='M16 25c0-6 3-11 8-13-1 5 0 9 3 13'/><path d='M25 25c0-4 2-7 6-8-1 3 0 6 2 8'/>"
+    },
+    "mountainFire": {
+      "viewBox": "0 0 42 28",
+      "body": "<path d='M2 26l11-15 7 8 6-7 14 14z'/><path d='M30 3c1.5 2.5 4 4 4 7a4 4 0 0 1-8 0c0-3 2.5-4.5 4-7z'/>"
+    },
+    "sunWave": {
+      "viewBox": "0 0 40 30",
+      "body": "<circle cx='28' cy='9' r='4.5'/><path d='M28 1.5v1.5M35.5 9H34M33.3 3.7l-1 1M22.7 3.7l1 1'/><path d='M2 19c3 0 3-2.5 6-2.5s3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5'/><path d='M2 25c3 0 3-2.5 6-2.5s3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5'/><path d='M7 15c1.5-5 5-8 10-8'/>"
+    },
+    "fish": {
+      "viewBox": "0 0 40 24",
+      "body": "<path d='M3 12c5-7 15-9 23-2 3-2 6-4 10-5-2 4-2 10 0 14-4-1-7-3-10-5-8 7-18 5-23-2z'/><circle cx='11' cy='11' r='1.4'/>"
+    },
+    "doctorPlane": {
+      "viewBox": "0 0 24 15",
+      "body": "<path d='M1 9l20-5c1.5-.4 2.5.8 1.5 1.8L19 8l-9 2.5-3 4H5l1.5-3.5L3 12 1.5 11z'/><path d='M9 5l2 2'/>"
+    },
+    "sheep": {
+      "viewBox": "0 0 24 24",
+      "body": "<path d='M6.5 15.5a3 3 0 0 1-.3-6 3.5 3.5 0 0 1 6.3-2 3.5 3.5 0 0 1 5.8 2.3 2.8 2.8 0 0 1-.8 5.7z'/><path d='M18.2 9.6l3.3-.6v3.6l-2.6.6'/><path d='M8 15.5v4M11 15.5v4M14 15.5v4M17 15.5v4'/>"
+    },
+    "tram": {
+      "viewBox": "0 0 24 24",
+      "body": "<path d='M6 6h12a2 2 0 0 1 2 2v9H4V8a2 2 0 0 1 2-2z'/><path d='M7 9h4v3H7zM13 9h4v3h-4z'/><path d='M12 6V3M9 3h6'/><circle cx='8' cy='19.5' r='1.5'/><circle cx='16' cy='19.5' r='1.5'/>"
+    },
+    "notebook": {
+      "viewBox": "0 0 24 24",
+      "body": "<path d='M5 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5z'/><path d='M8 3v18M11 8h4M11 12h4'/><path d='M20.5 6.5l1 1-6 6-1.5.5.5-1.5z'/>"
+    },
+    "uluru": {
+      "viewBox": "0 0 46 20",
+      "body": "<path d='M2 18c3-8 8-12 21-12s18 4 21 12z'/><path d='M14 18v-5M23 18v-7M32 18v-5'/>"
+    },
+    "domes": {
+      "viewBox": "0 0 24 24",
+      "body": "<path d='M1 19h22'/><path d='M2.5 19c.8-5 2.6-7.5 4.6-7.5S10 14 10.6 16c.8-6 2.8-9 5-9s4.4 4 5.4 12'/>"
+    },
+    "rocket": {
+      "viewBox": "0 0 24 24",
+      "body": "<path d='M12 2c3.5 2.5 5 6 5 10l-2.5 4h-5L7 12c0-4 1.5-7.5 5-10z'/><circle cx='12' cy='9' r='1.8'/><path d='M7 12l-3 3 1 3 3.5-2M17 12l3 3-1 3-3.5-2M10 19l2 3 2-3'/>"
+    },
+    "trophy": {
+      "viewBox": "0 0 24 24",
+      "body": "<path d='M7 3h10v6a5 5 0 0 1-10 0z'/><path d='M7 5H3.5a3 3 0 0 0 3.5 4M17 5h3.5a3 3 0 0 1-3.5 4'/><path d='M12 14v4M8 21h8M9.5 18h5'/>"
+    },
+    "star": {
+      "viewBox": "0 0 24 24",
+      "body": "<path d='M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z'/>"
+    },
+    "flag": {
+      "viewBox": "0 0 24 24",
+      "body": "<path d='M5 22V3'/><path d='M5 4h12l-2.5 4L17 12H5'/>"
+    }
   },
-
   "map": {
     "viewBox": "0 0 1000 800",
     "land": [
@@ -124,23 +525,369 @@
       "M790,735 L850,730 L840,785 L805,790 Z"
     ],
     "seas": [
-      { "text": "Coral Sea", "x": 990, "y": 150, "anchor": "end", "size": 28 },
-      { "text": "Indian Ocean", "x": 40, "y": 745, "anchor": "start", "size": 28 }
+      {
+        "text": "Coral Sea",
+        "x": 990,
+        "y": 150,
+        "anchor": "end",
+        "size": 28
+      },
+      {
+        "text": "Indian Ocean",
+        "x": 40,
+        "y": 745,
+        "anchor": "start",
+        "size": 28
+      }
     ]
   },
-
   "texts": {
     "privacy": "Deine Lehrkraft sieht dein Ergebnis nur unter deinem Code – nicht unter deinem Namen.",
     "codeHelp": "Deinen Code findest du auf deiner Code-Karte. Gib niemals deinen Namen ein. Der Code wird nur auf diesem iPad gespeichert."
   },
-
   "stations": [],
-
   "demo": {
     "code": "TIGER-DEMO",
     "course": "09c",
     "events": [
-      { "station": "SPR-W1", "n": 2, "self": 0, "h": 0, "f": ["S", "NEG"], "s": "Your questions with Do and Does are correct.", "fb": "After doesn't, use the base form.", "ts": "2026-10-05T08:20:00Z" }
+      {
+        "station": "SPR-B",
+        "n": 2,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "NEG",
+          "Q"
+        ],
+        "s": "2 of 4 correct",
+        "fb": "",
+        "ts": "2026-10-05T08:10:00Z"
+      },
+      {
+        "station": "SP-B",
+        "n": 1,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "IRREG",
+          "DID"
+        ],
+        "s": "1 of 4 correct",
+        "fb": "",
+        "ts": "2026-10-05T08:10:00Z"
+      },
+      {
+        "station": "PROG-B",
+        "n": 2,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "FORM"
+        ],
+        "s": "2 of 4 correct",
+        "fb": "",
+        "ts": "2026-10-05T08:10:00Z"
+      },
+      {
+        "station": "PP-B",
+        "n": 3,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "SINCE"
+        ],
+        "s": "3 of 4 correct",
+        "fb": "",
+        "ts": "2026-10-05T08:10:00Z"
+      },
+      {
+        "station": "GOING-B",
+        "n": 4,
+        "self": 0,
+        "h": 0,
+        "f": [],
+        "s": "4 of 4 correct",
+        "fb": "",
+        "ts": "2026-10-05T08:10:00Z"
+      },
+      {
+        "station": "SPR-W1",
+        "n": 2,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "S",
+          "NEG"
+        ],
+        "s": "Your questions with Do and Does are correct.",
+        "fb": "After doesn't, use the base form.",
+        "ts": "2026-10-05T08:20:00Z"
+      }
+    ]
+  },
+  "checkin": {
+    "sheet": "AUS1-START",
+    "intro": {
+      "en": "Show what you can do already. There are no stars for right or wrong – this is just your starting point.",
+      "de": "Zeig, was du schon kannst. Es gibt keine Punkte für richtig oder falsch – das ist nur dein Startpunkt."
+    },
+    "goldFrom": 3,
+    "items": [
+      {
+        "topic": "SPR",
+        "area": "S",
+        "type": "choice",
+        "text": "My sister ___ in a café on Saturdays.",
+        "options": [
+          "work",
+          "works",
+          "is work"
+        ],
+        "answer": [
+          "works"
+        ]
+      },
+      {
+        "topic": "SP",
+        "area": "IRREG",
+        "type": "gap",
+        "text": "Yesterday we ___ to the beach.",
+        "hint": "go",
+        "answer": [
+          "went"
+        ]
+      },
+      {
+        "topic": "PROG",
+        "area": "WAS",
+        "type": "choice",
+        "text": "They ___ playing volleyball at 4 pm yesterday.",
+        "options": [
+          "was",
+          "were",
+          "are"
+        ],
+        "answer": [
+          "were"
+        ]
+      },
+      {
+        "topic": "PP",
+        "area": "FORM",
+        "type": "gap",
+        "text": "I have never ___ a koala.",
+        "hint": "see",
+        "answer": [
+          "seen"
+        ]
+      },
+      {
+        "topic": "GOING",
+        "area": "BE",
+        "type": "choice",
+        "text": "Look at the dark clouds! It ___ rain.",
+        "options": [
+          "is going to",
+          "going to",
+          "goes to"
+        ],
+        "answer": [
+          "is going to"
+        ]
+      },
+      {
+        "topic": "SPR",
+        "area": "NEG",
+        "type": "gap",
+        "text": "Tom ___ cold water. He always swims in the pool.",
+        "hint": "not / like",
+        "answer": [
+          "doesn't like",
+          "does not like"
+        ]
+      },
+      {
+        "topic": "SP",
+        "area": "ED",
+        "type": "gap",
+        "text": "Yesterday the bus ___ in front of our hotel.",
+        "hint": "stop",
+        "answer": [
+          "stopped"
+        ]
+      },
+      {
+        "topic": "PROG",
+        "area": "FORM",
+        "type": "gap",
+        "text": "We ___ TV when the lights went out.",
+        "hint": "watch – past progressive",
+        "answer": [
+          "were watching"
+        ]
+      },
+      {
+        "topic": "PP",
+        "area": "HAS",
+        "type": "choice",
+        "text": "My dad ___ been to Sydney twice.",
+        "options": [
+          "has",
+          "have",
+          "is"
+        ],
+        "answer": [
+          "has"
+        ]
+      },
+      {
+        "topic": "GOING",
+        "area": "INF",
+        "type": "choice",
+        "text": "We are going to ___ the reef tomorrow.",
+        "options": [
+          "visit",
+          "visiting",
+          "visited"
+        ],
+        "answer": [
+          "visit"
+        ]
+      },
+      {
+        "topic": "SPR",
+        "area": "Q",
+        "type": "choice",
+        "text": "___ your brother play football?",
+        "options": [
+          "Do",
+          "Does",
+          "Is"
+        ],
+        "answer": [
+          "does"
+        ]
+      },
+      {
+        "topic": "SP",
+        "area": "DID",
+        "type": "choice",
+        "text": "Did you ___ the dolphins last week?",
+        "options": [
+          "see",
+          "saw",
+          "seen"
+        ],
+        "answer": [
+          "see"
+        ]
+      },
+      {
+        "topic": "PROG",
+        "area": "USE",
+        "type": "choice",
+        "text": "I ___ in the sea when a jellyfish touched my leg.",
+        "options": [
+          "was swimming",
+          "swim",
+          "am swimming"
+        ],
+        "answer": [
+          "was swimming"
+        ]
+      },
+      {
+        "topic": "PP",
+        "area": "USE",
+        "type": "choice",
+        "text": "___ you ever tried surfing?",
+        "options": [
+          "Have",
+          "Did",
+          "Do"
+        ],
+        "answer": [
+          "have"
+        ]
+      },
+      {
+        "topic": "GOING",
+        "area": "NEG",
+        "type": "choice",
+        "text": "___ you going to swim later?",
+        "options": [
+          "Are",
+          "Do",
+          "Will"
+        ],
+        "answer": [
+          "are"
+        ]
+      },
+      {
+        "topic": "SPR",
+        "area": "WH",
+        "type": "choice",
+        "text": "Where ___ you usually go at the weekend?",
+        "options": [
+          "do",
+          "does",
+          "are"
+        ],
+        "answer": [
+          "do"
+        ]
+      },
+      {
+        "topic": "SP",
+        "area": "DID",
+        "type": "gap",
+        "text": "She ___ a new surfboard last week.",
+        "hint": "not / buy",
+        "answer": [
+          "didn't buy",
+          "did not buy"
+        ]
+      },
+      {
+        "topic": "PROG",
+        "area": "FORM",
+        "type": "gap",
+        "text": "What were you ___ at 10 pm last night?",
+        "hint": "do",
+        "answer": [
+          "doing"
+        ]
+      },
+      {
+        "topic": "PP",
+        "area": "SINCE",
+        "type": "choice",
+        "text": "We have lived here ___ 2019.",
+        "options": [
+          "since",
+          "for",
+          "ago"
+        ],
+        "answer": [
+          "since"
+        ]
+      },
+      {
+        "topic": "GOING",
+        "area": "NEG",
+        "type": "choice",
+        "text": "Tom ___ going to buy a new phone. He has no money.",
+        "options": [
+          "isn't",
+          "doesn't",
+          "not"
+        ],
+        "answer": [
+          "isn't",
+          "is not"
+        ]
+      }
     ]
   }
 }

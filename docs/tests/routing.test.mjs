@@ -11,20 +11,34 @@ for (const [id, t] of Object.entries(cfg.topics)) t.id = id;
 let t = 0;
 const ev = (station, n, f = [], h = 0) => normaliseEvent({ station, n, h, f, ts: ++t * 1000 });
 
-// 1. Start: simple present ist "now", Check-in (bald) blockiert nicht, Schreibroute noch nicht offen
+// 1. Ganz am Anfang: Check-in ist "now", simple present wartet, Schreibroute noch nicht offen
 let p = progress(cfg, []);
-assert.equal(p.status.SPR, 'now');
-assert.equal(p.status.START, 'soon');
+assert.equal(p.status.START, 'now');
+assert.equal(p.status.SPR, 'later');
 assert.equal(p.status.SP, 'soon');
 assert.equal(p.now.writing, undefined);
 assert.equal(Object.values(p.status).filter((s) => s === 'now').length, 1);
 
+// 1b. Nach dem Check-in (5 Startwerte): Start erledigt, simple present offen; Gold-Tipp ab Startwert 3
+const base = [ev('SPR-B', 3, ['WH']), ev('SP-B', 1, ['IRREG', 'DID']), ev('PROG-B', 2, ['FORM']), ev('PP-B', 2, ['SINCE']), ev('GOING-B', 4)];
+p = progress(cfg, base);
+assert.equal(p.status.START, 'done');
+assert.equal(p.status.SPR, 'now');
+assert.equal(p.topics.SPR.base.n, 3);
+assert.equal(p.topics.SPR.gold, true);
+assert.equal(p.topics.SP.gold, false);
+assert.equal(p.topics.SPR.stars, 0, 'Startwert gibt keinen Stern');
+
 // 2. Arbeitsblatt → 1 Stern + Stempel, Station noch nicht fertig
-p = progress(cfg, [ev('SPR-W1', 2, ['S', 'NEG'])]);
+p = progress(cfg, [...base, ev('SPR-W1', 2, ['S', 'NEG'])]);
 assert.equal(p.topics.SPR.stars, 1);
 assert.equal(p.topics.SPR.stamp, true);
 assert.equal(p.status.SPR, 'now');
-assert.equal(p.stamps, 1);
+assert.equal(p.stamps, 2, 'Start-Stempel + Gold-Coast-Stempel');
+
+// 2b. Goldenes Blatt allein zählt als Arbeitsblatt-Stern
+p = progress(cfg, [...base, ev('SPR-W2', 4)]);
+assert.equal(p.topics.SPR.stars, 1);
 
 // 3. Üben → 2 Sterne, Station fertig, Level-up wenn besser als Blatt
 const w1 = ev('SPR-W1', 2, ['S']);
@@ -49,6 +63,7 @@ assert.equal(stepInfo(cfg, 'SPR-W1').kind, 'sheet');
 assert.equal(stepInfo(cfg, 'SPR-W2').kind, 'extra');
 assert.equal(stepInfo(cfg, 'SPR-P').kind, 'practice');
 assert.equal(stepInfo(cfg, 'SPR-F').kind, 'final');
+assert.equal(stepInfo(cfg, 'SPR-B').kind, 'baseline');
 assert.equal(stepInfo(cfg, 'G4'), null);
 
 // 7. Validierung: Link (inkl. Doppelkodierung und Apostroph) und Einfügezeile

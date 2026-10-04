@@ -201,9 +201,9 @@ function installTriggers() {
 
 // Schritt-IDs der Themen-Coaches: <THEMA>-W1 (Blatt), -W2 … (Zusatzblatt), -P (Üben), -F (Final check)
 function stepInfo_(cfg, id) {
-  var m = String(id || '').match(/^([A-Z]{2,6})-(W(\d)|P|F)$/);
+  var m = String(id || '').match(/^([A-Z]{2,6})-(W(\d)|P|F|B)$/);
   if (!m || !cfg.topics || !cfg.topics[m[1]]) return null;
-  var kind = m[2] === 'P' ? 'practice' : m[2] === 'F' ? 'final' : (m[3] === '1' ? 'sheet' : 'extra');
+  var kind = m[2] === 'P' ? 'practice' : m[2] === 'F' ? 'final' : m[2] === 'B' ? 'baseline' : (m[3] === '1' ? 'sheet' : 'extra');
   return { topicId: m[1], topic: cfg.topics[m[1]], kind: kind };
 }
 
@@ -252,7 +252,7 @@ function writeOverview_(cfg, list, label) {
   var head = ['Kurs', 'Code'];
   topicIds.forEach(function (t) {
     var n = cfg.topics[t].name;
-    head.push(n + ': Blatt', n + ': Üben', n + ': Zusatz', n + ': Final', n + ': offene Fehlerbereiche', n + ': Vorschlag');
+    head.push(n + ': Start', n + ': Blatt', n + ': Üben', n + ': Zusatz', n + ': Final', n + ': offene Fehlerbereiche', n + ': Vorschlag');
   });
   var rows = [head];
   var bg = [head.map(function () { return SETTINGS.HEADER_COLOR; })];
@@ -260,7 +260,7 @@ function writeOverview_(cfg, list, label) {
     var row = [p.kurs, p.code];
     var colors = ['#FFFFFF', '#FFFFFF'];
     topicIds.forEach(function (t) {
-      var best = { sheet: null, practice: null, extra: null, final: null };
+      var best = { baseline: null, sheet: null, practice: null, extra: null, final: null };
       var lastByStep = {};
       Object.keys(p.best).forEach(function (s) {
         var si = stepInfo_(cfg, s);
@@ -269,7 +269,7 @@ function writeOverview_(cfg, list, label) {
         if (!best[si.kind] || b.n > best[si.kind].n) best[si.kind] = b;
         lastByStep[s] = p.last[s];
       });
-      ['sheet', 'practice', 'extra', 'final'].forEach(function (k) {
+      ['baseline', 'sheet', 'practice', 'extra', 'final'].forEach(function (k) {
         row.push(best[k] ? best[k].n : '');
         colors.push(best[k] ? (SETTINGS.LEVEL_COLORS[best[k].n] || '#FFFFFF') : '#FFFFFF');
       });
@@ -507,25 +507,31 @@ function getDashboardData() {
 
   Object.keys(topics).forEach(function (tid) {
     var t = topics[tid];
-    var steps = { sheet: 0, practice: 0, extra: 0, final: 0 };
+    var steps = { baseline: 0, sheet: 0, practice: 0, extra: 0, final: 0 };
     var levels = { 1: 0, 2: 0, 3: 0, 4: 0 };
     var area = {};
     t.areas.forEach(function (a) { area[a] = { code: a, label: t.labels[a] || a, now: [], ever: [], unchecked: [] }; });
     var kidRows = [];
     var improved = 0; var compared = 0; var manyHelps = [];
+    var gBase = 0; var gNow = 0; var gN = 0; var gUp = 0;   // Lernzuwachs gegenüber dem Check-in
 
     Object.keys(t.kids).forEach(function (code) {
       var k = t.kids[code];
       var by = function (kind) { return k.attempts.filter(function (a) { return a.kind === kind; }); };
-      var sheet = bestOf(by('sheet')); var practice = bestOf(by('practice')); var final = bestOf(by('final'));
-      var extra = by('extra').length > 0 || by('practice').length > 1;
-      if (sheet) steps.sheet++; if (practice) steps.practice++; if (extra) steps.extra++; if (final) steps.final++;
-      var digital = k.attempts.filter(function (a) { return a.kind === 'practice' || a.kind === 'final'; });
+      var base = by('baseline')[0] || null;                                   // erster Check-in = Startwert
+      var sheetsAll = by('sheet').concat(by('extra'));                        // weißes ODER goldenes Blatt
+      var sheet = bestOf(sheetsAll); var practice = bestOf(by('practice')); var final = bestOf(by('final'));
+      var distinctSheets = {}; sheetsAll.forEach(function (a) { distinctSheets[a.step] = true; });
+      var extra = Object.keys(distinctSheets).length >= 2 || by('practice').length >= 2;
+      if (base) steps.baseline++; if (sheet) steps.sheet++; if (practice) steps.practice++; if (extra) steps.extra++; if (final) steps.final++;
+      var work = k.attempts.filter(function (a) { return a.kind !== 'baseline'; });
+      var digital = work.filter(function (a) { return a.kind === 'practice' || a.kind === 'final'; });
       var latest = k.attempts[k.attempts.length - 1];
       var current = digital.length ? digital[digital.length - 1].n : (sheet ? sheet.n : latest.n);
       levels[current] = (levels[current] || 0) + 1;
       allCurrent.push(current);
       if (sheet && practice) { compared++; if (practice.n > sheet.n) improved++; }
+      if (base && work.length) { gN++; gBase += base.n; gNow += current; if (current > base.n) gUp++; }
       if (k.attempts.some(function (a) { return a.h >= 3; })) manyHelps.push(code);
       latest.f.forEach(function (c) { if (area[c]) area[c].now.push(code); });
       var ever = {};
@@ -538,7 +544,7 @@ function getDashboardData() {
       if (lastSheetIdx >= 0 && !practicedAfter) k.attempts[lastSheetIdx].f.forEach(function (c) { if (area[c]) area[c].unchecked.push(code); });
       var next = !sheet ? 'Arbeitsblatt' : !practice ? 'Üben' : current <= 2 ? 'noch eine Übungsrunde' : current === 3 ? 'optional: Extra' : 'fertig';
       kidRows.push({
-        code: code, kurs: k.kurs, sheet: sheet ? sheet.n : null, practice: practice ? practice.n : null, final: final ? final.n : null,
+        code: code, kurs: k.kurs, base: base ? base.n : null, sheet: sheet ? sheet.n : null, practice: practice ? practice.n : null, final: final ? final.n : null,
         extra: extra, current: current, stars: (sheet ? 1 : 0) + (practice ? 1 : 0) + (extra ? 1 : 0),
         open: latest.f.map(function (c) { return t.labels[c] || c; }), next: next,
         trend: sheet && practice ? practice.n - sheet.n : null,
@@ -550,7 +556,9 @@ function getDashboardData() {
     var areaList = t.areas.map(function (a) { return area[a]; }).map(function (a) {
       return { code: a.code, label: a.label, now: a.now.length, ever: a.ever.length, resolved: a.ever.length - a.now.length, unchecked: a.unchecked.length, nowCodes: a.now, uncheckedCodes: a.unchecked };
     });
-    out.topics.push({ id: tid, name: t.name, kids: n, steps: steps, levels: levels, areas: areaList, improved: improved, compared: compared, manyHelps: manyHelps, rows: kidRows });
+    var growth = gN ? { kids: gN, base: round1_(gBase / gN), now: round1_(gNow / gN), up: gUp } : null;
+    out.topics.push({ id: tid, name: t.name, kids: n, steps: steps, levels: levels, areas: areaList, improved: improved, compared: compared, growth: growth, manyHelps: manyHelps, rows: kidRows });
+    if (growth && growth.kids >= 3) out.recommendations.push({ type: 'gut', topic: t.name, text: 'Lernzuwachs seit dem Check-in: Ø ' + String(growth.base).replace('.', ',') + ' → ' + String(growth.now).replace('.', ',') + ' (' + growth.up + ' von ' + growth.kids + ' Kindern verbessert).', action: 'Messbarer Fortschritt gegenüber dem Startwert.' });
 
     // Empfehlungen für die nächsten Stunden
     areaList.forEach(function (a) {
@@ -597,7 +605,8 @@ var AI_SYSTEM = [
   '',
   'So entstehen die Daten (wichtig für deine Interpretation):',
   '- Jedes Kind ist nur über einen Code bekannt (z. B. KOALA-7Q2X). Es gibt keine Namen. Verwende nur diese Codes.',
-  '- Pro Thema gibt es Schritte: W1 = Standard-Arbeitsblatt (Papier, vom Coach per Foto korrigiert), W2/W3 = freiwillige Zusatzblätter,',
+  '- Pro Thema gibt es Schritte: B = Check-in (fester Pre-Test auf der Website, für alle gleich, automatisch ohne KI ausgewertet – die Baseline),',
+  '  W1 = Standard-Arbeitsblatt (Papier, vom Coach per Foto korrigiert), W2/W3 = Zusatzblätter (W2 = goldenes, schwereres Blatt),',
   '  P = adaptives Üben im Chat (2 Runden à 8 Sätze), F = Final check (persönliche Wiederholung).',
   '- Niveau 1–4: Blatt nach Prozent (≥90 % = 4, 75–89 = 3, 50–74 = 2, <50 = 1); Üben nach Stufe und Trefferzahl der letzten Runde.',
   '- Hilfen 0–3 = wie viele Hinweise das Kind beim Üben brauchte.',
@@ -609,6 +618,7 @@ var AI_SYSTEM = [
   '- Benenne Grenzen: kleine Zahlen, fehlende Schritte, mögliche Fehlkorrekturen des Coaches.',
   '- Suche aktiv nach Mustern über einzelne Zahlen hinaus: Fehlerbereiche, die gemeinsam auftreten; Entwicklung vom Blatt zum Üben;',
   '  Kinder, deren Hilfen hoch sind, obwohl das Niveau gut ist; Bereiche, die nie geprüft wurden.',
+  '- Lernzuwachs misst du gegen den Check-in (B) als Ausgangswert: Klassenmittel vorher/nachher und Anteil der Kinder, die sich verbessert haben.',
   '- Empfehlungen müssen im Unterricht einer heterogenen 9. Klasse in 45 Minuten umsetzbar sein.',
   '- Schreib auf Deutsch, klar und knapp, für eine Lehrkraft. Keine Fachsprache ohne Erklärung.',
   '',

@@ -1,8 +1,8 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
-  loadConfig, loadEvents, progress, getTraveller, isDemo, esc, starsHTML, starOne, UI, store, reducedMotion,
-} from './core.js?v=2.0';
-import { openCodeDialog, openRules, copyText, headerHTML, wireCodePill } from './ui.js?v=2.0';
+  loadConfig, loadEvents, progress, getTraveller, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion,
+} from './core.js?v=2.1';
+import { openCodeDialog, openRules, copyText, headerHTML, wireCodePill } from './ui.js?v=2.1';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -110,7 +110,7 @@ function markers() {
     const wide = String(def.number).length > 1;
     const cls = ['marker', `is-${state}`, route?.shape === 'square' ? 'sq' : bonus ? 'bonus' : 'rd', wide ? 'wide' : '', sel ? 'is-selected' : '', def.goal ? 'goal' : '', pops.has(id) && !reducedMotion() ? 'pop' : ''].join(' ');
     const label = `${route ? `${route.name}, ` : 'Bonus, '}${def.number}, ${def.place}, ${state}`;
-    const dots = route && !def.optional && route.shape === 'circle' && t
+    const dots = route && !def.optional && route.shape === 'circle' && t && !t.checkin
       ? `<span class="dots">${[0, 1, 2].map((i) => `<i class="${i < t.stars ? 'on' : ''}"></i>`).join('')}</span>` : '';
     return `<div class="spot" style="left:${def.x / 10}%;top:${def.y / 8}%;--rc:${color}">
       ${state === 'now' ? '<span class="now-flag">NOW</span>' : ''}
@@ -169,7 +169,16 @@ function renderPanel() {
   }).join('');
 
   let body = '';
-  if (state === 'soon') {
+  if (t.checkin) {
+    body = state === 'done'
+      ? `<div class="info-box teal">${UI.check}<span><b>Check-in done!</b> We know your starting point. <span class="de">(Check-in geschafft – dein Startpunkt ist gespeichert.)</span></span></div>`
+      : `<div class="action" style="--rc:${color}">
+          <div class="action-h">WHAT TO DO NOW <span class="de-inline">(Was du jetzt machst)</span></div>
+          <p style="margin:0"><b>Start with the check-in:</b> show what you can do already. No stars for right or wrong – it is just your starting point.<br>
+            <span class="de">(Starte mit dem Check-in: Zeig, was du schon kannst. Es zählt nicht für Punkte – es ist nur dein Startpunkt.)</span></p>
+          <a class="btn" href="${link('checkin.html')}">Start the check-in (Check-in starten)</a>
+        </div>`;
+  } else if (state === 'soon') {
     body = `<div class="info-box">${UI.lock}<span><b>Coming soon.</b> This stop opens later. <span class="de">(Kommt bald. Diese Station öffnet später.)</span></span></div>`;
   } else if (state === 'later') {
     body = `<div class="info-box">${UI.lock}<span><b>Later.</b> First finish the stop before. <span class="de">(Später. Mach zuerst den Stopp davor fertig.)</span></span></div>`;
@@ -189,7 +198,7 @@ function renderPanel() {
       <div class="topic">Topic: ${esc(def.topic)}</div>
     </div>
     ${def.rules ? `<button type="button" class="btn ghost" id="rules">${UI.book}<span>Rules <span class="de-inline">(Regeln)</span></span></button>` : ''}
-    ${state !== 'soon' && route?.shape === 'circle' && !def.optional ? `<ul class="steps">${steps}</ul>` : ''}
+    ${state !== 'soon' && route?.shape === 'circle' && !def.optional && !t.checkin ? `<ul class="steps">${steps}</ul>` : ''}
     ${body}`;
 
   panel.querySelector('.postcard img')?.addEventListener('error', (e) => e.target.remove());
@@ -203,7 +212,13 @@ function renderPanel() {
 
 function actionBox(def, t, color) {
   let todo; let mode = '';
-  if (!t.w1) {
+  if (!t.w1 && t.gold) {
+    todo = [
+      ['Your check-in shows: you are good at this! Take the <b>GOLD worksheet</b> from the box.', 'Dein Check-in zeigt: Das kannst du schon gut! Nimm das goldene Arbeitsblatt.'],
+      ['Copy your start code and tap into the coach field below.', 'Kopiere deinen Startcode und tippe unten in das Coach-Feld.'],
+      ['Paste the code, send it – then send a <b>photo</b> of your worksheet.', 'Code einfügen, senden – dann ein Foto vom Blatt schicken.'],
+    ];
+  } else if (!t.w1) {
     todo = [
       ['Take <b>worksheet 1</b> from the box and do it.', 'Nimm Arbeitsblatt 1 aus der Box und bearbeite es.'],
       ['Copy your start code and tap into the coach field below.', 'Kopiere deinen Startcode und tippe unten in das Coach-Feld.'],

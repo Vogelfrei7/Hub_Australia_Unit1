@@ -1,6 +1,6 @@
 # Stunde 1: Start der Road Trip + simple present (60 Minuten, 09c, 29 SuS)
 
-**Ziel:** Alle haben ihren Code, kennen den Ablauf und sammeln mindestens den ersten Stern (Arbeitsblatt). Viele schaffen auch den zweiten (Üben).
+**Ziel:** Alle haben ihren Code, machen den **Check-in (Baseline)**, kennen den Ablauf und sammeln den ersten Stern (Arbeitsblatt).
 
 ## Vorbereitung (heute Abend)
 
@@ -19,14 +19,16 @@
 
 | Zeit | Phase | Was passiert | Material |
 |---|---|---|---|
-| 0–5 | **Einstieg** | Demo-Karte am Beamer: „Wir reisen durch Australien. Blau = Grammatik an der Küste, Orange = Schreiben in der Wüste. Pro Stopp sammelt ihr bis zu 3 Sterne und einen Stempel für euren Pass.“ Keine Noten, keine Rangliste. | Beamer: Demo-Karte |
+| 0–5 | **Einstieg** | Demo-Karte am Beamer: „Wir reisen durch Australien. Blau = Grammatik an der Küste, Orange = Schreiben in der Wüste. Pro Stopp sammelt ihr bis zu 3 Sterne und einen Stempel für euren Pass.“ Keine Noten, keine Rangliste. | Beamer: `…/hub/?demo=1&fresh=1&reset=1` |
 | 5–10 | **Codes** | Karten verdeckt austeilen. Alle öffnen die Seite und geben den Code ein. Regel: **nie den Namen eintippen**, Karte in den Englisch-Hefter. | Code-Karten, iPads |
-| 10–16 | **So geht's** | `how.html` zeigen, dann einmal live in der Demo: Stopp 1 antippen → **Rules** öffnen → Startcode kopieren → ins Coach-Feld einfügen → Chat öffnet sich. | Beamer: So geht's, Demo |
-| 16–18 | **Regeln** | Kurz gemeinsam die Regeln im Fenster „Rules“ lesen (he/she/it -s, don't/doesn't, Do/Does). | Beamer |
-| 18–35 | **Stern 1: Arbeitsblatt** | Weißes Blatt holen, bearbeiten (≈ 12 Min.), fotografieren, an den Coach schicken, auf **„🏅 Get your stamp“** tippen. | AUS1-SPR-1 |
-| 35–52 | **Stern 2: Üben** | Auf der Karte den Startcode erneut kopieren → Coach → 2 Runden à 8 Sätze. Wer fertig ist: **Stern 3** mit dem goldenen Blatt oder einer weiteren Runde. | iPads, AUS1-SPR-2 |
-| 52–57 | **Pass** | Alle öffnen „My passport“. Partner zeigen sich ihren Stempel. | iPads |
-| 57–60 | **Abschluss** | Blitzlicht: „Was war leicht, was war schwer?“ – Ausblick: nächste Stunde Stopp 2. | – |
+| 10–25 | **Check-in (Start)** | „Bevor wir üben, schauen wir, was ihr schon könnt. Das ist euer Startpunkt – es gibt keine Punkte, nur einen Start-Stempel.“ Alle tippen auf **Start → Start the check-in**: 20 Aufgaben, **ohne Hilfe**, nur einmal. **Bitte nicht helfen und nicht nebeneinander vergleichen** – sonst stimmt der Startwert nicht. | iPads |
+| 25–30 | **So geht's + Regeln** | `how.html` zeigen; Stopp 1 antippen → **Rules** gemeinsam lesen (he/she/it -s, don't/doesn't, Do/Does) → Startcode kopieren → ins Coach-Feld einfügen. | Beamer |
+| 30–50 | **Stern 1: Arbeitsblatt** | Die Karte sagt jedem Kind, welches Blatt: **weiß** – oder **gold**, wenn der Check-in im simple present schon stark war. Bearbeiten, fotografieren, an den Coach schicken, auf **„🏅 Get your stamp“** tippen. | AUS1-SPR-1, AUS1-SPR-2 |
+| 50–56 | **Stern 2 (wer fertig ist)** | Üben mit dem Coach (2 Runden à 8 Sätze). Die anderen üben in der nächsten Stunde. | iPads |
+| 56–60 | **Pass + Abschluss** | „My passport“ öffnen: Start-Stempel + Gold-Coast-Stempel. Blitzlicht: „Was war leicht, was war schwer?“ | iPads |
+
+**Wichtig für die Diagnostik:** Der Check-in ist die Baseline für alle Zeiten. Er geht pro Kind nur einmal.
+Kinder, die heute fehlen, machen ihn **vor** ihrem ersten Stopp nach (die Karte führt sie automatisch dorthin).
 
 **Lehrkraft während der Arbeitsphasen:** Dashboard im Sheet offen lassen (Road Trip → Dashboard öffnen) und gelegentlich
 „Aktualisieren“ – so siehst du live, wer hängt (keine Abgabe nach 20 Minuten) und welche Fehler gehäuft auftreten.

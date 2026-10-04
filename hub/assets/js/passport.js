@@ -1,6 +1,6 @@
 // Pass v2 (passport.html): Steckbrief, Stempel nach Routen, Bonus, Achievements.
-import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, UI } from './core.js?v=2.0';
-import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=2.0';
+import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, UI } from './core.js?v=2.1';
+import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=2.1';
 
 const app = document.getElementById('app');
 let cfg; let trav; let pr;
@@ -54,7 +54,7 @@ function cell(id, route) {
   const def = cfg.topics[id]; const t = pr.topics[id];
   if (t.stamp) {
     return `<button type="button" class="cell" data-id="${id}" aria-label="${esc(def.place)} stamp, ${t.stars} of 3 stars. Show details.">
-      ${stampHTML(cfg, def, { size: 128, stars: t.stars, date: fmtDate((t.p || t.w1 || t.last).ts) })}</button>`;
+      ${stampHTML(cfg, def, { size: 128, stars: t.checkin ? null : t.stars, date: t.checkin ? '' : fmtDate((t.p || t.w1 || t.last).ts) })}</button>`;
   }
   return `<div class="cell">${slotHTML(def, { size: 124, state: pr.status[id], route })}</div>`;
 }
