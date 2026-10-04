@@ -558,7 +558,7 @@ function getDashboardData() {
     });
     var growth = gN ? { kids: gN, base: round1_(gBase / gN), now: round1_(gNow / gN), up: gUp } : null;
     out.topics.push({ id: tid, name: t.name, kids: n, steps: steps, levels: levels, areas: areaList, improved: improved, compared: compared, growth: growth, manyHelps: manyHelps, rows: kidRows });
-    if (growth && growth.kids >= 3) out.recommendations.push({ type: 'gut', topic: t.name, text: 'Lernzuwachs seit dem Check-in: Ø ' + String(growth.base).replace('.', ',') + ' → ' + String(growth.now).replace('.', ',') + ' (' + growth.up + ' von ' + growth.kids + ' Kindern verbessert).', action: 'Messbarer Fortschritt gegenüber dem Startwert.' });
+    if (growth && growth.kids >= 3) out.recommendations.push({ type: 'gut', topic: t.name, text: 'Lernzuwachs (Entwicklung seit dem Check-in): Ø ' + String(growth.base).replace('.', ',') + ' → ' + String(growth.now).replace('.', ',') + ' (' + growth.up + ' von ' + growth.kids + ' Kindern verbessert).', action: 'Hinweis: Check-in und Üben nutzen unterschiedliche Aufgabenformate – der genaue Vorher-Nachher-Vergleich folgt mit dem Post-Test.' });
 
     // Empfehlungen für die nächsten Stunden
     areaList.forEach(function (a) {
@@ -619,6 +619,8 @@ var AI_SYSTEM = [
   '- Suche aktiv nach Mustern über einzelne Zahlen hinaus: Fehlerbereiche, die gemeinsam auftreten; Entwicklung vom Blatt zum Üben;',
   '  Kinder, deren Hilfen hoch sind, obwohl das Niveau gut ist; Bereiche, die nie geprüft wurden.',
   '- Lernzuwachs misst du gegen den Check-in (B) als Ausgangswert: Klassenmittel vorher/nachher und Anteil der Kinder, die sich verbessert haben.',
+  '  Wichtig: Check-in (4 Aufgaben je Zeitform, teils Auswahl) und Arbeitsblatt/Üben sind unterschiedliche Aufgabenformate. Nenne diese Entwicklung "Lernzuwachs (Entwicklung seit dem Check-in)",',
+  '  deute sie vorsichtig und weise darauf hin, dass der genaue Vorher-Nachher-Vergleich erst mit dem Post-Test (Parallelfassung) möglich ist.',
   '- Empfehlungen müssen im Unterricht einer heterogenen 9. Klasse in 45 Minuten umsetzbar sein.',
   '- Schreib auf Deutsch, klar und knapp, für eine Lehrkraft. Keine Fachsprache ohne Erklärung.',
   '',

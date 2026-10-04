@@ -19,14 +19,15 @@ assert.equal(p.status.SP, 'soon');
 assert.equal(p.now.writing, undefined);
 assert.equal(Object.values(p.status).filter((s) => s === 'now').length, 1);
 
-// 1b. Nach dem Check-in (5 Startwerte): Start erledigt, simple present offen; Gold-Tipp ab Startwert 3
-const base = [ev('SPR-B', 3, ['WH']), ev('SP-B', 1, ['IRREG', 'DID']), ev('PROG-B', 2, ['FORM']), ev('PP-B', 2, ['SINCE']), ev('GOING-B', 4)];
+// 1b. Nach dem Check-in (5 Startwerte): Start erledigt, simple present offen; Gold-Tipp erst bei 4 von 4
+const base = [ev('SPR-B', 4), ev('SP-B', 1, ['IRREG', 'DID']), ev('PROG-B', 3, ['FORM']), ev('PP-B', 2, ['SINCE']), ev('GOING-B', 4)];
 p = progress(cfg, base);
 assert.equal(p.status.START, 'done');
 assert.equal(p.status.SPR, 'now');
-assert.equal(p.topics.SPR.base.n, 3);
+assert.equal(p.topics.SPR.base.n, 4);
 assert.equal(p.topics.SPR.gold, true);
 assert.equal(p.topics.SP.gold, false);
+assert.equal(p.topics.PROG.gold, false, 'Startwert 3 reicht nicht mehr für Gold');
 assert.equal(p.topics.SPR.stars, 0, 'Startwert gibt keinen Stern');
 
 // 2. Arbeitsblatt → 1 Stern + Stempel, Station noch nicht fertig

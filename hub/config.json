@@ -631,7 +631,7 @@
       "en": "Show what you can do already. There are no stars for right or wrong – this is just your starting point.",
       "de": "Zeig, was du schon kannst. Es gibt keine Punkte für richtig oder falsch – das ist nur dein Startpunkt."
     },
-    "goldFrom": 3,
+    "goldFrom": 4,
     "items": [
       {
         "topic": "SPR",
@@ -684,16 +684,15 @@
       {
         "topic": "GOING",
         "area": "BE",
-        "type": "choice",
+        "type": "gap",
         "text": "Look at the dark clouds! It ___ rain.",
-        "options": [
-          "is going to",
-          "going to",
-          "goes to"
-        ],
         "answer": [
-          "is going to"
-        ]
+          "is going to",
+          "'s going to",
+          "is going to rain",
+          "'s going to rain"
+        ],
+        "hint": "be going to"
       },
       {
         "topic": "SPR",
@@ -813,16 +812,12 @@
       {
         "topic": "GOING",
         "area": "NEG",
-        "type": "choice",
+        "type": "gap",
         "text": "___ you going to swim later?",
-        "options": [
-          "Are",
-          "Do",
-          "Will"
-        ],
         "answer": [
           "are"
-        ]
+        ],
+        "hint": "be"
       },
       {
         "topic": "SPR",

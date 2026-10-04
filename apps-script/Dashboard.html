@@ -204,7 +204,7 @@ function renderTopic() {
         '<p class="sub" style="margin:8px 0 0">' + (Object.keys(DATA.classSizes).length ? 'von ' + size + ' Kindern der Klasse' : 'von ' + t.kids + ' Kindern mit Ergebnissen') + '</p></section>' +
       '<section class="card"><h3>Aktueller Stand (Niveau)</h3><div class="stack">' + stack + '</div>' +
         '<div class="legend"><span style="--c:var(--l1)">1</span><span style="--c:var(--l2)">2</span><span style="--c:var(--l3)">3</span><span style="--c:var(--l4)">4</span></div>' +
-        (t.growth ? '<p style="margin:12px 0 0;font-size:16px">Seit dem Check-in: <b>Ø ' + String(t.growth.base).replace('.', ',') + ' → ' + String(t.growth.now).replace('.', ',') + '</b><br><span class="sub">' + t.growth.up + ' von ' + t.growth.kids + ' Kindern verbessert</span></p>' : '') +
+        (t.growth ? '<p style="margin:12px 0 0;font-size:16px">Lernzuwachs <span class="sub">(Entwicklung seit dem Check-in)</span>: <b>Ø ' + String(t.growth.base).replace('.', ',') + ' → ' + String(t.growth.now).replace('.', ',') + '</b><br><span class="sub">' + t.growth.up + ' von ' + t.growth.kids + ' Kindern verbessert</span></p>' : '') +
         (t.compared ? '<p style="margin:8px 0 0"><b>' + t.improved + ' von ' + t.compared + '</b> Kindern sind beim Üben besser als auf dem Blatt.</p>' : '') + '</section>' +
       '<section class="card"><h3>Fehlerbereiche</h3>' + areas +
         '<div class="legend" style="margin-top:8px"><span style="--c:var(--plenum)">noch offen</span><span style="--c:var(--l3)">behoben</span></div></section>' +
