@@ -346,25 +346,46 @@ export function validate(cfg, raw) {
   const station = String(raw.station || '').trim().toUpperCase();
   const int = (v) => (/^\s*\d+\s*$/.test(String(v)) ? Number(v) : NaN);
   const n = int(raw.n);
-  const self = int(raw.self);
+  const selfMissing = raw.self == null || String(raw.self).trim() === '' || String(raw.self).trim() === '-';
+  const self = selfMissing ? null : int(raw.self);
   const h = int(raw.h === '' || raw.h == null ? 0 : raw.h);
+  const step = stepInfo(cfg, station); // neues Format der Themen-Coaches, z. B. SPR-W1
 
   if (!cfg.codeRe.test(code)) errors.push(`Der Code "${code || '?'}" hat nicht das richtige Format (z. B. ${cfg.codeExample}).`);
-  if (!cfg.byId[station]) errors.push(`Die Station "${station || '?'}" gibt es nicht.`);
+  if (!cfg.byId[station] && !step) errors.push(`Die Station "${station || '?'}" gibt es nicht.`);
   if (!(n >= 1 && n <= 4)) errors.push('Das Niveau muss eine Zahl von 1 bis 4 sein.');
-  if (!(self >= 1 && self <= 4)) errors.push('Die Selbsteinschätzung muss eine Zahl von 1 bis 4 sein.');
+  if (!selfMissing && !(self >= 1 && self <= 4)) errors.push('Die Selbsteinschätzung muss eine Zahl von 1 bis 4 sein.');
   if (!(h >= 0 && h <= 3)) errors.push('Die Hilfen müssen eine Zahl von 0 bis 3 sein.');
 
   const fRaw = String(raw.f || '').split(/[,;\s]+/).map((x) => x.trim().toUpperCase()).filter((x) => x && x !== '-' && x !== 'NONE');
   const f = [];
+  const areas = step ? step.topic.areas : null;
   for (const c of fRaw) {
-    if (cfg.errorCatalog[c]) { if (!f.includes(c)) f.push(c); } else warnings.push(`Unbekannter Fehlercode "${c}" wurde ignoriert.`);
+    const known = areas ? areas.includes(c) : !!cfg.errorCatalog[c];
+    if (known) { if (!f.includes(c)) f.push(c); } else warnings.push(`Unbekannter Fehlercode "${c}" wurde ignoriert.`);
   }
   const s = cleanText(raw.s);
   const fb = cleanText(raw.fb);
   const kurs = cleanText(raw.kurs).replace(/^-$/, '');
 
   return { ok: errors.length === 0, errors, warnings, result: { code, kurs, station, n, self, h, f, s, fb } };
+}
+
+// Schritt-ID der Themen-Coaches: <THEMA>-W1 (Blatt), -W2 … (Zusatzblatt), -P (Üben), -F (Final check)
+export function stepInfo(cfg, id) {
+  const m = String(id || '').toUpperCase().match(/^([A-Z]{2,6})-(W(\d)|P|F)$/);
+  const topic = m && cfg.topics?.[m[1]];
+  if (!topic) return null;
+  const kind = m[2] === 'P' ? 'practice' : m[2] === 'F' ? 'final' : m[3] === '1' ? 'sheet' : 'extra';
+  const label = { sheet: 'Worksheet', extra: `Extra worksheet ${m[3]}`, practice: 'Practice', final: 'Final check' }[kind];
+  return {
+    kind, topic,
+    station: {
+      id: String(id).toUpperCase(), place: topic.place, topic: topic.name, skill: `${topic.name} · ${label}`,
+      medium: kind === 'sheet' || kind === 'extra' ? 'paper' : 'digital', coach: 'grammar',
+      stamp: { shape: 'circle', ink: '#1B2A55', icon: topic.icon, caption: label.toUpperCase() },
+    },
+  };
 }
 
 /* ---------- An das Google-Formular senden ---------- */
@@ -379,7 +400,7 @@ export async function submitToForm(cfg, r) {
   put('kurs', r.kurs || '-');
   put('station', r.station);
   put('niveau', r.n);
-  put('selbst', r.self);
+  put('selbst', r.self ?? '-');
   put('hilfen', r.h);
   put('fehler', r.f.join(', ') || '-');
   put('staerke', r.s || '-');

@@ -1,0 +1,13 @@
+{
+  "book": "Headlight 5",
+  "resultUrl": "https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/abgabe.html",
+  "agents": [
+    { "id": "SPR",  "file": "topics/simple-present.md",          "covers": "simple present (Gegenwart: he/she/it -s, do/does)", "sheets": "AUS1-SPR-…",  "active": true },
+    { "id": "SP",   "file": null, "name": "Simple Past Coach",       "covers": "simple past (Vergangenheit: -ed, unregelmäßige Verben, did)", "sheets": "AUS1-SP-…",   "active": false },
+    { "id": "PROG", "file": null, "name": "Past Progressive Coach",  "covers": "past progressive (was/were + -ing)", "sheets": "AUS1-PROG-…", "active": false },
+    { "id": "PP",   "file": null, "name": "Present Perfect Coach",   "covers": "present perfect (have/has + 3. Form)", "sheets": "AUS1-PP-…",   "active": false },
+    { "id": "GOING","file": null, "name": "Going-to Coach",          "covers": "going to-future (Pläne)", "sheets": "AUS1-GOING-…", "active": false },
+    { "id": "SPPP", "file": "topics/past-vs-present-perfect.md", "covers": "simple past oder present perfect? (Kontrast)", "sheets": "AUS1-SPPP-…", "active": false },
+    { "id": "WRITE","file": null, "name": "Writing Coach",           "covers": "Schreiben: Artikel planen, schreiben, verbessern", "sheets": "AUS1-W…",     "active": true }
+  ]
+}

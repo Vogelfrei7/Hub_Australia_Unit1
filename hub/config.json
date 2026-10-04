@@ -172,6 +172,11 @@
     }
   ],
 
+  "topics": {
+    "SPR":  { "name": "Simple present", "place": "Gold Coast", "icon": "wave",  "areas": ["S", "NEG", "Q", "WH", "USE"] },
+    "SPPP": { "name": "Simple past or present perfect", "place": "Perth", "icon": "sheep", "areas": ["CHOICE", "TIME", "SIGNAL", "PPFORM", "SPFORM"] }
+  },
+
   "expressStamp": { "shape": "rect", "ink": "#3F8E99", "text": "#1F5F68", "icon": "plane", "caption": "EXPRESS" },
 
   "errorCatalog": {

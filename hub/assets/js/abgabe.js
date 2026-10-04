@@ -3,7 +3,7 @@
 import {
   loadConfig, loadEvents, deriveState, newlyOpened, getTraveller, setTraveller, isDemo, link,
   esc, stars, calibration, nextStep, fmtDate, stampHTML, UI, store, signature, addPending,
-  parseFromURL, parseBlock, validate, submitToForm, normaliseEvent,
+  parseFromURL, parseBlock, validate, submitToForm, normaliseEvent, stepInfo,
 } from './core.js';
 
 const app = document.getElementById('app');
@@ -141,7 +141,8 @@ function confirmCode(mine, theirs) {
 /* ---------- Stempel-Moment ---------- */
 
 function renderMoment(r, ev, before, after, warnings, already) {
-  const s = cfg.byId[r.station];
+  const s = cfg.byId[r.station] || stepInfo(cfg, r.station).station;
+  const hasSelf = r.self != null;
   const coach = cfg.agents[s.coach]?.name || 'Coach';
   const prev = before.best[s.id];
   const head = !prev ? 'Stamp collected!' : r.n > prev.n ? 'New best result!' : 'Visit saved!';
@@ -158,14 +159,14 @@ function renderMoment(r, ev, before, after, warnings, already) {
         ${UI.brush(240)}
         <div class="sub" style="font-size:16px">${esc(subline)}</div>
       </div>
-      <div class="two">
+      ${hasSelf ? `<div class="two">
         <div class="thought"><span>You thought</span><span class="big" aria-label="${r.self} of 4">${stars(r.self)}</span></div>
         <div class="shown"><span>You showed</span><span class="big" aria-label="${r.n} of 4">${stars(r.n)}</span></div>
       </div>
-      <div class="calib-big">${esc(calibration(cfg, ev))}</div>
+      <div class="calib-big">${esc(calibration(cfg, ev))}</div>` : ''}
       <div class="lines">
         ${r.s ? `<div><span style="color:var(--sage)">${UI.check}</span><span><strong>Strong:</strong> ${esc(r.s)}</span></div>` : ''}
-        ${step ? `<div>${UI.plus}<span><strong>Next step:</strong> ${esc(step)}</span></div>` : ''}
+        ${step ? `<div>${UI.plus}<span><strong>Tip:</strong> ${esc(step)}</span></div>` : ''}
         ${prev && r.n <= prev.n ? `<div lang="de" class="hint-de">Dein bester Versuch (${stars(prev.n)}) zählt weiter.</div>` : ''}
       </div>
       ${openedText.length ? `<div class="new-box">${UI.pin}<span><strong>New on your map:</strong> ${esc(joinList(openedText))} ${openedText.length > 1 ? 'are' : 'is'} open.</span></div>` : ''}

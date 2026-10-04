@@ -64,4 +64,16 @@ assert.equal(v.warnings.length, 1);
 assert.equal(validate(cfg, { ...block, n: '5' }).ok, false);
 assert.equal(validate(cfg, { ...block, code: 'Max Mustermann' }).ok, false);
 
+// 9. Neues Format der Themen-Coaches (ohne Selbsteinschaetzung, Schritt-IDs, eigene Fehlerbereiche)
+const v2 = validate(cfg, { code: 'FUCHS-K7Q2', station: 'SPR-W1', n: '3', self: '', h: '0', f: 'S,NEG,G0X', s: 'Challenge box solved.', fb: "After doesn't, use the base form." });
+assert.ok(v2.ok, v2.errors.join());
+assert.equal(v2.result.self, null);
+assert.deepEqual(v2.result.f, ['S', 'NEG']);
+assert.equal(v2.result.fb, "After doesn't, use the base form.");
+assert.ok(validate(cfg, { code: 'FUCHS-K7Q2', station: 'SPR-P', n: '2', h: '1', f: '-' }).ok);
+assert.ok(validate(cfg, { code: 'FUCHS-K7Q2', station: 'SPR-W2', n: '4', h: '0', f: '-' }).ok);
+assert.equal(validate(cfg, { code: 'FUCHS-K7Q2', station: 'XYZ-P', n: '2', h: '0', f: '-' }).ok, false);
+const blk = parseBlock("FUCHS-K7Q2 | - | SPR-W1 | 3 | - | 0 | S, NEG | Challenge box solved. | After doesn't, use the base form.");
+assert.ok(validate(cfg, blk).ok);
+
 console.log('Alle Routing- und Validierungstests bestanden.');
