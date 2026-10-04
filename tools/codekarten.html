@@ -43,12 +43,12 @@
 <body>
 <div class="ctl">
   <h1>Code-Karten</h1>
-  <p>Erzeugt zufällige Lern-Codes (Tier + 4 Zeichen). Jedes Kind bekommt ein <b>eigenes Tier</b>, solange die Anzahl reicht.
-     Die Codes funktionieren für alle Themen und Reihen. Nichts wird gespeichert oder gesendet.</p>
+  <p>Erzeugt zufällige Lern-Codes (Tiername + 4 Zeichen, z. B. <b>LOEWE-K7Q2</b>). Die Codes funktionieren für alle Themen und Fächer.
+     Reichen die 15 Tiere einer Gruppe nicht, kommen Tiere doppelt vor – mit anderem Code. Nichts wird gespeichert oder gesendet.</p>
   <p class="warn"><b>Zuordnungsliste:</b> Nur für den Testlauf. Ausdrucken, Namen von Hand eintragen, sicher aufbewahren und
      <b>nicht</b> digital speichern oder ins Repo legen. Danach vernichten.</p>
-  <label>Wilde Tiere <input id="nw" type="number" min="0" max="15" value="15"></label>
-  <label>Süße Tiere <input id="nc" type="number" min="0" max="15" value="14"></label>
+  <label>Wilde Tiere <input id="nw" type="number" min="0" max="40" value="18"></label>
+  <label>Süße Tiere <input id="nc" type="number" min="0" max="40" value="11"></label>
   <label>Klasse <input id="k" value="09c"></label>
   <button id="go" type="button">Neu erzeugen</button>
   <button id="pc" type="button">Karten drucken</button>
@@ -58,39 +58,48 @@
 <div class="list" id="list"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script>
-  // 15 "wild & stark" und 15 "süß & kuschelig" – keine Australien-Tiere, damit die Codes für alle Reihen passen.
-  var WILD = ['WOLF', 'BEAR', 'TIGER', 'LION', 'SHARK', 'EAGLE', 'FALCON', 'COBRA', 'VIPER', 'RHINO', 'GORILLA', 'JAGUAR', 'PANTHER', 'ORCA', 'LYNX'];
-  var CUTE = ['PANDA', 'BUNNY', 'KITTEN', 'PUPPY', 'OTTER', 'HAMSTER', 'PENGUIN', 'FAWN', 'LAMB', 'ALPACA', 'HEDGEHOG', 'SQUIRREL', 'DOLPHIN', 'SEAL', 'FOX'];
+  // Tierliste kommt aus hub/config.json → "animals" (Codewort ohne Umlaute, Anzeigename, Bilddatei).
+  // Fallback, falls die Seite ohne Server geöffnet wird:
+  var ANIMALS = {
+    wild: [['WOLF','Wolf','wolf'],['BAER','Bär','bear'],['TIGER','Tiger','tiger'],['LOEWE','Löwe','lion'],['HAI','Hai','shark'],['ADLER','Adler','eagle'],['FALKE','Falke','falcon'],['KOBRA','Kobra','cobra'],['VIPER','Viper','viper'],['NASHORN','Nashorn','rhino'],['GORILLA','Gorilla','gorilla'],['JAGUAR','Jaguar','jaguar'],['PANTHER','Panther','panther'],['ORCA','Orca','orca'],['LUCHS','Luchs','lynx']],
+    cute: [['PANDA','Panda','panda'],['HASE','Hase','bunny'],['KATZE','Katze','kitten'],['WELPE','Welpe','puppy'],['OTTER','Otter','otter'],['HAMSTER','Hamster','hamster'],['PINGUIN','Pinguin','penguin'],['KITZ','Rehkitz','fawn'],['LAMM','Lamm','lamb'],['ALPAKA','Alpaka','alpaca'],['IGEL','Igel','hedgehog'],['EICHHORN','Eichhörnchen','squirrel'],['DELFIN','Delfin','dolphin'],['ROBBE','Robbe','seal'],['FUCHS','Fuchs','fox']]
+  };
   var CH = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
   var MAP = 'https://vogelfrei7.github.io/Hub_Australia_Unit1/';
   var HUB = 'https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/?code=';   // QR öffnet die Karte mit eingetragenem Code
+  var IMG = '../hub/assets/img/animals/';
   function qr(text) { var q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 3, margin: 0, scalable: true }); }
-  var IMG = '../hub/assets/img/animals/';   // optional: eigene Tierbilder als <tier>.webp (klein geschrieben)
   function rnd(n) { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; }
   function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = rnd(i + 1); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
   function suffix() { var s; do { s = ''; for (var i = 0; i < 4; i++) s += CH[rnd(CH.length)]; } while (!/\d/.test(s)); return s; }
   function esc(s) { return String(s).replace(/[<>&"]/g, function (c) { return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]; }); }
+  // n Tiere aus einer Gruppe: erst jedes Tier einmal, danach wieder von vorn (neu gemischt)
+  function pick(group, n) { var out = []; while (out.length < n) out = out.concat(shuffle(group)); return out.slice(0, n); }
   function render() {
-    var nw = Math.max(0, Math.min(15, +document.getElementById('nw').value || 0));
-    var nc = Math.max(0, Math.min(15, +document.getElementById('nc').value || 0));
+    var nw = Math.max(0, Math.min(40, +document.getElementById('nw').value || 0));
+    var nc = Math.max(0, Math.min(40, +document.getElementById('nc').value || 0));
     var k = document.getElementById('k').value.trim();
-    var animals = shuffle(WILD).slice(0, nw).concat(shuffle(CUTE).slice(0, nc));
-    var codes = animals.map(function (a) { return a + '-' + suffix(); });
-    document.getElementById('sheet').innerHTML = codes.map(function (c) {
-      var a = c.split('-')[0], nice = a.charAt(0) + a.slice(1).toLowerCase();
-      return '<div class="card"><div class="pic"><img src="' + IMG + a.toLowerCase() + '.webp" alt="" onerror="this.parentNode.textContent=\'' + nice.charAt(0) + '\'"></div>' +
-        '<div><div class="t">Your learning code (Dein Lern-Code)' + (k ? ' · ' + esc(k) : '') + '</div>' +
-        '<div class="c">' + c + '</div><div class="u">' + MAP + '</div>' +
+    var used = {};
+    var cards = pick(ANIMALS.wild, nw).concat(pick(ANIMALS.cute, nc)).map(function (a) {
+      var c; do { c = a[0] + '-' + suffix(); } while (used[c]); used[c] = true;
+      return { code: c, de: a[1], file: a[2] };
+    });
+    document.getElementById('sheet').innerHTML = cards.map(function (x) {
+      return '<div class="card"><div class="pic"><img src="' + IMG + x.file + '.webp" alt="' + esc(x.de) + '" onerror="this.parentNode.textContent=\'' + x.de.charAt(0) + '\'"></div>' +
+        '<div><div class="t">' + esc(x.de) + ' · Your learning code (Dein Lern-Code)' + (k ? ' · ' + esc(k) : '') + '</div>' +
+        '<div class="c">' + x.code + '</div><div class="u">' + MAP + '</div>' +
         '<div class="t">Keep it secret. Never type your name. (Nicht weitergeben, nie den Namen eintippen.)</div></div>' +
-        '<div class="qr" title="Scan me">' + qr(HUB + c) + '<span>Scan me<br>(Scannen)</span></div></div>';
+        '<div class="qr" title="Scan me">' + qr(HUB + x.code) + '<span>Scan me<br>(Scannen)</span></div></div>';
     }).join('');
     document.getElementById('list').innerHTML = '<h2>Zuordnungsliste ' + esc(k) + ' (vertraulich, nur Papier)</h2><table><tr><th>Code</th><th>Name</th></tr>' +
-      codes.slice().sort().map(function (c) { return '<tr><td><b>' + c + '</b></td><td class="n"></td></tr>'; }).join('') + '</table>';
+      cards.map(function (x) { return x.code; }).sort().map(function (c) { return '<tr><td><b>' + c + '</b></td><td class="n"></td></tr>'; }).join('') + '</table>';
   }
   document.getElementById('go').onclick = render;
   document.getElementById('pc').onclick = function () { document.body.className = 'only-cards'; window.print(); document.body.className = ''; };
   document.getElementById('pl').onclick = function () { document.body.className = 'only-list'; window.print(); document.body.className = ''; };
-  render();
+  fetch('../hub/config.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (cfg) {
+    if (cfg.animals) ANIMALS = { wild: cfg.animals.wild.map(function (a) { return [a.code, a.de, a.file]; }), cute: cfg.animals.cute.map(function (a) { return [a.code, a.de, a.file]; }) };
+  }).catch(function () { /* Fallback-Liste oben */ }).then(render);
 </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 // Pass v2 (passport.html): Steckbrief, Stempel nach Routen, Bonus, Achievements.
-import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, UI } from './core.js?v=2.3';
-import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=2.3';
+import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, avatarSrc, UI } from './core.js?v=2.4';
+import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=2.4';
 
 const app = document.getElementById('app');
 let cfg; let trav; let pr;
@@ -18,14 +18,14 @@ async function main() {
 
 function render() {
   // Tierbild zum Code (assets/img/animals/<tier>.webp); fehlt es, bleibt der Name stehen
-  const avatarImg = `assets/img/animals/${trav.code.split('-')[0].toLowerCase()}.webp`;
+  const avatarImg = avatarSrc(cfg, trav.code);
   app.innerHTML = `
   ${headerHTML(cfg, { code: trav.code, page: 'passport' })}
   <div class="passport">
     <section class="pp-page" aria-label="Traveller">
       <div><h1 class="pp-title">${esc(cfg.unit.passportTitle)}</h1>${UI.brush(220)}<span class="de">(Mein Reisepass)</span></div>
       <div class="profile">
-        <div class="avatar"><img src="${esc(avatarImg)}" alt="${esc(animalOf(trav.code))}" onerror="this.remove()"><b>${esc(animalOf(trav.code))}</b><span>your animal</span></div>
+        <div class="avatar"><img src="${esc(avatarImg)}" alt="${esc(animalOf(cfg, trav.code))}" onerror="this.remove()"><b>${esc(animalOf(cfg, trav.code))}</b><span>your animal</span></div>
         <div class="facts">
           <div><span class="k">CODE</span><span class="v">${esc(trav.code)}</span></div>
           <div><span class="k">CLASS</span><span class="v">${esc(trav.course || '–')}</span></div>

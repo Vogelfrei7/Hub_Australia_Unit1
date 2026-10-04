@@ -14,7 +14,7 @@
     "09c": 29
   },
   "codePattern": "^[A-Z]{3,8}-[A-Z0-9]{4}$",
-  "codeExample": "TIGER-K7Q2",
+  "codeExample": "LOEWE-K7Q2",
   "backend": {
     "appsScriptUrl": "https://script.google.com/macros/s/AKfycbzAivk36uh69nqofdTPMxWjjovB2ZwHhc7cIHcbsxJz-ALQe-22Dy5HhluuTovkgIF9/exec",
     "timeoutMs": 8000,
@@ -147,7 +147,8 @@
         "ink": "#1B2A55",
         "icon": "opera",
         "image": "assets/img/stamps/START.webp"
-      }
+      },
+      "image": "assets/img/START.webp"
     },
     "SPR": {
       "route": "grammar",
@@ -234,7 +235,8 @@
         "ink": "#A9502B",
         "icon": "sunWave",
         "image": "assets/img/stamps/SPR.webp"
-      }
+      },
+      "image": "assets/img/SPR.webp"
     },
     "SP": {
       "route": "grammar",
@@ -261,7 +263,8 @@
         "IRREG": "unregelmäßige Verben",
         "ED": "regelmäßige -ed-Formen und Schreibung",
         "DID": "did + Grundform in Fragen und Verneinung"
-      }
+      },
+      "image": "assets/img/SP.webp"
     },
     "PROG": {
       "route": "grammar",
@@ -885,6 +888,162 @@
           "isn't",
           "is not"
         ]
+      }
+    ]
+  },
+  "animals": {
+    "wild": [
+      {
+        "code": "WOLF",
+        "de": "Wolf",
+        "file": "wolf"
+      },
+      {
+        "code": "BAER",
+        "de": "Bär",
+        "file": "bear"
+      },
+      {
+        "code": "TIGER",
+        "de": "Tiger",
+        "file": "tiger"
+      },
+      {
+        "code": "LOEWE",
+        "de": "Löwe",
+        "file": "lion"
+      },
+      {
+        "code": "HAI",
+        "de": "Hai",
+        "file": "shark"
+      },
+      {
+        "code": "ADLER",
+        "de": "Adler",
+        "file": "eagle"
+      },
+      {
+        "code": "FALKE",
+        "de": "Falke",
+        "file": "falcon"
+      },
+      {
+        "code": "KOBRA",
+        "de": "Kobra",
+        "file": "cobra"
+      },
+      {
+        "code": "VIPER",
+        "de": "Viper",
+        "file": "viper"
+      },
+      {
+        "code": "NASHORN",
+        "de": "Nashorn",
+        "file": "rhino"
+      },
+      {
+        "code": "GORILLA",
+        "de": "Gorilla",
+        "file": "gorilla"
+      },
+      {
+        "code": "JAGUAR",
+        "de": "Jaguar",
+        "file": "jaguar"
+      },
+      {
+        "code": "PANTHER",
+        "de": "Panther",
+        "file": "panther"
+      },
+      {
+        "code": "ORCA",
+        "de": "Orca",
+        "file": "orca"
+      },
+      {
+        "code": "LUCHS",
+        "de": "Luchs",
+        "file": "lynx"
+      }
+    ],
+    "cute": [
+      {
+        "code": "PANDA",
+        "de": "Panda",
+        "file": "panda"
+      },
+      {
+        "code": "HASE",
+        "de": "Hase",
+        "file": "bunny"
+      },
+      {
+        "code": "KATZE",
+        "de": "Katze",
+        "file": "kitten"
+      },
+      {
+        "code": "WELPE",
+        "de": "Welpe",
+        "file": "puppy"
+      },
+      {
+        "code": "OTTER",
+        "de": "Otter",
+        "file": "otter"
+      },
+      {
+        "code": "HAMSTER",
+        "de": "Hamster",
+        "file": "hamster"
+      },
+      {
+        "code": "PINGUIN",
+        "de": "Pinguin",
+        "file": "penguin"
+      },
+      {
+        "code": "KITZ",
+        "de": "Rehkitz",
+        "file": "fawn"
+      },
+      {
+        "code": "LAMM",
+        "de": "Lamm",
+        "file": "lamb"
+      },
+      {
+        "code": "ALPAKA",
+        "de": "Alpaka",
+        "file": "alpaca"
+      },
+      {
+        "code": "IGEL",
+        "de": "Igel",
+        "file": "hedgehog"
+      },
+      {
+        "code": "EICHHORN",
+        "de": "Eichhörnchen",
+        "file": "squirrel"
+      },
+      {
+        "code": "DELFIN",
+        "de": "Delfin",
+        "file": "dolphin"
+      },
+      {
+        "code": "ROBBE",
+        "de": "Robbe",
+        "file": "seal"
+      },
+      {
+        "code": "FUCHS",
+        "de": "Fuchs",
+        "file": "fox"
       }
     ]
   }

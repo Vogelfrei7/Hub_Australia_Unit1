@@ -20,6 +20,7 @@ CONFIG = os.path.join(ROOT, 'hub', 'config.json')
 ANIMALS = {'wolf', 'bear', 'tiger', 'lion', 'shark', 'eagle', 'falcon', 'cobra', 'viper', 'rhino', 'gorilla', 'jaguar', 'panther', 'orca', 'lynx',
            'panda', 'bunny', 'kitten', 'puppy', 'otter', 'hamster', 'penguin', 'fawn', 'lamb', 'alpaca', 'hedgehog', 'squirrel', 'dolphin', 'seal', 'fox'}
 BADGES = {'levelup', 'allfive', 'stars'}
+SRC_TIME = [0]
 
 
 def hex_rgb(h):
@@ -29,6 +30,8 @@ def hex_rgb(h):
 
 def save_webp(im, path, size, quality=82):
     os.makedirs(os.path.dirname(path), exist_ok=True)
+    if os.path.exists(path) and os.path.getmtime(path) > SRC_TIME[0]:
+        return os.path.getsize(path) // 1024   # schon aktuell
     im = im.copy()
     im.thumbnail((size, size), Image.LANCZOS)
     im.save(path, 'WEBP', quality=quality, method=6)
@@ -52,6 +55,7 @@ def main():
     changed = False
     for f in sorted(os.listdir(RAW)):
         name, _ = os.path.splitext(f)
+        SRC_TIME[0] = os.path.getmtime(os.path.join(RAW, f))
         src = Image.open(os.path.join(RAW, f)).convert('RGBA')
         low = name.lower()
         if low in ANIMALS:
@@ -77,7 +81,8 @@ def main():
             im = src.convert('RGB')
             im.thumbnail((1200, 1200), Image.LANCZOS)
             path = os.path.join(IMG, f'{tid}.webp')
-            im.save(path, 'WEBP', quality=80, method=6)
+            if not (os.path.exists(path) and os.path.getmtime(path) > SRC_TIME[0]):
+                im.save(path, 'WEBP', quality=80, method=6)
             topics[tid]['image'] = f'assets/img/{tid}.webp'
             changed = True
             print(f'Postkarte {f:15} -> {tid}.webp ({os.path.getsize(path) // 1024} KB)')

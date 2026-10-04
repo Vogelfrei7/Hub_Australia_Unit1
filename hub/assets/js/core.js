@@ -58,12 +58,17 @@ export function setTraveller(cfg, code, course) {
   if (course) store.set(cfg, 'course', course);
 }
 export function normaliseCode(raw) {
-  return String(raw || '').trim().toUpperCase().replace(/\s+/g, '').replace(/[–—_]/g, '-');
+  return String(raw || '').trim().toUpperCase().replace(/\s+/g, '').replace(/[–—_]/g, '-')
+    .replace(/Ä/g, 'AE').replace(/Ö/g, 'OE').replace(/Ü/g, 'UE').replace(/ẞ|ß/g, 'SS');
 }
-export function animalOf(code) {
+// Tier zum Code: deutsches Codewort (BAER) → Anzeigename (Bär) und Bilddatei (bear.webp); Liste in config.animals
+function animalEntry(cfg, code) {
   const w = String(code || '').split('-')[0];
-  return w ? w.charAt(0) + w.slice(1).toLowerCase() : '';
+  const list = cfg && cfg.animals ? [...(cfg.animals.wild || []), ...(cfg.animals.cute || [])] : [];
+  return list.find((a) => a.code === w) || { code: w, de: w ? w.charAt(0) + w.slice(1).toLowerCase() : '', file: w.toLowerCase() };
 }
+export function animalOf(cfg, code) { return animalEntry(cfg, code).de; }
+export function avatarSrc(cfg, code) { return `assets/img/animals/${animalEntry(cfg, code).file}.webp`; }
 
 /* ---------- Ereignisse ---------- */
 

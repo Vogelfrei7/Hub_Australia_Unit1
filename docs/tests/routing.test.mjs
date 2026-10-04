@@ -1,7 +1,7 @@
 // Logik-Test ohne Browser:  node docs/tests/routing.test.mjs
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { progress, diff, normaliseEvent, validate, parseBlock, parseFromURL, stepInfo } from '../../hub/assets/js/core.js';
+import { progress, diff, normaliseEvent, validate, parseBlock, parseFromURL, stepInfo, normaliseCode, animalOf, avatarSrc } from '../../hub/assets/js/core.js';
 
 const cfg = JSON.parse(readFileSync(new URL('../../hub/config.json', import.meta.url)));
 cfg.codeRe = new RegExp(cfg.codePattern);
@@ -81,5 +81,13 @@ assert.ok(v.ok, v.errors.join());
 assert.equal(validate(cfg, { ...fromUrl, n: '5' }).ok, false);
 assert.equal(validate(cfg, { ...fromUrl, code: 'Max Mustermann' }).ok, false);
 assert.equal(validate(cfg, { ...fromUrl, station: 'XYZ-P' }).ok, false);
+
+// 8. Deutsche Tiernamen: Umlaute werden umgewandelt, Anzeige mit Umlaut, Bild englisch
+assert.equal(normaliseCode(' bär-k7q2 '), 'BAER-K7Q2');
+assert.equal(normaliseCode('Löwe-AB12'), 'LOEWE-AB12');
+assert.ok(cfg.codeRe.test(normaliseCode('Eichhörnchen'.slice(0, 0) + 'EICHHORN-AB12')));
+assert.equal(animalOf(cfg, 'BAER-K7Q2'), 'Bär');
+assert.equal(avatarSrc(cfg, 'EICHHORN-K7Q2'), 'assets/img/animals/squirrel.webp');
+assert.equal(avatarSrc(cfg, 'TIGER-K7Q2'), 'assets/img/animals/tiger.webp');
 
 console.log('Alle Logik- und Validierungstests bestanden.');
