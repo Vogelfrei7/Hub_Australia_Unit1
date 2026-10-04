@@ -124,6 +124,7 @@ function onOpen() {
   SpreadsheetApp.getUi().createMenu('Road Trip')
     .addItem('Dashboard öffnen', 'openDashboard')
     .addItem('Auswertung aktualisieren', 'refreshAnalysis')
+    .addItem('KI-Schlüssel hinterlegen', 'setApiKey')
     .addItem('Formular-Konfiguration anzeigen (entry-IDs)', 'showFormConfig')
     .addSeparator()
     .addItem('Neues Formular anlegen (nur falls noch keins existiert)', 'createForm')
@@ -575,5 +576,162 @@ function getDashboardData() {
   };
   var order = { plenum: 0, blind: 1, gruppe: 2, gut: 3 };
   out.recommendations.sort(function (a, b) { return order[a.type] - order[b.type]; });
+  out.lastReport = lastAiReport_();
+  out.aiReady = !!PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
   return JSON.parse(JSON.stringify(out));
+}
+
+/* ===================== KI-Auswertung (Claude API) ===================== */
+
+var AI = {
+  MODEL: 'claude-opus-5-5',
+  EFFORT: 'medium',      // gründlich genug für die Auswertung, kurz genug für das Zeitlimit von Apps Script
+  MAX_TOKENS: 12000,
+  SHEET: 'KI-Auswertung'
+};
+
+var AI_SYSTEM = [
+  'Du bist eine erfahrene Beraterin für Englischdidaktik und Lerndiagnostik an Realschulen in NRW.',
+  'Eine Lehrkraft gibt dir die gesammelten Ergebnisse ihrer Klasse aus KI-Grammatik-Coaches. Du erstellst daraus einen Auswertungsbericht,',
+  'mit dem sie die nächsten Unterrichtsstunden plant und den sie in Teilen beim Besuch des Regierungspräsidenten zeigt.',
+  '',
+  'So entstehen die Daten (wichtig für deine Interpretation):',
+  '- Jedes Kind ist nur über einen Code bekannt (z. B. KOALA-7Q2X). Es gibt keine Namen. Verwende nur diese Codes.',
+  '- Pro Thema gibt es Schritte: W1 = Standard-Arbeitsblatt (Papier, vom Coach per Foto korrigiert), W2/W3 = freiwillige Zusatzblätter,',
+  '  P = adaptives Üben im Chat (2 Runden à 8 Sätze), F = Final check (persönliche Wiederholung).',
+  '- Niveau 1–4: Blatt nach Prozent (≥90 % = 4, 75–89 = 3, 50–74 = 2, <50 = 1); Üben nach Stufe und Trefferzahl der letzten Runde.',
+  '- Hilfen 0–3 = wie viele Hinweise das Kind beim Üben brauchte.',
+  '- Fehlerbereiche wurden von einem KI-Coach vergeben. Sie sind gute Hinweise, aber keine gesicherte Diagnose.',
+  '',
+  'Regeln:',
+  '- Belege jede Aussage mit Zahlen aus den Daten („7 von 22 Kindern …“). Erfinde nichts, rechne nachvollziehbar.',
+  '- Unterscheide klar zwischen Befund (steht in den Daten) und Deutung (deine Vermutung). Kennzeichne Deutungen als solche.',
+  '- Benenne Grenzen: kleine Zahlen, fehlende Schritte, mögliche Fehlkorrekturen des Coaches.',
+  '- Suche aktiv nach Mustern über einzelne Zahlen hinaus: Fehlerbereiche, die gemeinsam auftreten; Entwicklung vom Blatt zum Üben;',
+  '  Kinder, deren Hilfen hoch sind, obwohl das Niveau gut ist; Bereiche, die nie geprüft wurden.',
+  '- Empfehlungen müssen im Unterricht einer heterogenen 9. Klasse in 45 Minuten umsetzbar sein.',
+  '- Schreib auf Deutsch, klar und knapp, für eine Lehrkraft. Keine Fachsprache ohne Erklärung.',
+  '',
+  'Gliederung (Markdown, genau diese Überschriften):',
+  '## 1. Auf einen Blick',
+  '3–5 wichtigste Befunde als Stichpunkte, jeweils mit Zahl.',
+  '## 2. Lernzuwachs und Trends',
+  '## 3. Problemfelder und Zusammenhänge',
+  '## 4. Blinde Flecken und Grenzen der Daten',
+  '## 5. Vorschlag für die nächsten zwei Stunden',
+  'Konkret: was im Plenum, welche Kleingruppen (mit Codes), wer was einzeln übt.',
+  '## 6. Kinder im Blick',
+  'Höchstens 6 Codes mit je einem Satz Begründung und einer Idee.',
+  '## 7. Kurzfassung für den Besuch',
+  'Genau 3 Kernaussagen ohne Codes, verständlich für Außenstehende: Was zeigt die Diagnostik, was folgt daraus für den Unterricht?',
+  'Danach ein Satz zur Rolle der KI: Sie liefert Hinweise, die Lehrkraft entscheidet.'
+].join('\n');
+
+// Kompakte, pseudonyme Zusammenfassung aller Ergebnisse – Grundlage für die KI (und zum Kopieren in einen Claude-Chat).
+function buildAiInput_() {
+  var cfg = loadConfig_();
+  var events = readEvents_().filter(function (e) { return stepInfo_(cfg, e.station); });
+  events.sort(function (a, b) { return String(a.ts) < String(b.ts) ? -1 : 1; });
+  var lines = [];
+  var tz = Session.getScriptTimeZone();
+  var topics = {};
+  events.forEach(function (e) {
+    var si = stepInfo_(cfg, e.station);
+    var t = topics[si.topicId] || (topics[si.topicId] = { name: si.topic.name, labels: si.topic.areaLabels || {}, kids: {} });
+    (t.kids[e.code] || (t.kids[e.code] = [])).push(e);
+  });
+  var size = cfg.classSizes ? Object.keys(cfg.classSizes).map(function (k) { return k + ': ' + cfg.classSizes[k] + ' Kinder'; }).join(', ') : 'unbekannt';
+  lines.push('Klassengröße: ' + size + '. Abgaben insgesamt: ' + events.length + '. Stand: ' + Utilities.formatDate(new Date(), tz, 'dd.MM.yyyy HH:mm'));
+  Object.keys(topics).forEach(function (tid) {
+    var t = topics[tid];
+    lines.push('');
+    lines.push('### Thema: ' + t.name + ' (' + tid + '), ' + Object.keys(t.kids).length + ' Kinder');
+    lines.push('Fehlerbereiche: ' + Object.keys(t.labels).map(function (c) { return c + ' = ' + t.labels[c]; }).join('; '));
+    lines.push('Format je Kind: Schritt:Niveau/Hilfen[Fehlerbereiche]@Datum, chronologisch');
+    Object.keys(t.kids).sort().forEach(function (code) {
+      var parts = t.kids[code].map(function (e) {
+        var step = e.station.split('-')[1];
+        var d = new Date(e.ts);
+        var when = isNaN(d) ? '' : '@' + Utilities.formatDate(d, tz, 'dd.MM HH:mm');
+        return step + ':' + e.n + '/' + e.h + '[' + (e.f.join(',') || '-') + ']' + when;
+      });
+      lines.push(code + ' | ' + parts.join(' | '));
+    });
+  });
+  return { text: lines.join('\n'), events: events.length };
+}
+
+// Für den Weg über den Claude-Chat: Auftrag + Daten in einem Text.
+function getAiPromptForChat() {
+  if (!isOwner_()) throw new Error('Kein Zugriff');
+  var input = buildAiInput_();
+  return AI_SYSTEM + '\n\n---\n\nHier sind die Daten:\n\n' + input.text;
+}
+
+// Erstellt die KI-Auswertung über die Claude API und speichert sie im Blatt "KI-Auswertung".
+function runAiAnalysis() {
+  if (!isOwner_()) throw new Error('Kein Zugriff');
+  var key = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
+  if (!key) throw new Error('Kein API-Schlüssel hinterlegt. Im Sheet: Road Trip → KI-Schlüssel hinterlegen.');
+  var input = buildAiInput_();
+  if (input.events < 5) throw new Error('Noch zu wenige Ergebnisse für eine Auswertung (mindestens 5 Abgaben).');
+
+  var body = {
+    model: AI.MODEL,
+    max_tokens: AI.MAX_TOKENS,
+    thinking: { type: 'adaptive' },
+    output_config: { effort: AI.EFFORT },
+    fallbacks: 'default',
+    system: AI_SYSTEM,
+    messages: [{ role: 'user', content: 'Hier sind die Daten der Klasse. Erstelle den Bericht.\n\n' + input.text }]
+  };
+  var res = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-beta': 'server-side-fallback-2026-07-01' },
+    payload: JSON.stringify(body),
+    muteHttpExceptions: true
+  });
+  var code = res.getResponseCode();
+  var data;
+  try { data = JSON.parse(res.getContentText()); } catch (e) { throw new Error('Antwort der API nicht lesbar (HTTP ' + code + ').'); }
+  if (code !== 200) {
+    var msg = data && data.error ? data.error.type + ': ' + data.error.message : 'HTTP ' + code;
+    if (code === 401) msg = 'API-Schlüssel ungültig. Bitte neu hinterlegen.';
+    if (code === 429 || code === 529) msg = 'Die API ist gerade ausgelastet. Bitte in einer Minute noch einmal versuchen.';
+    throw new Error(msg);
+  }
+  if (data.stop_reason === 'refusal') throw new Error('Die Anfrage wurde abgelehnt. Bitte den Weg „Für Claude-Chat kopieren“ nutzen.');
+  var report = (data.content || []).filter(function (b) { return b.type === 'text'; }).map(function (b) { return b.text; }).join('\n').trim();
+  if (!report) throw new Error('Die API hat keinen Text geliefert.');
+  if (data.stop_reason === 'max_tokens') report += '\n\n_(Bericht wurde gekürzt.)_';
+
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(AI.SHEET) || SpreadsheetApp.getActiveSpreadsheet().insertSheet(AI.SHEET);
+  if (sh.getLastRow() === 0) {
+    sh.appendRow(['Zeitpunkt', 'Modell', 'Abgaben', 'Bericht']);
+    sh.getRange(1, 1, 1, 4).setFontWeight('bold').setFontColor('#FFFFFF').setBackground(SETTINGS.HEADER_COLOR);
+    sh.setColumnWidth(4, 900);
+  }
+  var row = [new Date(), data.model || AI.MODEL, input.events, report];
+  sh.appendRow(row);
+  sh.getRange(sh.getLastRow(), 4).setWrap(true).setVerticalAlignment('top');
+  return { report: report, at: new Date().toISOString(), model: data.model || AI.MODEL, events: input.events };
+}
+
+function lastAiReport_() {
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(AI.SHEET);
+  if (!sh || sh.getLastRow() < 2) return null;
+  var v = sh.getRange(sh.getLastRow(), 1, 1, 4).getValues()[0];
+  return { at: v[0] instanceof Date ? v[0].toISOString() : String(v[0]), model: v[1], events: v[2], report: String(v[3]) };
+}
+
+// Menü: API-Schlüssel sicher in den Script-Eigenschaften speichern (nie im Code oder Repo).
+function setApiKey() {
+  var ui = SpreadsheetApp.getUi();
+  var r = ui.prompt('Claude-API-Schlüssel', 'Schlüssel einfügen (beginnt mit sk-ant-). Er wird nur in diesem Script gespeichert.', ui.ButtonSet.OK_CANCEL);
+  if (r.getSelectedButton() !== ui.Button.OK) return;
+  var key = r.getResponseText().trim();
+  if (!/^sk-ant-/.test(key)) { ui.alert('Das sieht nicht wie ein Claude-API-Schlüssel aus.'); return; }
+  PropertiesService.getScriptProperties().setProperty('ANTHROPIC_API_KEY', key);
+  ui.alert('Gespeichert. Die KI-Auswertung ist jetzt im Dashboard verfügbar.');
 }

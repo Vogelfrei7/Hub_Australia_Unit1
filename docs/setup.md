@@ -98,3 +98,19 @@ funktioniert also für jedes neue Thema ohne Änderung.
 6. **Notfall ohne Netz:** `apps-script/Dashboard.html` lokal im Browser öffnen → zeigt Beispieldaten.
 
 Optional: In `config.json` `"classSizes": { "09c": 26 }` eintragen – dann zeigt das Dashboard „x von 26 Kindern“.
+
+## 10. KI-Auswertung (Claude API)
+
+Im Dashboard erstellt **„KI-Auswertung erstellen“** einen Bericht mit 7 Abschnitten (Befunde, Trends, Zusammenhänge,
+blinde Flecken, Plan für zwei Stunden, Kinder im Blick, Kurzfassung für den Besuch). Jeder Bericht wird im Blatt
+**„KI-Auswertung“** gespeichert, das Dashboard zeigt den letzten.
+
+1. API-Schlüssel unter console.anthropic.com erstellen (Abrechnung über dein Konto).
+2. Im Sheet: **Road Trip → KI-Schlüssel hinterlegen** → Schlüssel einfügen. Er liegt nur in den Script-Eigenschaften, nie im Repo.
+3. Modell: Claude Opus 5.5 (`AI.MODEL` in `Code.gs`), Aufwand `medium`. Kosten pro Bericht: grob wenige Cent bis ca. 0,30 €,
+   je nach Datenmenge.
+4. **Ohne API:** „Für Claude-Chat kopieren“ kopiert Auftrag + Daten; in einen neuen Claude-Chat einfügen.
+
+Datenschutz: An die API gehen nur Codes, Schritte, Niveaus, Hilfen, Fehlerbereiche und Zeitpunkte – keine Namen, keine
+Freitexte der Kinder. Im Präsentationsmodus ersetzt das Dashboard die Codes auch im Bericht durch „Kind 01 …“.
+Die Auswertung ist ein Vorschlag; die Fehlerbereiche stammen selbst von einem KI-Coach.

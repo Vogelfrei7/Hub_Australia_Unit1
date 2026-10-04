@@ -65,6 +65,14 @@
   .note { color: var(--muted); font-size: 13px; margin-top: 18px; }
   .demo { background: #FFF6D9; border: 1px solid #E8D28A; border-radius: 10px; padding: 8px 12px; margin-bottom: 14px; font-size: 14px; }
   .empty { color: var(--muted); padding: 24px; text-align: center; }
+  .md { margin-top: 12px; max-width: 900px; }
+  .md h2 { font-size: 17px; margin: 18px 0 6px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .md h2:first-child { border-top: 0; padding-top: 0; }
+  .md h3 { font-size: 15px; margin: 12px 0 4px; }
+  .md ul { margin: 4px 0 8px; padding-left: 20px; } .md li { margin: 3px 0; }
+  .md p { margin: 6px 0; }
+  .md .visit { background: var(--accent-soft); border-radius: 12px; padding: 4px 16px 10px; margin-top: 10px; }
+  button[disabled] { opacity: .55; cursor: wait; }
 </style>
 </head>
 <body>
@@ -84,6 +92,17 @@
   <section class="card">
     <h2>Empfehlungen für die nächsten Stunden</h2>
     <div class="recs" id="recs"></div>
+  </section>
+  <section class="card" style="margin-top:16px" id="ai">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center">
+      <h2 style="margin:0">KI-Auswertung</h2>
+      <div class="btns">
+        <button id="ai-run" type="button">KI-Auswertung erstellen</button>
+        <button id="ai-copy" type="button">Für Claude-Chat kopieren</button>
+      </div>
+    </div>
+    <p class="sub" id="ai-status" style="margin:8px 0 0">Claude wertet alle Ergebnisse aus: Trends, Zusammenhänge, blinde Flecken und ein Vorschlag für die nächsten zwei Stunden. Dauert etwa 1–2 Minuten.</p>
+    <div id="ai-report" class="md"></div>
   </section>
   <div class="tabs" id="tabs"></div>
   <div id="topic"></div>
@@ -124,6 +143,8 @@ function render(d) {
     ['auf Niveau 3 oder 4', k.share3 == null ? '–' : k.share3 + ' %']
   ].map(function (x) { return '<div class="card kpi"><b>' + esc(x[1]) + '</b><span>' + esc(x[0]) + '</span></div>'; }).join('');
   renderRecs();
+  showReport(d.lastReport);
+  if (LIVE && !d.aiReady) document.getElementById('ai-status').textContent = 'Noch kein API-Schlüssel hinterlegt (Sheet: Road Trip → KI-Schlüssel hinterlegen). „Für Claude-Chat kopieren“ funktioniert trotzdem.';
   document.getElementById('tabs').innerHTML = d.topics.map(function (t, i) {
     return '<button type="button" class="' + (i === TOPIC ? 'on' : '') + '" data-i="' + i + '">' + esc(t.name) + ' (' + t.kids + ')</button>';
   }).join('');
@@ -198,9 +219,94 @@ function renderTopic() {
 
 document.getElementById('anon').onclick = function () {
   ANON = !ANON; this.classList.toggle('on', ANON); this.setAttribute('aria-pressed', ANON);
-  if (DATA) { renderRecs(); renderTopic(); }
+  if (DATA) { renderRecs(); renderTopic(); showReport(DATA.lastReport || (LIVE ? null : SHOWN_DEMO)); }
 };
 document.getElementById('reload').onclick = load;
+
+/* ---------- KI-Auswertung ---------- */
+var LIVE = !!(window.google && google.script && google.script.run);
+var SHOWN_DEMO = null;
+
+// Kleines, sicheres Markdown: Überschriften, Listen, Fett, Kursiv. Abschnitt 7 wird hervorgehoben.
+function md(src) {
+  var html = [], list = false, inVisit = false;
+  var inline = function (s) { return esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/(^|[^*])\*(?!\s)(.+?)\*/g, '$1<i>$2</i>').replace(/_\((.+?)\)_/g, '<i>($1)</i>'); };
+  String(src || '').split(/\r?\n/).forEach(function (line) {
+    var h = line.match(/^(#{2,3})\s+(.*)$/), li = line.match(/^\s*[-*•]\s+(.*)$/), num = line.match(/^\s*\d+[.)]\s+(.*)$/);
+    if (!li && !num && list) { html.push('</ul>'); list = false; }
+    if (h) {
+      if (h[1] === '##') {
+        if (inVisit) { html.push('</div>'); inVisit = false; }
+        if (/Besuch/i.test(h[2])) { html.push('<div class="visit">'); inVisit = true; }
+      }
+      html.push('<h' + (h[1].length) + '>' + inline(h[2]) + '</h' + (h[1].length) + '>');
+    } else if (li || num) {
+      if (!list) { html.push('<ul>'); list = true; }
+      html.push('<li>' + inline((li || num)[1]) + '</li>');
+    } else if (line.trim()) html.push('<p>' + inline(line) + '</p>');
+  });
+  if (list) html.push('</ul>');
+  if (inVisit) html.push('</div>');
+  return html.join('');
+}
+
+function showReport(r) {
+  var el = document.getElementById('ai-report');
+  if (!r) { el.innerHTML = ''; return; }
+  var text = r.report;
+  if (ANON) Object.keys(ALIAS).forEach(function (c) { text = text.split(c).join(ALIAS[c]); });
+  document.getElementById('ai-status').textContent = 'Letzte Auswertung: ' + fmt(r.at) + ' · ' + r.events + ' Abgaben · ' + r.model +
+    '. Die KI liefert Hinweise – du entscheidest.';
+  el.innerHTML = md(text);
+}
+
+document.getElementById('ai-run').onclick = function () {
+  var btn = this, status = document.getElementById('ai-status');
+  if (!LIVE) { SHOWN_DEMO = DEMO_REPORT; showReport(DEMO_REPORT); return; }
+  btn.disabled = true; status.textContent = 'Claude wertet aus … (etwa 1–2 Minuten, Fenster bitte offen lassen)';
+  google.script.run.withSuccessHandler(function (r) { btn.disabled = false; DATA.lastReport = r; showReport(r); })
+    .withFailureHandler(function (e) { btn.disabled = false; status.textContent = '⚠ ' + e.message; }).runAiAnalysis();
+};
+
+document.getElementById('ai-copy').onclick = function () {
+  var btn = this, status = document.getElementById('ai-status');
+  var done = function (text) {
+    var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) { /* */ }
+    ta.remove();
+    status.textContent = ok ? 'Kopiert: Auftrag + Daten (nur Codes, keine Namen). In einen neuen Claude-Chat einfügen.' : 'Kopieren nicht möglich – bitte erneut versuchen.';
+    btn.disabled = false;
+  };
+  btn.disabled = true;
+  if (!LIVE) { done('(Beispiel) Auftrag + Daten würden hier stehen.'); return; }
+  google.script.run.withSuccessHandler(done).withFailureHandler(function (e) { btn.disabled = false; status.textContent = '⚠ ' + e.message; }).getAiPromptForChat();
+};
+
+var DEMO_REPORT = { at: new Date().toISOString(), events: 44, model: 'Beispiel', report: [
+  '## 1. Auf einen Blick',
+  '- **Verneinung ist das Hauptproblem:** 7 von 24 Kindern haben im letzten Versuch noch Fehler bei *doesn\'t + Grundform*.',
+  '- **Das Üben wirkt:** 11 von 20 Kindern sind beim Üben besser als auf dem Arbeitsblatt (im Schnitt +0,6 Niveaustufen).',
+  '- **Fragen mit Fragewort** sind für 8 Kinder noch offen – fast nur bei Kindern, die Stufe D erreicht haben.',
+  '- **Gebrauch und Signalwörter** sitzen: kein einziges Kind mit Fehlern.',
+  '## 2. Lernzuwachs und Trends',
+  '- Der Zuwachs ist bei schwächeren Kindern (Blatt Niveau 1–2) am größten. (Deutung: die Hilfeboxen greifen.)',
+  '## 3. Problemfelder und Zusammenhänge',
+  '- Wer Fehler bei der Verneinung hat, hat in 5 von 7 Fällen auch Fehler bei Ja-/Nein-Fragen. **Gemeinsames Grundproblem: do/does als Hilfsverb.**',
+  '## 4. Blinde Flecken und Grenzen der Daten',
+  '- 4 Kinder haben das Blatt, aber noch nicht geübt. Ihre Fehler sind ungeprüft.',
+  '- Who-Fragen kommen nur im Challenge-Kasten und auf Stufe D vor – für die meisten Kinder liegen dazu keine Daten vor.',
+  '## 5. Vorschlag für die nächsten zwei Stunden',
+  '- **Plenum (10 Min.):** do/does als „Helfer“ für Frage und Verneinung, mit Satzbaukasten.',
+  '- **Kleingruppe:** die 5 Kinder mit Verneinung + Fragen üben gemeinsam mit Karten.',
+  '- **Einzeln:** die 4 Kinder ohne Übung starten zuerst den Coach.',
+  '## 6. Kinder im Blick',
+  '- **WOMBAT-1CH7:** Niveau 1, drei offene Bereiche, noch keine Übung – heute zuerst begleiten.',
+  '## 7. Kurzfassung für den Besuch',
+  '- Die Diagnostik zeigt in Echtzeit, **wo die Klasse steht**: ein gemeinsames Grundproblem statt vieler Einzelfehler.',
+  '- Daraus folgt eine **gezielte Plenumsphase** und Kleingruppen – statt Wiederholung für alle.',
+  '- Das adaptive Üben bringt **messbaren Lernzuwachs**, besonders bei schwächeren Kindern.',
+  'Die KI liefert Hinweise und Vorschläge – die Entscheidungen trifft die Lehrkraft.'
+].join('\n') };
 
 // Erfundene Daten für die Vorschau und als Notfall in der Präsentation
 function demoData() {
