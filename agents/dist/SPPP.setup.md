@@ -1,7 +1,7 @@
 # Past or Perfect Coach – Einrichtung in Sidekick
 
 - **Name:** Past or Perfect Coach
-- **System-Prompt:** Inhalt von `dist/SPPP.md` komplett einfügen (13501 Zeichen)
+- **System-Prompt:** Inhalt von `dist/SPPP.md` komplett einfügen (13801 Zeichen)
 - **Modell:** Sonnet 5.5 (Alternative: GPT 6 Sol)
 - **Wissen:** nur die Blätter und Lösungen dieses Themas (AUS1-SPPP-1, AUS1-SPPP-2) – keine anderen Themen
 - **Nutzergedächtnis:** aus

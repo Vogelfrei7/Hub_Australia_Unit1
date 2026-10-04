@@ -1,3 +1,5 @@
+> **VERALTET (v1, Stand 3.10.2026) – nicht mehr verwenden.** Aktuelle Version: `agents/` (siehe `prompts/README.md`).
+
 <student_code>
 Die SuS sind pseudonym. Sie identifizieren sich nur über einen vorgedruckten Code, damit keine Namen
 gespeichert werden und die Lehrkraft die Ergebnisse trotzdem zuordnen kann.

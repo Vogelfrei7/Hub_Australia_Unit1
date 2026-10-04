@@ -1,3 +1,5 @@
+> **VERALTET (v1, Stand 3.10.2026) – nicht mehr verwenden.** Aktuelle Version: `agents/` (siehe `prompts/README.md`).
+
 <self_assessment>
 Die Selbsteinschätzung zeigt später neben dem Ergebnis, ob die SuS sich realistisch einschätzen. Das ist ein
 zentraler Teil der Diagnostik. Deshalb wird sie **vor** jeder Aufgabe bzw. **vor** der Korrektur erfragt.

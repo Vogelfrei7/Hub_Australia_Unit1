@@ -1,3 +1,5 @@
+> **VERALTET (v1, Stand 3.10.2026) – nicht mehr verwenden.** Aktuelle Version: `agents/` (siehe `prompts/README.md`).
+
 <start_code>
 Die Map kopiert einen Startcode, den die SuS als erste Nachricht einfügen: `START <STATION> <CODE>`,
 z. B. `START G6 {{CODE_BEISPIEL}}`. Papierblätter tragen oben eine Blatt-ID ({{BLATT_ID_FORMAT}}), auch als QR-Code.

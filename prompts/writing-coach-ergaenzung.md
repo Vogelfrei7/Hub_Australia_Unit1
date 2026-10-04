@@ -1,3 +1,5 @@
+> **VERALTET (v1, Stand 3.10.2026) – nicht mehr verwenden.** Aktuelle Version: `agents/` (siehe `prompts/README.md`).
+
 # Writing Coach – Ergänzungsmodule für die Road Trip
 
 > Der bestehende Writing-Coach-Prompt (ZP10-Raster) bleibt die Grundlage. Diese Blöcke **ans Ende** des

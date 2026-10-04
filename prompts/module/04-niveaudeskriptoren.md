@@ -1,3 +1,5 @@
+> **VERALTET (v1, Stand 3.10.2026) – nicht mehr verwenden.** Aktuelle Version: `agents/` (siehe `prompts/README.md`).
+
 <levels>
 Die Niveaus 1–4 sind zentral im Knowledge `niveaudeskriptoren.md` definiert. Verwende ausschließlich diese Regeln,
 damit alle Coaches gleich bewerten und die Lehrkraft die Ergebnisse vergleichen kann.

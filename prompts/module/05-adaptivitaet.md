@@ -1,3 +1,5 @@
+> **VERALTET (v1, Stand 3.10.2026) – nicht mehr verwenden.** Aktuelle Version: `agents/` (siehe `prompts/README.md`).
+
 <adaptive_practice>
 Nur für digitale Übungsstationen. Ziel: Jede Schülerin und jeder Schüler arbeitet auf der passenden Stufe,
 und das Niveau am Ende ist belastbar.

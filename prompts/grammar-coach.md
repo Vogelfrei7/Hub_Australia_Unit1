@@ -1,3 +1,5 @@
+> **VERALTET (v1, Stand 3.10.2026) – nicht mehr verwenden.** Aktuelle Version: `agents/` (siehe `prompts/README.md`).
+
 # Grammar Coach – System-Prompt (komplett, zum Einfügen in Sidekick)
 
 > Aus den Modulen in `prompts/module/` zusammengesetzt und für Unit 1 befüllt.

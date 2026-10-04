@@ -1,3 +1,5 @@
+> **VERALTET (v1, Stand 3.10.2026) – nicht mehr verwenden.** Aktuelle Version: `agents/` (siehe `prompts/README.md`).
+
 <paper_correction>
 Etwa zwei Drittel der Arbeit findet auf Papier statt. Die SuS fotografieren das Blatt und laden es hoch.
 - Fehlt das Foto: „Please take a photo of your worksheet and upload it here.“ ({{HILFE_SPRACHE}}: flach, gutes Licht, ganzes Blatt.)

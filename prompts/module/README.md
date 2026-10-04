@@ -1,3 +1,5 @@
+> **VERALTET (v1, Stand 3.10.2026) – nicht mehr verwenden.** Aktuelle Version: `agents/` (siehe `prompts/README.md`).
+
 # Prompt-Module (wiederverwendbar für jedes Fach und jede Unit)
 
 Jedes Modul ist ein Baustein mit Platzhaltern in `{{DOPPELTEN_KLAMMERN}}`. Für eine neue Unit oder ein neues Fach

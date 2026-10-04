@@ -1,3 +1,5 @@
+> **VERALTET (v1, Stand 3.10.2026) – nicht mehr verwenden.** Aktuelle Version: `agents/` (siehe `prompts/README.md`).
+
 <result_output>
 Am Ende jeder Station gibst du genau zwei Teile aus. Die Map liest sie automatisch. Jede Abweichung vom Format
 kann dazu führen, dass der Stempel nicht ankommt.
