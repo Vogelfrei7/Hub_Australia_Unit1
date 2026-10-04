@@ -173,8 +173,16 @@
   ],
 
   "topics": {
-    "SPR":  { "name": "Simple present", "place": "Gold Coast", "icon": "wave",  "areas": ["S", "NEG", "Q", "WH", "USE"] },
-    "SPPP": { "name": "Simple past or present perfect", "place": "Perth", "icon": "sheep", "areas": ["CHOICE", "TIME", "SIGNAL", "PPFORM", "SPFORM"] }
+    "SPR": {
+      "name": "Simple present", "place": "Gold Coast", "icon": "wave",
+      "areas": ["S", "NEG", "Q", "WH", "USE"],
+      "areaLabels": { "S": "he/she/it: -s und Schreibung", "NEG": "Verneinung: don't/doesn't + Grundform", "Q": "Ja-/Nein-Fragen und Kurzantworten", "WH": "Fragen mit Fragewort / Who", "USE": "Gebrauch und Signalwörter" }
+    },
+    "SPPP": {
+      "name": "Simple past or present perfect", "place": "Perth", "icon": "sheep",
+      "areas": ["CHOICE", "TIME", "SIGNAL", "PPFORM", "SPFORM"],
+      "areaLabels": { "CHOICE": "falsche Zeitform gewählt", "TIME": "present perfect mit Zeitpunkt", "SIGNAL": "Signalwort übersehen", "PPFORM": "Form present perfect", "SPFORM": "Form simple past" }
+    }
   },
 
   "expressStamp": { "shape": "rect", "ink": "#3F8E99", "text": "#1F5F68", "icon": "plane", "caption": "EXPRESS" },

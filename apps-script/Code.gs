@@ -192,11 +192,19 @@ function installTriggers() {
 
 /* ===================== Auswertung ===================== */
 
+// Schritt-IDs der Themen-Coaches: <THEMA>-W1 (Blatt), -W2 … (Zusatzblatt), -P (Üben), -F (Final check)
+function stepInfo_(cfg, id) {
+  var m = String(id || '').match(/^([A-Z]{2,6})-(W(\d)|P|F)$/);
+  if (!m || !cfg.topics || !cfg.topics[m[1]]) return null;
+  var kind = m[2] === 'P' ? 'practice' : m[2] === 'F' ? 'final' : (m[3] === '1' ? 'sheet' : 'extra');
+  return { topicId: m[1], topic: cfg.topics[m[1]], kind: kind };
+}
+
 function refreshAnalysis() {
   var cfg = loadConfig_();
   var stations = cfg.stations.map(function (s) { return s.id; });
   var catalog = cfg.errorCatalog || {};
-  var events = readEvents_().filter(function (e) { return stations.indexOf(e.station) !== -1; });
+  var events = readEvents_().filter(function (e) { return stations.indexOf(e.station) !== -1 || stepInfo_(cfg, e.station); });
   events.sort(function (a, b) { return String(a.ts) < String(b.ts) ? -1 : 1; });
 
   // pro Code: Kurs, bester Versuch, letzter Versuch je Station
@@ -212,9 +220,112 @@ function refreshAnalysis() {
   var list = Object.keys(people).map(function (k) { return people[k]; })
     .sort(function (a, b) { return (a.kurs + a.code) < (b.kurs + b.code) ? -1 : 1; });
 
-  writeMatrix_(cfg, stations, list, catalog);
-  writeErrors_(list, catalog);
+  // Fehlerbereich-Beschriftung: Themen-Coaches (pro Thema) oder alter Gesamtkatalog
+  var label = function (station, code) {
+    var si = stepInfo_(cfg, station);
+    if (si) return { structure: si.topic.name, label: (si.topic.areaLabels || {})[code] || code, key: si.topicId + '·' + code };
+    var c = catalog[code] || {};
+    return { structure: c.structure || '?', label: c.label || 'unbekannter Code', key: code, station: c.station || '' };
+  };
+
+  writeOverview_(cfg, list, label);
+  writeClassPicture_(cfg, list, label);
+  writeErrors_(list, label);
+  var hasV1 = events.some(function (e) { return stations.indexOf(e.station) !== -1; });
+  if (hasV1) writeMatrix_(cfg, stations, list, catalog);
   writeCalibration_(list);
+}
+
+// Überblick: pro Kind und Thema bestes Niveau je Schritt + aktuelle Fehlerbereiche + Vorschlag
+function writeOverview_(cfg, list, label) {
+  var sh = sheet_('Überblick');
+  var topicIds = Object.keys(cfg.topics || {}).filter(function (t) {
+    return list.some(function (p) { return Object.keys(p.best).some(function (s) { var si = stepInfo_(cfg, s); return si && si.topicId === t; }); });
+  });
+  var head = ['Kurs', 'Code'];
+  topicIds.forEach(function (t) {
+    var n = cfg.topics[t].name;
+    head.push(n + ': Blatt', n + ': Üben', n + ': Zusatz', n + ': Final', n + ': offene Fehlerbereiche', n + ': Vorschlag');
+  });
+  var rows = [head];
+  var bg = [head.map(function () { return SETTINGS.HEADER_COLOR; })];
+  list.forEach(function (p) {
+    var row = [p.kurs, p.code];
+    var colors = ['#FFFFFF', '#FFFFFF'];
+    topicIds.forEach(function (t) {
+      var best = { sheet: null, practice: null, extra: null, final: null };
+      var lastByStep = {};
+      Object.keys(p.best).forEach(function (s) {
+        var si = stepInfo_(cfg, s);
+        if (!si || si.topicId !== t) return;
+        var b = p.best[s];
+        if (!best[si.kind] || b.n > best[si.kind].n) best[si.kind] = b;
+        lastByStep[s] = p.last[s];
+      });
+      ['sheet', 'practice', 'extra', 'final'].forEach(function (k) {
+        row.push(best[k] ? best[k].n : '');
+        colors.push(best[k] ? (SETTINGS.LEVEL_COLORS[best[k].n] || '#FFFFFF') : '#FFFFFF');
+      });
+      var open = {};
+      Object.keys(lastByStep).forEach(function (s) { lastByStep[s].f.forEach(function (c) { open[label(s, c).label] = true; }); });
+      row.push(Object.keys(open).join(', '));
+      colors.push('#FFFFFF');
+      var tip;
+      if (!best.sheet) tip = 'Arbeitsblatt machen';
+      else if (!best.practice) tip = 'Üben mit dem Coach';
+      else if (best.practice.n <= 2) tip = 'noch eine Übungsrunde';
+      else if (best.practice.n === 3) tip = 'optional: Zusatzblatt oder Runde';
+      else tip = 'fertig – nächstes Thema';
+      row.push(tip);
+      colors.push('#FFFFFF');
+    });
+    rows.push(row);
+    bg.push(colors);
+  });
+  sh.getRange(1, 1, rows.length, head.length).setValues(rows).setBackgrounds(bg).setFontColor('#1B2A55').setVerticalAlignment('middle');
+  header_(sh, head.length);
+  sh.getRange(1, 1, 1, head.length).setFontColor('#FFFFFF').setWrap(true);
+  sh.setFrozenColumns(2);
+  sh.autoResizeColumns(1, 2);
+  sh.getRange(rows.length + 2, 1).setValue('Zahlen = bestes Niveau 1–4 (Terrakotta → Petrol). „Offene Fehlerbereiche“ = Fehler im jeweils letzten Versuch. Stand: ' + new Date().toLocaleString('de-DE'));
+}
+
+// Klassenbild: Wie viele Kinder haben aktuell Fehler in welchem Bereich? Mit Balkendiagramm – zum Zeigen geeignet.
+function writeClassPicture_(cfg, list, label) {
+  var sh = sheet_('Klassenbild');
+  sh.getCharts().forEach(function (c) { sh.removeChart(c); });
+  var count = {};
+  var withData = {};
+  list.forEach(function (p) {
+    var seen = {};
+    Object.keys(p.last).forEach(function (s) {
+      var si = stepInfo_(cfg, s);
+      if (!si) return;
+      withData[si.topicId + '|' + p.code] = true;
+      p.last[s].f.forEach(function (c) { seen[si.topic.name + ': ' + label(s, c).label] = si.topicId; });
+    });
+    Object.keys(seen).forEach(function (k) { count[k] = (count[k] || 0) + 1; });
+  });
+  var kids = {};
+  Object.keys(withData).forEach(function (k) { kids[k.split('|')[0]] = (kids[k.split('|')[0]] || 0) + 1; });
+  var rows = [['Fehlerbereich', 'Kinder mit diesem Fehler (aktuell)']];
+  Object.keys(count).sort(function (a, b) { return count[b] - count[a]; }).forEach(function (k) { rows.push([k, count[k]]); });
+  sh.getRange(1, 1).setValue('Klassenbild: Wo braucht die Klasse noch Übung?').setFontSize(16).setFontWeight('bold').setFontColor('#1B2A55');
+  sh.getRange(2, 1).setValue('Gezählt wird jedes Kind einmal pro Fehlerbereich, wenn der Fehler im letzten Versuch noch auftaucht. Kinder mit Ergebnissen: ' +
+    Object.keys(kids).map(function (t) { return cfg.topics[t].name + ' ' + kids[t]; }).join(' · '));
+  if (rows.length === 1) { sh.getRange(4, 1).setValue('Noch keine Fehler in den Themen-Coaches erfasst.'); return; }
+  sh.getRange(4, 1, rows.length, 2).setValues(rows).setFontColor('#1B2A55');
+  sh.getRange(4, 1, 1, 2).setFontWeight('bold').setFontColor('#FFFFFF').setBackground(SETTINGS.HEADER_COLOR);
+  sh.autoResizeColumns(1, 2);
+  var chart = sh.newChart().asBarChart()
+    .addRange(sh.getRange(4, 1, rows.length, 2))
+    .setPosition(4, 4, 0, 0)
+    .setOption('title', 'Fehlerbereiche der Klasse (Anzahl Kinder)')
+    .setOption('legend', { position: 'none' })
+    .setOption('colors', ['#3F8E99'])
+    .setOption('width', 620).setOption('height', Math.max(260, rows.length * 34))
+    .build();
+  sh.insertChart(chart);
 }
 
 function expressSet_(cfg, p, catalog) {
@@ -273,35 +384,33 @@ function writeMatrix_(cfg, stations, list, catalog) {
   sh.getRange(note, 1, 1, 1).setValue('Legende: 1–4 = bestes Niveau (Terrakotta → Petrol), E = Express (laut Check-in nicht nötig), leer = noch nicht besucht. Stand: ' + new Date().toLocaleString('de-DE'));
 }
 
-function writeErrors_(list, catalog) {
+function writeErrors_(list, label) {
   var sh = sheet_('Fehlermuster');
   var agg = {};
   list.forEach(function (p) {
-    var seenNow = {};
     p.all.forEach(function (e) {
       e.f.forEach(function (c) {
-        var k = (p.kurs || '-') + '|' + c;
-        var a = agg[k] || (agg[k] = { kurs: p.kurs || '-', code: c, total: 0, students: {}, current: {} });
+        var l = label(e.station, c);
+        var k = (p.kurs || '-') + '|' + l.key;
+        var a = agg[k] || (agg[k] = { kurs: p.kurs || '-', code: c, info: l, total: 0, students: {}, current: {} });
         a.total++;
         a.students[p.code] = true;
       });
     });
-    // "aktuell": Fehler im jeweils letzten Versuch pro Station
+    // "aktuell": Fehler im jeweils letzten Versuch pro Station bzw. Schritt
     Object.keys(p.last).forEach(function (st) {
-      p.last[st].f.forEach(function (c) { seenNow[c] = true; });
-    });
-    Object.keys(seenNow).forEach(function (c) {
-      var k = (p.kurs || '-') + '|' + c;
-      if (agg[k]) agg[k].current[p.code] = true;
+      p.last[st].f.forEach(function (c) {
+        var k = (p.kurs || '-') + '|' + label(st, c).key;
+        if (agg[k]) agg[k].current[p.code] = true;
+      });
     });
   });
-  var head = ['Kurs', 'Fehlercode', 'Bereich', 'Beschreibung', 'Station', 'Nennungen gesamt', 'SuS gesamt', 'SuS aktuell'];
+  var head = ['Kurs', 'Fehlercode', 'Thema', 'Beschreibung', 'Station', 'Nennungen gesamt', 'SuS gesamt', 'SuS aktuell'];
   var rows = [head];
   Object.keys(agg).map(function (k) { return agg[k]; })
     .sort(function (a, b) { return a.kurs === b.kurs ? Object.keys(b.current).length - Object.keys(a.current).length || b.total - a.total : (a.kurs < b.kurs ? -1 : 1); })
     .forEach(function (a) {
-      var c = catalog[a.code] || {};
-      rows.push([a.kurs, a.code, c.structure || '?', c.label || 'unbekannter Code', c.station || '', a.total, Object.keys(a.students).length, Object.keys(a.current).length]);
+      rows.push([a.kurs, a.code, a.info.structure, a.info.label, a.info.station || '', a.total, Object.keys(a.students).length, Object.keys(a.current).length]);
     });
   sh.getRange(1, 1, rows.length, head.length).setValues(rows).setFontColor('#1B2A55');
   header_(sh, head.length);
@@ -310,6 +419,15 @@ function writeErrors_(list, catalog) {
 }
 
 function writeCalibration_(list) {
+  // Nur Abgaben mit Selbsteinschätzung (die Themen-Coaches fragen keine mehr ab)
+  list = list.map(function (p) {
+    return { kurs: p.kurs, code: p.code, all: p.all.filter(function (e) { return e.self >= 1; }) };
+  }).filter(function (p) { return p.all.length; });
+  if (!list.length) {
+    var old = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Kalibrierung');
+    if (old) old.clear();
+    return;
+  }
   var sh = sheet_('Kalibrierung');
   var head = ['Kurs', 'Code', 'Abgaben', 'Ø Selbst', 'Ø Niveau', 'Ø Differenz (Selbst − Niveau)', 'Tendenz', 'Stationen überschätzt', 'Stationen unterschätzt'];
   var rows = [head];
