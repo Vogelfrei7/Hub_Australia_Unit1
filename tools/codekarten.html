@@ -8,57 +8,77 @@
 <link rel="stylesheet" href="../hub/assets/css/tokens.css">
 <style>
   body { margin: 0; background: var(--cream); color: var(--navy); font-family: var(--font-body); }
-  .ctl { max-width: 900px; margin: 0 auto; padding: 20px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+  .ctl { max-width: 980px; margin: 0 auto; padding: 20px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
   .ctl h1 { width: 100%; margin: 0; font-family: var(--font-hand); font-weight: 400; font-size: 40px; }
-  .ctl p { width: 100%; margin: 0; font-size: 14px; color: var(--text-muted); }
+  .ctl p { width: 100%; margin: 0; font-size: 14px; color: var(--text-muted); line-height: 1.5; }
   label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 700; }
   input { min-height: 44px; padding: 0 10px; border-radius: 10px; border: 2px solid var(--line); font: 700 16px var(--font-body); width: 110px; }
   button { min-height: 44px; padding: 0 18px; border-radius: 10px; border: none; background: var(--navy); color: #fff; font: 700 15px var(--font-body); cursor: pointer; }
-  .sheet { max-width: 900px; margin: 0 auto; padding: 0 16px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
-  .card { background: var(--paper); border: 1.5px dashed var(--coast); border-radius: 12px; padding: 14px 16px; break-inside: avoid; }
-  .card .t { font-family: var(--font-hand); font-size: 24px; line-height: 1; }
-  .card .c { font: 700 24px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 2px; margin: 8px 0; }
-  .card .u { font-size: 11px; color: var(--text-muted); word-break: break-all; }
-  .card .h { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
-  @media print { .ctl { display: none; } body { background: #fff; } .sheet { padding: 0; } }
+  .sheet { max-width: 980px; margin: 0 auto; padding: 0 16px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 10px; }
+  .card { background: #fff; border: 1.5px dashed var(--coast); border-radius: 12px; padding: 14px 16px; break-inside: avoid; display: flex; gap: 14px; align-items: center; }
+  .pic { width: 64px; height: 64px; flex-shrink: 0; border-radius: 50%; background: var(--sky-light); display: flex; align-items: center; justify-content: center; font: 400 26px var(--font-hand); color: var(--navy); overflow: hidden; }
+  .pic img { width: 100%; height: 100%; object-fit: cover; }
+  .card .t { font-size: 12px; color: var(--text-muted); }
+  .card .c { font: 700 22px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 2px; margin: 4px 0; }
+  .card .u { font-size: 10.5px; color: var(--text-muted); word-break: break-all; }
+  .list { max-width: 980px; margin: 0 auto; padding: 0 16px 40px; }
+  .list table { width: 100%; border-collapse: collapse; background: #fff; }
+  .list th, .list td { border: 1px solid #CDBC9E; padding: 7px 10px; text-align: left; font-size: 14px; }
+  .list td.n { width: 50%; }
+  .warn { background: #FFF6D9; border: 1px solid #E8D28A; border-radius: 10px; padding: 8px 12px; font-size: 13px; }
+  @media print {
+    .ctl { display: none; } body { background: #fff; } .sheet, .list { padding: 0; }
+    .list { break-before: page; }
+    body.only-cards .list, body.only-list .sheet { display: none; }
+  }
 </style>
 </head>
 <body>
 <div class="ctl">
-  <h1>Code-Karten drucken</h1>
-  <p>Erzeugt zufällige, nicht erratbare Codes direkt im Browser. Nichts wird gespeichert oder gesendet.
-     Es gibt keine Zuordnungsliste: Die Karten werden verdeckt verteilt. Für jede Klasse eigene Karten drucken
-     und doppelte Codes vermeiden (Seite nicht mehrfach für dieselbe Klasse neu laden).</p>
-  <label>Anzahl <input id="n" type="number" min="1" max="60" value="30"></label>
+  <h1>Code-Karten</h1>
+  <p>Erzeugt zufällige Lern-Codes (Tier + 4 Zeichen). Jedes Kind bekommt ein <b>eigenes Tier</b>, solange die Anzahl reicht.
+     Die Codes funktionieren für alle Themen und Reihen. Nichts wird gespeichert oder gesendet.</p>
+  <p class="warn"><b>Zuordnungsliste:</b> Nur für den Testlauf. Ausdrucken, Namen von Hand eintragen, sicher aufbewahren und
+     <b>nicht</b> digital speichern oder ins Repo legen. Danach vernichten.</p>
+  <label>Wilde Tiere <input id="nw" type="number" min="0" max="15" value="15"></label>
+  <label>Süße Tiere <input id="nc" type="number" min="0" max="15" value="14"></label>
   <label>Klasse <input id="k" value="09c"></label>
-  <button id="go" type="button">Erzeugen</button>
-  <button id="pr" type="button">Drucken</button>
+  <button id="go" type="button">Neu erzeugen</button>
+  <button id="pc" type="button">Karten drucken</button>
+  <button id="pl" type="button">Liste drucken</button>
 </div>
 <div class="sheet" id="sheet"></div>
+<div class="list" id="list"></div>
 <script>
-  const WORDS = ['KOALA', 'EMU', 'WOMBAT', 'DINGO', 'POSSUM', 'QUOLL', 'GECKO', 'PELICAN', 'NUMBAT', 'BILBY', 'GALAH', 'WALLABY', 'KOOKA', 'DUGONG', 'TURTLE', 'SHARK', 'RAY', 'CORAL', 'BOAB', 'WATTLE', 'GUM', 'REEF', 'SURF', 'DUNE', 'CANYON', 'OUTBACK', 'BUSH', 'CROC', 'IBIS', 'MAGPIE'];
-  const CH = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-  const MAP = 'https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/';
-  const rnd = (n) => { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; };
-  function make(count) {
-    const out = new Set();
-    while (out.size < count) {
-      let s = ''; for (let i = 0; i < 4; i++) s += CH[rnd(CH.length)];
-      if (!/\d/.test(s)) continue; // mindestens eine Ziffer
-      out.add(`${WORDS[rnd(WORDS.length)]}-${s}`);
-    }
-    return [...out];
-  }
+  // 15 "wild & stark" und 15 "süß & kuschelig" – keine Australien-Tiere, damit die Codes für alle Reihen passen.
+  var WILD = ['WOLF', 'BEAR', 'TIGER', 'LION', 'SHARK', 'EAGLE', 'FALCON', 'COBRA', 'VIPER', 'RHINO', 'GORILLA', 'JAGUAR', 'PANTHER', 'ORCA', 'LYNX'];
+  var CUTE = ['PANDA', 'BUNNY', 'KITTEN', 'PUPPY', 'OTTER', 'HAMSTER', 'PENGUIN', 'FAWN', 'LAMB', 'ALPACA', 'HEDGEHOG', 'SQUIRREL', 'DOLPHIN', 'SEAL', 'FOX'];
+  var CH = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  var MAP = 'https://vogelfrei7.github.io/Hub_Australia_Unit1/';
+  var IMG = '../hub/assets/img/animals/';   // optional: eigene Tierbilder als <tier>.webp (klein geschrieben)
+  function rnd(n) { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = rnd(i + 1); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function suffix() { var s; do { s = ''; for (var i = 0; i < 4; i++) s += CH[rnd(CH.length)]; } while (!/\d/.test(s)); return s; }
+  function esc(s) { return String(s).replace(/[<>&"]/g, function (c) { return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]; }); }
   function render() {
-    const n = Math.max(1, Math.min(60, Number(document.getElementById('n').value) || 30));
-    const k = document.getElementById('k').value.trim();
-    document.getElementById('sheet').innerHTML = make(n).map((c) => `
-      <div class="card"><div class="t">Australia Road Trip${k ? ' · ' + k.replace(/[<>&"]/g, '') : ''}</div>
-      <div class="c">${c}</div><div class="u">${MAP}</div>
-      <div class="h">Dein persönlicher Code. Nicht weitergeben, keinen Namen eingeben.</div></div>`).join('');
+    var nw = Math.max(0, Math.min(15, +document.getElementById('nw').value || 0));
+    var nc = Math.max(0, Math.min(15, +document.getElementById('nc').value || 0));
+    var k = document.getElementById('k').value.trim();
+    var animals = shuffle(WILD).slice(0, nw).concat(shuffle(CUTE).slice(0, nc));
+    var codes = animals.map(function (a) { return a + '-' + suffix(); });
+    document.getElementById('sheet').innerHTML = codes.map(function (c) {
+      var a = c.split('-')[0], nice = a.charAt(0) + a.slice(1).toLowerCase();
+      return '<div class="card"><div class="pic"><img src="' + IMG + a.toLowerCase() + '.webp" alt="" onerror="this.remove();this.parentNode.textContent=\'' + nice.charAt(0) + '\'"></div>' +
+        '<div><div class="t">Your learning code (Dein Lern-Code)' + (k ? ' · ' + esc(k) : '') + '</div>' +
+        '<div class="c">' + c + '</div><div class="u">' + MAP + '</div>' +
+        '<div class="t">Keep it secret. Never type your name. (Nicht weitergeben, nie den Namen eintippen.)</div></div></div>';
+    }).join('');
+    document.getElementById('list').innerHTML = '<h2>Zuordnungsliste ' + esc(k) + ' (vertraulich, nur Papier)</h2><table><tr><th>Code</th><th>Name</th></tr>' +
+      codes.slice().sort().map(function (c) { return '<tr><td><b>' + c + '</b></td><td class="n"></td></tr>'; }).join('') + '</table>';
   }
-  document.getElementById('go').addEventListener('click', render);
-  document.getElementById('pr').addEventListener('click', () => window.print());
+  document.getElementById('go').onclick = render;
+  document.getElementById('pc').onclick = function () { document.body.className = 'only-cards'; window.print(); document.body.className = ''; };
+  document.getElementById('pl').onclick = function () { document.body.className = 'only-list'; window.print(); document.body.className = ''; };
   render();
 </script>
 </body>

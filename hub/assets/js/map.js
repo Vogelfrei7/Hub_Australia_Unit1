@@ -1,13 +1,12 @@
-// Map (index.html): Rundreise, Stationszustaende, Seitenpanel.
+// Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
-  loadConfig, loadEvents, deriveState, getTraveller, isDemo, link, esc, fill, stars,
-  calibration, UI, reducedMotion, store,
-} from './core.js';
-import { openCodeDialog, copyText, headerHTML } from './ui.js';
+  loadConfig, loadEvents, progress, getTraveller, isDemo, esc, starsHTML, starOne, UI, store, reducedMotion,
+} from './core.js?v=2.0';
+import { openCodeDialog, openRules, copyText, headerHTML, wireCodePill } from './ui.js?v=2.0';
 
 const app = document.getElementById('app');
-const view = { sel: null, copied: null, just: null };
-let cfg; let trav; let state; let loadInfo;
+const view = { sel: null, copied: false, just: null };
+let cfg; let trav; let pr; let info;
 
 main().catch((err) => {
   console.error(err);
@@ -19,259 +18,223 @@ async function main() {
   document.title = cfg.unit.title;
   trav = getTraveller(cfg);
   if (isDemo() && new URLSearchParams(location.search).has('reset')) store.del(cfg, 'demoExtra');
-  try {
-    const raw = sessionStorage.getItem('arh.just');
-    if (raw) { view.just = JSON.parse(raw); sessionStorage.removeItem('arh.just'); }
-  } catch { /* */ }
-  const q = new URLSearchParams(location.search).get('st');
-  if (q && cfg.byId[q.toUpperCase()]) view.sel = q.toUpperCase();
+  try { const j = sessionStorage.getItem('arh.just'); if (j) { view.just = JSON.parse(j); sessionStorage.removeItem('arh.just'); } } catch { /* */ }
+  const q = (new URLSearchParams(location.search).get('st') || '').toUpperCase();
+  if (cfg.topics[q] || cfg.bonus?.[q]) view.sel = q;
 
   if (!trav.code) {
-    renderShell({ status: {}, best: {}, tips: {}, counts: { stamps: 0 }, nextId: null, express: [] });
+    pr = progress(cfg, []);
+    render();
     openCodeDialog(cfg, { closable: false, onSave: () => location.reload() });
     return;
   }
-  await refresh();
-}
-
-async function refresh() {
-  loadInfo = await loadEvents(cfg, trav.code);
-  state = deriveState(cfg, loadInfo.events);
-  if (view.just?.station && cfg.byId[view.just.station]) view.sel = view.sel || view.just.station;
-  if (!view.sel) view.sel = state.nextId || cfg.routing.checkIn;
-  renderShell(state);
+  info = await loadEvents(cfg, trav.code);
+  pr = progress(cfg, info.events);
+  if (!view.sel) view.sel = pr.now.grammar || pr.now.writing || 'SPR';
+  render();
 }
 
 /* ---------- Seite ---------- */
 
-function renderShell(st) {
-  const next = st.nextId ? cfg.byId[st.nextId] : null;
-  const sub = `${esc(cfg.unit.subtitle)} · Next stop: ${next ? `${esc(next.place)} · ${esc(next.topic)}` : '–'}`;
-  const right = `<a class="pill-btn" href="${link('abgabe.html')}" style="letter-spacing:0">Hand in</a>
-    <a class="btn round" href="${link('passport.html')}">${UI.passport} Passport · ${st.counts.stamps} stamps</a>`;
+function render() {
   app.innerHTML = `
-    ${headerHTML(cfg, { title: cfg.unit.title, sub, code: trav.code, right })}
+    ${headerHTML(cfg, { code: trav.code, stamps: pr.stamps, slots: pr.stampSlots })}
     <div class="map-layout">
       <section aria-label="Map">
-        <div class="map-scroll">
-          <div class="map" id="map">${mapSVG(st)}${spotsHTML(st)}</div>
-        </div>
-        ${legendHTML()}
+        <div class="map-scroll"><div class="map" id="map">${mapSVG()}${markers()}</div></div>
+        ${legend()}
         <div class="status-line">${statusLine()}</div>
       </section>
       <aside class="panel" id="panel" aria-live="polite"></aside>
     </div>`;
+  wireCodePill(cfg);
+  app.querySelectorAll('.marker').forEach((b) => b.addEventListener('click', () => {
+    view.sel = b.dataset.id; view.copied = false;
+    app.querySelectorAll('.marker').forEach((m) => m.classList.toggle('is-selected', m.dataset.id === view.sel));
+    renderPanel();
+    if (window.innerWidth < 960) document.getElementById('panel').scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth' });
+  }));
   if (trav.code) renderPanel();
-  wire();
-  // Schmale Bildschirme: Karte auf die ausgewaehlte Station zentrieren
-  const sc = app.querySelector('.map-scroll');
-  const sel = cfg.byId[view.sel];
-  if (sc && sel && sc.scrollWidth > sc.clientWidth) {
-    const W = Number(cfg.map.viewBox.split(/\s+/)[2]);
-    sc.scrollLeft = (sel.x / W) * sc.scrollWidth - sc.clientWidth / 2;
-  }
+  const sc = app.querySelector('.map-scroll'); const s = cfg.topics[view.sel] || cfg.bonus?.[view.sel];
+  if (sc && s && sc.scrollWidth > sc.clientWidth) sc.scrollLeft = (s.x / 1000) * sc.scrollWidth - sc.clientWidth / 2;
 }
 
 function statusLine() {
-  if (!loadInfo) return '';
-  if (loadInfo.source === 'demo') return 'Demo mode – nothing is saved or sent.';
-  const pend = loadInfo.pending ? ` ${loadInfo.pending} new stamp(s) still on the way to your teacher.` : '';
-  if (!cfg.backend.appsScriptUrl) return `Not connected yet – your progress is saved on this iPad only.${pend}`;
-  if (loadInfo.source === 'live') return `Up to date.${pend}`;
-  if (loadInfo.source === 'cache') return `No connection – showing your saved progress.${pend}`;
-  return `No connection.${pend}`;
+  if (!info) return '';
+  if (info.source === 'demo') return 'Demo – nothing is saved. (Demo – nichts wird gespeichert.)';
+  const pend = info.pending ? ` ${info.pending} new result(s) on the way to your teacher.` : '';
+  if (info.source === 'live') return `Up to date.${pend}`;
+  return `No connection – showing your saved progress.${pend} (Keine Verbindung – gespeicherter Stand.)`;
 }
 
-function wire() {
-  document.getElementById('code-pill')?.addEventListener('click', () => {
-    if (isDemo()) return;
-    openCodeDialog(cfg, { onSave: () => location.reload() });
-  });
-  app.querySelectorAll('.tag').forEach((b) => b.addEventListener('click', () => {
-    view.sel = b.dataset.id;
-    view.copied = null;
-    app.querySelectorAll('.tag').forEach((t) => {
-      t.classList.toggle('is-selected', t.dataset.id === view.sel);
-      t.setAttribute('aria-pressed', String(t.dataset.id === view.sel));
-    });
-    renderPanel();
-    if (window.innerWidth < 960) {
-      document.getElementById('panel').scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
-    }
-  }));
-  if (view.just && !reducedMotion()) {
-    // Animation nur einmal
-    setTimeout(() => { view.just = null; }, 800);
-  }
-}
+/* ---------- Karte ---------- */
 
-/* ---------- Karte (SVG) ---------- */
-
-function pt(id) { const s = cfg.byId[id]; return [s.x, s.y]; }
-
-function geometry(st) {
-  const s = st.status;
-  const corridor = []; const solid = []; const arcs = []; const dots = new Set();
-  for (const route of cfg.map.routes) {
-    const seq = route.stations;
-    for (let i = 0; i < seq.length - 1; i++) {
-      const a = seq[i]; const b = seq[i + 1];
-      if (s[a] === 'skipped' || s[b] === 'skipped') continue;
-      if (s[a] === 'done') { corridor.push([a, b]); dots.add(a); }
-      if (s[a] === 'done' && s[b] === 'done') solid.push([a, b]);
-    }
-    for (let i = 0; i < seq.length;) {
-      if (s[seq[i]] !== 'skipped') { i++; continue; }
-      let j = i;
-      while (j < seq.length && s[seq[j]] === 'skipped') j++;
-      const a = seq[i - 1]; const b = seq[j];
-      if (a && b && s[a] === 'done') { arcs.push([a, b]); dots.add(a); dots.add(b); }
-      i = j;
-    }
-  }
-  return { corridor, solid, arcs, dots: [...dots] };
-}
-
-function arcPath(a, b) {
-  const [x1, y1] = pt(a); const [x2, y2] = pt(b);
-  const [W, H] = cfg.map.viewBox.split(/\s+/).slice(2).map(Number);
-  const [cx0, cy0] = cfg.map.seaCenter || [W / 2, H / 2];
-  const mx = (x1 + x2) / 2; const my = (y1 + y2) / 2;
-  let dx = mx - cx0; let dy = my - cy0;
-  const len = Math.hypot(dx, dy) || 1; dx /= len; dy /= len;
-  const dist = Math.hypot(x2 - x1, y2 - y1);
-  const cx = Math.min(W - 10, Math.max(10, mx + dx * dist * 0.55));
-  const cy = Math.min(H - 10, Math.max(10, my + dy * dist * 0.55));
-  const lx = 0.25 * x1 + 0.5 * cx + 0.25 * x2 + dx * 22;
-  const ly = 0.25 * y1 + 0.5 * cy + 0.25 * y2 + dy * 22;
-  return { d: `M${x1},${y1} Q${cx.toFixed(0)},${cy.toFixed(0)} ${x2},${y2}`, lx: Math.min(W - 8, Math.max(8, lx)), ly, anchor: dx > 0.3 ? 'end' : dx < -0.3 ? 'start' : 'middle' };
-}
-
-function mapSVG(st) {
-  const g = geometry(st);
-  const just = view.just?.station;
-  const anim = (a, b) => (just && !reducedMotion() && (a === just || b === just));
-  const line = (pts, attrs, cls = '') => `<polyline points="${pts.map(pt).map((p) => p.join(',')).join(' ')}" fill="none" ${attrs} ${cls ? `class="${cls}" pathLength="1" stroke-dasharray="1"` : ''}/>`;
+function mapSVG() {
   const lands = cfg.map.land;
-  const routesBase = cfg.map.routes.map((r) => line(r.stations, 'stroke="var(--route-open)" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" stroke-linejoin="round"')).join('');
-  const arcs = g.arcs.map(([a, b]) => {
-    const p = arcPath(a, b);
-    return `<path d="${p.d}" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-dasharray="11 8" stroke-linecap="round"/>
-      <text class="express-label" x="${p.lx.toFixed(0)}" y="${p.ly.toFixed(0)}" font-size="28" text-anchor="${p.anchor}">Express</text>`;
+  const pts = (arr) => arr.map((p) => p.join(',')).join(' ');
+  const routeSVG = cfg.routes.map((r) => {
+    const doneIdx = [];
+    r.stops.forEach((id, i) => { if (pr.status[id] === 'done') doneIdx.push(i); });
+    const isGrammar = r.shape === 'circle';
+    // begangener Teil: vom Start bis zur letzten erledigten Station (auf dem Pfad)
+    const lastDone = doneIdx.length ? Math.max(...doneIdx) : -1;
+    const stopPt = (id) => [cfg.topics[id].x, cfg.topics[id].y];
+    let walked = '';
+    if (lastDone >= 0) {
+      const target = stopPt(r.stops[lastDone + 1] || r.stops[lastDone]);
+      const cut = r.path.findIndex((p) => p[0] === target[0] && p[1] === target[1]);
+      const seg = r.path.slice(0, cut >= 0 ? cut + 1 : r.path.length);
+      if (seg.length > 1) walked = `<polyline points="${pts(seg)}" fill="none" stroke="${r.color}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`;
+    }
+    return `<polyline points="${pts(r.path)}" fill="none" stroke="${r.color}" stroke-width="${isGrammar ? 4 : 5}" stroke-dasharray="${isGrammar ? '2 11' : '12 9'}" stroke-linecap="round" stroke-linejoin="round" opacity="${isGrammar ? 0.7 : 0.85}"/>${walked}
+      <text x="${r.label.x}" y="${r.label.y}" font-family="Caveat Brush, cursive" font-size="34" fill="${r.color}" text-anchor="middle">${esc(r.name)}</text>
+      <text x="${r.label.x}" y="${r.label.y + 24}" font-family="Atkinson Hyperlegible, sans-serif" font-size="17" font-weight="700" fill="${r.color}" text-anchor="middle">(${esc(r.nameDe)} – ${esc(r.hint)})</text>`;
   }).join('');
-  return `
-  <svg class="base" viewBox="${cfg.map.viewBox}" preserveAspectRatio="none" aria-hidden="true">
-    <defs>
-      <clipPath id="landclip">${lands.map((d) => `<path d="${d}"/>`).join('')}</clipPath>
-      <pattern id="fog" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-        <rect width="14" height="14" fill="var(--land)"/>
-        <line x1="0" y1="0" x2="0" y2="14" stroke="var(--land-hatch, #E0C9A5)" stroke-width="5"/>
-      </pattern>
-    </defs>
+  return `<svg class="base" viewBox="${cfg.map.viewBox}" preserveAspectRatio="none" aria-hidden="true">
+    <defs><pattern id="fog" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="14" height="14" fill="var(--land)"/><line x1="0" y1="0" x2="0" y2="14" stroke="var(--land-hatch)" stroke-width="5"/></pattern></defs>
     ${lands.map((d) => `<path d="${d}" fill="url(#fog)" stroke="var(--coast)" stroke-width="3" stroke-linejoin="round"/>`).join('')}
-    <g clip-path="url(#landclip)" opacity=".75">
-      ${g.corridor.map(([a, b]) => line([a, b], 'stroke="var(--land-trail)" stroke-width="120" stroke-linecap="round"', anim(a, b) ? 'reveal' : '')).join('')}
-      ${g.dots.map((id) => { const [x, y] = pt(id); return `<circle cx="${x}" cy="${y}" r="60" fill="var(--land-trail)"/>`; }).join('')}
-    </g>
-    ${routesBase}
-    ${g.solid.map(([a, b]) => line([a, b], 'stroke="var(--navy)" stroke-width="4.5" stroke-linecap="round"', anim(a, b) ? 'reveal' : '')).join('')}
-    ${arcs}
-    ${(cfg.map.seas || []).map((s) => `<text class="sea-label" x="${s.x}" y="${s.y}" font-size="${s.size || 28}" text-anchor="${s.anchor || 'start'}">${esc(s.text)}</text>`).join('')}
+    ${routeSVG}
+    ${(cfg.map.seas || []).map((s) => `<text class="sea-label" x="${s.x}" y="${s.y}" font-size="${s.size}" text-anchor="${s.anchor}">${esc(s.text)}</text>`).join('')}
   </svg>`;
 }
 
-function spotsHTML(st) {
-  const [W, H] = cfg.map.viewBox.split(/\s+/).slice(2).map(Number);
-  const pops = new Set([view.just?.station, ...(view.just?.opened || [])].filter(Boolean));
-  return cfg.stations.map((s) => {
-    const status = st.status[s.id] || 'locked';
-    const sel = s.id === view.sel;
-    const label = status === 'skipped' ? `${s.place} · express` : s.place;
-    const tip = st.tips[s.id];
-    const aria = `${s.place}, ${s.topic}, ${s.skill}, ${cfg.texts.status[status]}${tip ? ', tip from a coach' : ''}`;
-    const pop = pops.has(s.id) && !reducedMotion() ? ' pop' : '';
-    return `<div class="spot" style="left:${(s.x / W) * 100}%;top:${(s.y / H) * 100}%">
-      <button type="button" class="tag is-${status}${sel ? ' is-selected' : ''}${pop}" data-id="${s.id}" aria-pressed="${sel}" aria-label="${esc(aria)}">${esc(s.id)}</button>
-      ${tip ? '<span class="tip-dot" aria-hidden="true">!</span>' : ''}
-      <span class="place-label ${s.label}">${esc(label)}</span>
+function markers() {
+  const items = [];
+  for (const r of cfg.routes) for (const id of r.stops) items.push({ id, def: cfg.topics[id], route: r, state: pr.status[id], t: pr.topics[id] });
+  for (const [id, b] of Object.entries(cfg.bonus || {})) items.push({ id, def: { ...b, number: 'Final' }, route: null, state: pr.finalDone ? 'done' : b.status, bonus: true });
+  const pops = new Set([view.just?.topic].filter(Boolean));
+  return items.map(({ id, def, route, state, t, bonus }) => {
+    const sel = id === view.sel;
+    const color = route ? route.color : '#1F5F68';
+    const wide = String(def.number).length > 1;
+    const cls = ['marker', `is-${state}`, route?.shape === 'square' ? 'sq' : bonus ? 'bonus' : 'rd', wide ? 'wide' : '', sel ? 'is-selected' : '', def.goal ? 'goal' : '', pops.has(id) && !reducedMotion() ? 'pop' : ''].join(' ');
+    const label = `${route ? `${route.name}, ` : 'Bonus, '}${def.number}, ${def.place}, ${state}`;
+    const dots = route && !def.optional && route.shape === 'circle' && t
+      ? `<span class="dots">${[0, 1, 2].map((i) => `<i class="${i < t.stars ? 'on' : ''}"></i>`).join('')}</span>` : '';
+    return `<div class="spot" style="left:${def.x / 10}%;top:${def.y / 8}%;--rc:${color}">
+      ${state === 'now' ? '<span class="now-flag">NOW</span>' : ''}
+      <button type="button" class="${cls}" data-id="${id}" aria-pressed="${sel}" aria-label="${esc(label)}">
+        ${state === 'done' ? UI.check : `<span>${esc(def.number)}</span>`}
+      </button>
+      ${dots}
+      <span class="place-label ${def.label}${route?.shape === 'square' ? ' w' : ''}${bonus ? ' b' : ''}">${esc(def.goal ? `${def.place} · goal` : def.place)}</span>
     </div>`;
   }).join('');
 }
 
-function legendHTML() {
-  return `<div class="legend" aria-label="Legend">
-    <span class="k"><i style="background:var(--terracotta)"></i>Stamp collected</span>
-    <span class="k"><i style="background:var(--navy);box-shadow:0 0 0 4px var(--sky-glow)"></i>Next stop</span>
-    <span class="k"><i style="background:var(--paper);border:2.5px solid var(--navy);width:18px;height:11px"></i>Open</span>
-    <span class="k"><i style="background:var(--paper);border:2px dashed var(--teal);width:18px;height:11px"></i>Express route</span>
-    <span class="k"><i style="background:var(--locked)"></i>Not yet</span>
-    <span class="k"><i style="background:var(--terracotta);border-radius:50%;width:18px;height:18px;color:#fff;font-size:11px;font-weight:700;font-style:normal;text-align:center;line-height:18px">!</i>Tip from a coach</span>
+function legend() {
+  return `<div class="legend">
+    ${cfg.routes.map((r) => `<span class="k"><i style="background:${r.color};border-radius:${r.shape === 'square' ? '5px' : '50%'}"></i><b>${esc(r.name)}</b>&nbsp;(${esc(r.nameDe)})</span>`).join('')}
+    <span class="k">${starsHTML(1, { size: 16 })}&nbsp;one star per step (ein Stern pro Schritt)</span>
+    <span class="k"><i style="background:#fff;border:2.5px dashed #3F8E99;border-radius:10px;width:28px"></i><b>Final check</b>&nbsp;(Bonus)</span>
   </div>`;
 }
 
-/* ---------- Seitenpanel ---------- */
+/* ---------- Panel ---------- */
+
+function routeLine(def, route) {
+  if (!route) return 'BONUS · ' + def.opens.toUpperCase();
+  const stops = route.stops.filter((id) => !cfg.topics[id].optional && /^\d+$/.test(cfg.topics[id].number));
+  if (!/^\d+$/.test(def.number)) return `${route.name.toUpperCase()} · ${def.number.toUpperCase()}`;
+  return `${route.name.toUpperCase()} · STOP ${def.number} OF ${stops.length}`;
+}
 
 function renderPanel() {
   const panel = document.getElementById('panel');
-  if (!panel || !state) return;
-  const c = cfg.byId[view.sel] || cfg.stations[0];
-  const status = state.status[c.id];
-  const coach = cfg.agents[c.coach]?.name || 'Coach';
-  const best = state.best[c.id];
-  const tip = state.tips[c.id];
-  const paper = c.medium === 'paper';
-  const t = cfg.texts;
+  const id = view.sel;
+  const bonus = cfg.bonus?.[id];
+  const def = bonus || cfg.topics[id];
+  if (!def) { panel.innerHTML = ''; return; }
+  const route = bonus ? null : cfg.routeById[def.route];
+  const state = bonus ? (pr.finalDone ? 'done' : def.status) : pr.status[id];
+  const t = pr.topics[id];
+  const color = route ? route.color : '#1F5F68';
 
-  let note = '';
-  if (status === 'next' || status === 'open') note = fill(paper ? t.note.nextPaper : t.note.nextDigital, { sheet: c.sheet || c.id, coach });
-  else if (status === 'skipped') note = t.note.skipped;
-  else if (status === 'locked') note = t.note.locked;
-  else if (status === 'done') note = t.note.done;
+  if (bonus) {
+    panel.innerHTML = `
+      <div class="route-chip" style="background:${color}">${esc(routeLine(def, null))}</div>
+      <h2 class="place">${esc(def.name)}</h2>
+      <div class="skill">Practice just what you need for the test.</div>
+      <div class="topic">(Übe genau das, was du für den Test brauchst.)</div>
+      <div class="info-box teal">${UI.lock}<span><b>Opens on ${esc(def.opens)}.</b><br>Your coach makes tasks just for you – from your own results.<br><span class="de">(Öffnet am ${esc(def.opensDe)}. Dein Coach macht Aufgaben nur für dich – aus deinen Ergebnissen.)</span></span></div>`;
+    return;
+  }
 
-  const canStart = status !== 'locked';
-  const startCode = `START ${c.id} ${trav.code}`;
-  const agentUrl = cfg.agents[c.coach]?.url;
-  const alt = c.alt || `Illustration: ${c.place} – ${c.topic}`;
+  const steps = cfg.steps.map((s) => {
+    const done = s.id === 'W1' ? !!t.w1 : s.id === 'P' ? !!t.p : t.extra;
+    return `<li class="step ${done ? 'done' : ''}">${starOne(done, 24)}
+      <span><b>${esc(s.star)}</b>${s.optional ? ' <span class="opt">optional</span>' : ''}<br><span class="de">${esc(s.de)}</span></span>
+      <span class="step-tag">${done ? 'done ✓' : ''}</span></li>`;
+  }).join('');
+
+  let body = '';
+  if (state === 'soon') {
+    body = `<div class="info-box">${UI.lock}<span><b>Coming soon.</b> This stop opens later. <span class="de">(Kommt bald. Diese Station öffnet später.)</span></span></div>`;
+  } else if (state === 'later') {
+    body = `<div class="info-box">${UI.lock}<span><b>Later.</b> First finish the stop before. <span class="de">(Später. Mach zuerst den Stopp davor fertig.)</span></span></div>`;
+  } else {
+    body = actionBox(def, t, color);
+  }
 
   panel.innerHTML = `
+    <div class="route-chip" style="background:${color}">${esc(routeLine(def, route))}</div>
     <div class="postcard">
-      <span class="id-tag">${esc(c.id)}</span>
-      ${c.image ? `<img src="${esc(c.image)}" alt="${esc(alt)}" loading="lazy">` : ''}
-      ${UI.image}<span>${esc(c.topic)}</span>
+      ${def.image ? `<img src="${esc(def.image)}" alt="${esc(def.alt || `${def.place}: ${def.topic}`)}" loading="lazy">` : ''}
+      ${UI.image}<span>${esc(def.topic)}</span>
     </div>
-    <div class="medium">${paper ? UI.paper : UI.tablet}<span>${paper ? 'Worksheet' : 'Digital'} · ${esc(coach)}</span></div>
     <div>
-      <h2 class="place">${esc(c.place)}</h2>
-      <div class="topic">${esc(c.topic)}</div>
-      <div class="skill">${esc(c.skill)}</div>
+      <h2 class="place">${esc(def.place)}</h2>
+      <div class="skill">${esc(def.name)}</div>
+      <div class="topic">Topic: ${esc(def.topic)}</div>
     </div>
-    <div class="status-pill ${status}">${esc(t.status[status])}</div>
-    ${status === 'done' && best ? `
-      <div class="result-box">
-        <div class="mini-stamp" style="border-color:${esc(c.stamp.ink)};color:${esc(c.stamp.ink)}"><b>${esc(c.id)}</b><small>VISITED</small></div>
-        <div class="rows">
-          <div><span class="lbl">You thought</span><span class="stars" aria-label="${best.self} of 4">${stars(best.self)}</span></div>
-          <div><span class="lbl">You showed</span><span class="stars shown" aria-label="${best.n} of 4">${stars(best.n)}</span></div>
-        </div>
-      </div>
-      <div class="calib">${esc(calibration(cfg, best))}</div>` : ''}
-    ${tip ? `<div class="tip-box"><strong>Tip from your ${esc(tip.coach)}:</strong> ${esc(tip.text)}</div>` : ''}
-    <div class="note">${esc(note)}</div>
-    ${canStart ? `
-      <button type="button" class="btn" id="start">${UI.copy}<span>Copy start code &amp; open ${esc(coach)}</span></button>
-      ${view.copied === c.id ? `
-        <div class="copied">
-          <span class="lbl">${agentUrl ? 'Copied! Paste this as your first message:' : 'Copied! The coach link is coming soon – ask your teacher. Your start code:'}</span>
-          <span class="code-mono">${esc(startCode)}</span>
-        </div>` : ''}` : ''}
-    <div class="help" lang="de">${esc(status === 'locked' ? t.help.locked : paper ? t.help.paper : t.help.digital)}</div>`;
+    ${def.rules ? `<button type="button" class="btn ghost" id="rules">${UI.book}<span>Rules <span class="de-inline">(Regeln)</span></span></button>` : ''}
+    ${state !== 'soon' && route?.shape === 'circle' && !def.optional ? `<ul class="steps">${steps}</ul>` : ''}
+    ${body}`;
 
-  const img = panel.querySelector('.postcard img');
-  img?.addEventListener('error', () => img.remove()); // fehlt das Bild: Platzhalter-Postkarte bleibt sichtbar
-  panel.querySelector('#start')?.addEventListener('click', () => {
-    copyText(startCode);
-    if (agentUrl) window.open(agentUrl, '_blank', 'noopener');
-    view.copied = c.id;
-    renderPanel();
+  panel.querySelector('.postcard img')?.addEventListener('error', (e) => e.target.remove());
+  panel.querySelector('#rules')?.addEventListener('click', () => openRules(cfg, def));
+  panel.querySelector('#copy')?.addEventListener('click', () => {
+    copyText(panel.querySelector('#startcode').textContent);
+    view.copied = true;
+    panel.querySelector('#copied').hidden = false;
   });
+}
+
+function actionBox(def, t, color) {
+  let todo; let mode = '';
+  if (!t.w1) {
+    todo = [
+      ['Take <b>worksheet 1</b> from the box and do it.', 'Nimm Arbeitsblatt 1 aus der Box und bearbeite es.'],
+      ['Copy your start code and tap into the coach field below.', 'Kopiere deinen Startcode und tippe unten in das Coach-Feld.'],
+      ['Paste the code, send it – then send a <b>photo</b> of your worksheet.', 'Code einfügen, senden – dann ein Foto vom Blatt schicken.'],
+    ];
+  } else if (!t.p) {
+    mode = ' PRACTICE';
+    todo = [
+      ['Now <b>practise</b> with the coach.', 'Jetzt übst du mit dem Coach.'],
+      ['Copy your start code, tap into the coach field, paste and send.', 'Startcode kopieren, ins Coach-Feld tippen, einfügen, senden.'],
+    ];
+  } else if (!t.extra) {
+    todo = [
+      ['Get your <b>third star</b>: worksheet 2 (gold) <i>or</i> one more practice round.', 'Dritter Stern: Arbeitsblatt 2 (gold) oder noch eine Übungsrunde.'],
+      ['Copy your start code, tap into the coach field, paste and send.', 'Startcode kopieren, ins Coach-Feld tippen, einfügen, senden.'],
+    ];
+  } else {
+    mode = ' PRACTICE';
+    todo = [['<b>All three stars!</b> You can practise again any time.', 'Alle drei Sterne! Du kannst jederzeit weiter üben.']];
+  }
+  const start = `START ${def.id} ${trav.code}${mode}`;
+  return `<div class="action" style="--rc:${color}">
+    <div class="action-h">WHAT TO DO NOW <span class="de-inline">(Was du jetzt machst)</span></div>
+    <ol class="todo">${todo.map(([en, de]) => `<li><span>${en}</span><span class="de">(${esc(de)})</span></li>`).join('')}</ol>
+    <div class="startcode"><span class="code-mono" id="startcode">${esc(start)}</span>
+      <button type="button" class="btn" id="copy">${UI.copy}<span>Copy start code <span class="de-inline">(kopieren)</span></span></button></div>
+    <div class="ok-box" id="copied" ${view.copied ? '' : 'hidden'}>✓ Copied! Now tap into the field below and paste. <span class="de">(Kopiert! Jetzt unten ins Feld tippen und einfügen.)</span></div>
+    ${def.coach?.input ? `<div class="coach">
+      <div class="coach-h">${UI.tablet}<b>${esc(def.coach.name)}</b> <span class="de">– tap, paste, send (tippen, einfügen, senden). A new tab opens.</span></div>
+      <iframe title="${esc(def.coach.name)}" src="${esc(def.coach.input)}" height="56" loading="lazy"></iframe>
+    </div>` : ''}
+    <p class="hint-de" style="margin:0">Am Ende tippst du im Chat auf „🏅 GET YOUR STAMP“. Dann kommt dein Stern hierher.</p>
+  </div>`;
 }

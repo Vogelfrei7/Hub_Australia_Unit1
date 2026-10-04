@@ -22,7 +22,7 @@ in `registry.json` eintragen, `node agents/build.mjs` ausführen, Prompt in eine
 
 1. Neuer Agent in Sidekick, Name **Simple Present Coach**, Modell **Sonnet 5.5**.
 2. System-Prompt: **Inhalt von `dist/SPR.md`** komplett einfügen.
-3. Wissen: **`private/knowledge/AUS1-SPR-1_loesung.md`** hochladen. Sonst nichts.
+3. Wissen: **`private/knowledge/AUS1-SPR-1_loesung.md`** und **`AUS1-SPR-2_loesung.md`** (goldenes Zusatzblatt) hochladen. Sonst nichts.
 4. Nutzergedächtnis aus.
 5. Starter-Buttons: `Check my worksheet (Arbeitsblatt prüfen)` · `Practice (Üben)` · `Final check`
 6. Weiterleitung (cascading): Writing Coach erlauben (die anderen Grammatik-Coaches gibt es noch nicht).

@@ -1,41 +1,34 @@
-// Australia Road Trip – gemeinsame Logik fuer Map, Passport und Abgabe.
-// Alles Inhaltliche kommt aus config.json; hier steht nur Verhalten.
+// Australia Road Trip v2 – gemeinsame Logik für Map, Pass und Abgabe.
+// Alles Inhaltliche steht in config.json; hier steht nur Verhalten.
 
-/* ---------- Config & Theme ---------- */
+/* ---------- Config ---------- */
 
 export async function loadConfig() {
   const res = await fetch('config.json', { cache: 'no-cache' });
   if (!res.ok) throw new Error('config.json not found');
   const cfg = await res.json();
-  cfg.byId = Object.fromEntries(cfg.stations.map((s) => [s.id, s]));
   cfg.codeRe = new RegExp(cfg.codePattern);
+  cfg.routeById = Object.fromEntries(cfg.routes.map((r) => [r.id, r]));
+  for (const [id, t] of Object.entries(cfg.topics)) t.id = id;
+  for (const [id, b] of Object.entries(cfg.bonus || {})) b.id = id;
   applyTheme(cfg.theme);
   return cfg;
 }
 
 export function applyTheme(theme) {
   if (!theme) return;
-  const root = document.documentElement;
-  for (const [k, v] of Object.entries(theme)) if (k.startsWith('--')) root.style.setProperty(k, v);
+  for (const [k, v] of Object.entries(theme)) if (k.startsWith('--')) document.documentElement.style.setProperty(k, v);
 }
 
 /* ---------- Storage (try/catch: privater Modus, volle Speicher) ---------- */
 
-function key(cfg, name) { return `arh.${cfg.id}.${name}`; }
-
+const key = (cfg, name) => `arh.${cfg.id}.${name}`;
 export const store = {
   get(cfg, name, fallback = null) {
-    try {
-      const raw = localStorage.getItem(key(cfg, name));
-      return raw == null ? fallback : JSON.parse(raw);
-    } catch { return fallback; }
+    try { const raw = localStorage.getItem(key(cfg, name)); return raw == null ? fallback : JSON.parse(raw); } catch { return fallback; }
   },
-  set(cfg, name, value) {
-    try { localStorage.setItem(key(cfg, name), JSON.stringify(value)); } catch { /* ignore */ }
-  },
-  del(cfg, name) {
-    try { localStorage.removeItem(key(cfg, name)); } catch { /* ignore */ }
-  },
+  set(cfg, name, value) { try { localStorage.setItem(key(cfg, name), JSON.stringify(value)); } catch { /* */ } },
+  del(cfg, name) { try { localStorage.removeItem(key(cfg, name)); } catch { /* */ } },
 };
 
 /* ---------- Demo-Modus ---------- */
@@ -54,20 +47,22 @@ export function link(page, params = {}) {
   return q ? `${page}?${q}` : page;
 }
 
-/* ---------- Traveller (Code + Kurs) ---------- */
+/* ---------- Kind (Code + Kurs) ---------- */
 
 export function getTraveller(cfg) {
   if (isDemo()) return { code: cfg.demo.code, course: cfg.demo.course };
   return { code: store.get(cfg, 'code'), course: store.get(cfg, 'course') || (cfg.courses.length === 1 ? cfg.courses[0] : null) };
 }
-
 export function setTraveller(cfg, code, course) {
   store.set(cfg, 'code', code);
   if (course) store.set(cfg, 'course', course);
 }
-
 export function normaliseCode(raw) {
   return String(raw || '').trim().toUpperCase().replace(/\s+/g, '').replace(/[–—_]/g, '-');
+}
+export function animalOf(code) {
+  const w = String(code || '').split('-')[0];
+  return w ? w.charAt(0) + w.slice(1).toLowerCase() : '';
 }
 
 /* ---------- Ereignisse ---------- */
@@ -76,20 +71,19 @@ export function normaliseEvent(e) {
   const f = Array.isArray(e.f) ? e.f : String(e.f || '').split(/[,;\s]+/);
   return {
     station: String(e.station || '').toUpperCase(),
-    n: Number(e.n), self: Number(e.self), h: Number(e.h) || 0,
+    n: Number(e.n), self: Number(e.self) || 0, h: Number(e.h) || 0,
     f: f.map((x) => String(x).trim().toUpperCase()).filter((x) => x && x !== '-' && x !== 'NONE'),
-    s: e.s || '', fb: e.fb || '',
+    s: e.s && e.s !== '-' ? e.s : '', fb: e.fb && e.fb !== '-' ? e.fb : '',
     ts: typeof e.ts === 'number' ? e.ts : Date.parse(e.ts) || Date.now(),
     pending: !!e.pending,
   };
 }
 
 export function signature(e) {
-  return [e.station, e.n, e.self, e.h, [...e.f].sort().join(','), e.s, e.fb].join('|');
+  return [e.station, e.n, e.h, [...e.f].sort().join(','), e.s, e.fb].join('|');
 }
 
-// Laedt Ereignisse: Apps Script (live) -> Cache -> leer. Lokal gesendete, noch nicht
-// im Sheet sichtbare Abgaben ("pending") werden ergaenzt, bis der Server sie liefert.
+// Apps Script (live) → Cache → leer. Lokal gesendete, noch nicht im Sheet sichtbare Abgaben werden ergänzt.
 export async function loadEvents(cfg, code) {
   if (isDemo()) {
     const extra = (store.get(cfg, 'demoExtra', []) || []).map(normaliseEvent);
@@ -108,19 +102,15 @@ export async function loadEvents(cfg, code) {
         server = data.events.map(normaliseEvent);
         store.set(cfg, cacheName, { at: Date.now(), events: server });
       }
-    } catch { /* offline oder blockiert -> Cache */ }
+    } catch { /* offline oder blockiert → Cache */ }
   }
   const cached = store.get(cfg, cacheName);
   const base = server || (cached ? cached.events.map(normaliseEvent) : []);
-
-  // Pending abgleichen
   const known = new Set(base.map(signature));
-  const dayAgo = Date.now() - 1000 * 60 * 60 * 24 * 3;
-  const pending = (store.get(cfg, `pending.${code}`, []) || [])
-    .map(normaliseEvent)
-    .filter((e) => !(server && known.has(signature(e))) && e.ts > dayAgo);
+  const limit = Date.now() - 1000 * 60 * 60 * 24 * 3;
+  const pending = (store.get(cfg, `pending.${code}`, []) || []).map(normaliseEvent)
+    .filter((e) => !(server && known.has(signature(e))) && e.ts > limit);
   store.set(cfg, `pending.${code}`, pending);
-
   return {
     events: base.concat(pending.filter((e) => !known.has(signature(e)))),
     source: server ? 'live' : cached ? 'cache' : 'none',
@@ -140,167 +130,152 @@ export function addPending(cfg, code, ev) {
   store.set(cfg, `pending.${code}`, list);
 }
 
-/* ---------- Zustand ableiten (rein, ohne DOM) ---------- */
+/* ---------- Schritt-IDs: <THEMA>-W1 (Blatt), -W2 … (Zusatzblatt), -P (Üben), -F (Final check) ---------- */
 
-function better(a, b) {
-  if (!b) return true;
-  if (a.n !== b.n) return a.n > b.n;
-  if (a.h !== b.h) return a.h < b.h;
-  return a.ts > b.ts;
+export function stepInfo(cfg, id) {
+  const m = String(id || '').toUpperCase().match(/^([A-Z]{2,6})-(W(\d)|P|F)$/);
+  const topic = m && cfg.topics[m[1]];
+  if (!topic) return null;
+  const kind = m[2] === 'P' ? 'practice' : m[2] === 'F' ? 'final' : m[3] === '1' ? 'sheet' : 'extra';
+  const label = { sheet: 'Worksheet', extra: `Worksheet ${m[3]}`, practice: 'Practice', final: 'Final check' }[kind];
+  return { id: String(id).toUpperCase(), topicId: m[1], topic, kind, label };
 }
 
-export function deriveState(cfg, rawEvents) {
-  const events = rawEvents.filter((e) => cfg.byId[e.station]).sort((a, b) => a.ts - b.ts);
-  const attempts = {};
-  const best = {};
+/* ---------- Fortschritt ableiten (rein, ohne DOM) ---------- */
+
+export function progress(cfg, rawEvents) {
+  const events = rawEvents.map((e) => ({ ...e, si: stepInfo(cfg, e.station) })).filter((e) => e.si).sort((a, b) => a.ts - b.ts);
+  const topics = {};
+  for (const id of Object.keys(cfg.topics)) topics[id] = { id, w1: null, p: null, final: null, extra: false, attempts: [], last: null };
+  const better = (a, b) => !b || a.n > b.n || (a.n === b.n && a.h < b.h);
   for (const e of events) {
-    (attempts[e.station] ||= []).push(e);
-    if (better(e, best[e.station])) best[e.station] = e;
+    const t = topics[e.si.topicId];
+    t.attempts.push(e);
+    t.last = e;
+    if (e.si.kind === 'sheet' && better(e, t.w1)) t.w1 = e;
+    if (e.si.kind === 'extra') t.extra = true;
+    if (e.si.kind === 'practice') { if (t.p) t.extra = true; if (better(e, t.p)) t.p = e; }
+    if (e.si.kind === 'final' && better(e, t.final)) t.final = e;
   }
-  const done = (id) => !!attempts[id];
-
-  // Route aus dem Check-in
-  const r = cfg.routing;
-  const check = best[r.checkIn];
-  const adaptive = cfg.stations.filter((s) => s.adaptive).map((s) => s.id);
-  const mandatory = new Set(cfg.stations.filter((s) => !s.adaptive).map((s) => s.id));
-  if (check) {
-    const weak = new Set(check.f.map((c) => cfg.errorCatalog[c]?.station).filter(Boolean));
-    for (const id of adaptive) if (check.n <= r.allMandatoryAtOrBelow || weak.has(id)) mandatory.add(id);
-  } else {
-    adaptive.forEach((id) => mandatory.add(id));
+  for (const t of Object.values(topics)) {
+    t.stars = (t.w1 ? 1 : 0) + (t.p ? 1 : 0) + (t.extra ? 1 : 0);
+    t.complete = !!(t.w1 && t.p);
+    t.stamp = t.stars > 0;
   }
-  const express = (id) => !!check && adaptive.includes(id) && !mandatory.has(id);
-  // Eine Express-Station gilt erst als "ueberflogen", wenn sie selbst erreichbar ist
-  // (sonst koennte man ueber eine Kette von Express-Stationen vorspringen).
-  const memo = {};
-  const available = (id, seen = new Set()) => {
-    if (seen.has(id)) return false;
-    seen.add(id);
-    return (cfg.byId[id].unlock?.after || []).every((p) => satisfied(p, seen));
-  };
-  const satisfied = (id, seen = new Set()) => {
-    if (id in memo) return memo[id];
-    memo[id] = done(id) || (express(id) && available(id, seen));
-    return memo[id];
-  };
 
+  // Zustand je Station: done · now · later · soon. Genau ein "now" pro Route; "soon"-Stationen blockieren nicht.
   const status = {};
-  for (const s of cfg.stations) {
-    const avail = available(s.id);
-    status[s.id] = done(s.id) ? 'done' : !avail ? 'locked' : express(s.id) ? 'skipped' : 'open';
-  }
-  const nextId = r.nextPriority.find((id) => status[id] === 'open') || null;
-  if (nextId) status[nextId] = 'next';
-
-  // Tipps: Fehler aus Schreib-Stationen -> passende G-Station,
-  // bis dort ein spaeterer Versuch mit Niveau >= 3 vorliegt.
-  const tips = {};
-  for (const e of events) {
-    const st = cfg.byId[e.station];
-    if (st.coach !== 'writing') continue;
-    for (const c of e.f) {
-      const target = cfg.errorCatalog[c]?.station;
-      if (!target || !cfg.byId[target]) continue;
-      const fixed = (attempts[target] || []).some((a) => a.ts > e.ts && a.n >= 3);
-      if (!fixed && !tips[target]) tips[target] = { code: c, text: cfg.errorCatalog[c].tip, coach: cfg.agents[st.coach].name, from: e.station };
+  const now = {};
+  for (const r of cfg.routes) {
+    let found = false;
+    for (const id of r.stops) {
+      const def = cfg.topics[id]; const t = topics[id];
+      if (t.complete) status[id] = 'done';
+      else if (def.status === 'soon' && !t.attempts.length) status[id] = 'soon';
+      else if (!found) { status[id] = 'now'; now[r.id] = id; found = true; }
+      else status[id] = 'later';
     }
   }
 
-  const ids = cfg.stations.map((s) => s.id);
-  const counts = {
-    stamps: ids.filter((id) => status[id] === 'done').length,
-    express: ids.filter((id) => status[id] === 'skipped').length,
-    toGo: ids.filter((id) => !done(id) && mandatory.has(id)).length,
+  const tenses = cfg.routes.find((r) => r.id === 'grammar').stops.filter((id) => /^\d+$/.test(cfg.topics[id].number));
+  const achievements = {
+    levelup: Object.values(topics).some((t) => t.w1 && t.p && t.p.n > t.w1.n),
+    allfive: tenses.length > 0 && tenses.every((id) => topics[id].complete),
+    stars: tenses.length > 0 && tenses.every((id) => topics[id].stars === 3),
   };
-  return { status, best, attempts, tips, nextId, counts, mandatory, express: ids.filter(express), checkInDone: !!check };
+  const finalDone = Object.values(topics).some((t) => t.final);
+  const stampSlots = Object.keys(cfg.topics).length + Object.keys(cfg.bonus || {}).length;
+  return {
+    topics, status, now, achievements, finalDone,
+    stamps: Object.values(topics).filter((t) => t.stamp).length + (finalDone ? 1 : 0),
+    stampSlots,
+    starCount: Object.values(topics).reduce((s, t) => s + t.stars, 0),
+  };
 }
 
-// Welche Stationen sind durch eine neue Abgabe hinzugekommen?
-export function newlyOpened(before, after) {
-  const opened = [];
-  for (const [id, st] of Object.entries(after.status)) {
-    if (before.status[id] === 'locked' && st !== 'locked' && st !== 'done') opened.push({ id, status: st });
-  }
-  return opened;
+// Neue Achievements und Sterne durch eine Abgabe
+export function diff(before, after) {
+  const newAch = Object.keys(after.achievements).filter((k) => after.achievements[k] && !before.achievements[k]);
+  const opened = Object.keys(after.status).filter((id) => before.status[id] !== 'now' && after.status[id] === 'now');
+  return { newAch, opened };
 }
 
-/* ---------- Texte ---------- */
+/* ---------- Hilfen ---------- */
 
-export function fill(tpl, vars) {
-  return String(tpl || '').replace(/\{(\w+)\}/g, (_, k) => (vars[k] ?? ''));
+export function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
-
-export function stars(n) {
-  const k = Math.max(0, Math.min(4, Number(n) || 0));
-  return '★'.repeat(k) + '☆'.repeat(4 - k);
-}
-
-export function calibration(cfg, ev) {
-  if (!ev) return '';
-  const t = cfg.texts.calibration;
-  return ev.n > ev.self ? t.higher : ev.n === ev.self ? t.same : t.lower;
-}
-
-export function nextStep(cfg, ev) {
-  if (!ev) return '';
-  return ev.fb || cfg.feedback?.[ev.station]?.[String(ev.n)] || '';
-}
-
+export function bold(s) { return esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); }
 export function fmtDate(ts) {
   const d = new Date(ts);
   if (Number.isNaN(d.getTime())) return '';
   const m = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'][d.getMonth()];
   return `${String(d.getDate()).padStart(2, '0')} ${m} ${d.getFullYear()}`;
 }
-
-export function esc(s) {
-  return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+export function reducedMotion() {
+  return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-/* ---------- Icons & Stempel ---------- */
+/* ---------- Icons, Sterne, Stempel ---------- */
 
 export function iconSVG(cfg, name, { size = 32, color = 'currentColor', width = 2.2 } = {}) {
   const ic = cfg.icons[name];
   if (!ic) return '';
   const [, , w, h] = ic.viewBox.split(/\s+/).map(Number);
-  const ratio = w / h;
-  const W = ratio >= 1 ? size : Math.round(size * ratio);
-  const H = ratio >= 1 ? Math.round(size / ratio) : size;
+  const W = w >= h ? size : Math.round((size * w) / h);
+  const H = w >= h ? Math.round((size * h) / w) : size;
   return `<svg width="${W}" height="${H}" viewBox="${ic.viewBox}" fill="none" stroke="${color}" stroke-width="${width * (h / 24)}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ic.body}</svg>`;
 }
 
-const SHAPES = {
-  circle: { w: 1, h: 1, r: '50%' },
-  rect: { w: 1.08, h: 0.82, r: '14px' },
-  oval: { w: 1.12, h: 0.82, r: '50%' },
-};
+function starSVG(on, size) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" fill="${on ? '#E0A526' : 'none'}" stroke="${on ? '#B07F12' : '#BBA98A'}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+}
+export function starsHTML(n, { size = 18 } = {}) {
+  return `<span class="stars" role="img" aria-label="${n} of 3 stars">${starSVG(n > 0, size)}${starSVG(n > 1, size)}${starSVG(n > 2, size)}</span>`;
+}
+export function starOne(on, size = 22) {
+  return `<span class="star1" role="img" aria-label="${on ? 'star collected' : 'no star yet'}">${starSVG(on, size)}</span>`;
+}
 
-// kind: 'done' | 'express' | 'open' | 'next' | 'locked'
-export function stampHTML(cfg, station, { size = 136, kind = 'done', date = '' } = {}) {
-  const st = station;
-  if (kind === 'open' || kind === 'next' || kind === 'locked') {
-    const cls = kind === 'next' ? 'stamp-slot is-next' : kind === 'open' ? 'stamp-slot is-open' : 'stamp-slot';
-    const sub = kind === 'next' ? '<span class="slot-sub">next stop</span>' : kind === 'open' ? '<span class="slot-sub">open</span>' : '';
-    return `<div class="${cls}" style="--s:${Math.round(size * 0.94)}px"><span class="slot-q">?</span><span class="slot-place">${esc(st.place)}</span>${sub}</div>`;
+const SHAPES = { circle: { w: 1, h: 1, r: '50%' }, rect: { w: 1.1, h: 0.84, r: '16px' }, oval: { w: 1.14, h: 0.84, r: '50%' } };
+
+// Stempel eines Themas. stars = null → ohne Sternreihe
+export function stampHTML(cfg, topic, { size = 150, stars = null, date = '' } = {}) {
+  const def = topic.stamp || { shape: 'circle', ink: '#1B2A55', icon: 'flag' };
+  if (def.image) {
+    // Eigenes Stempelbild (z. B. aus ChatGPT): assets/img/stamps/<ID>.png, in config: "stamp": { "image": "…" }
+    return `<div class="stamp stamp-img" style="width:${size}px"><img src="${esc(def.image)}" alt="${esc(topic.place)} stamp" width="${size}" height="${size}" onerror="this.parentNode.classList.add('broken')">
+      ${stars != null ? `<span class="stamp-stars">${starsHTML(stars, { size: Math.round(size * 0.13) })}</span>` : ''}</div>`;
   }
-  const isExp = kind === 'express';
-  const def = isExp ? cfg.expressStamp : st.stamp;
   const shape = SHAPES[def.shape] || SHAPES.circle;
-  const w = Math.round(size * shape.w);
-  const h = Math.round(size * shape.h);
-  const ink = def.ink;
-  const text = def.text || ink;
-  const title = isExp ? def.caption : st.place.toUpperCase();
-  const sub = isExp ? `${st.place.toUpperCase()} · ${st.id}` : `${def.caption} · ${st.id}`;
-  const fs = Math.min(size * 0.2, (w * 0.84) / (title.length * 0.46));
-  const rot = isExp ? -4 : (def.rotate ?? 0);
-  const border = isExp ? `${Math.max(2, size / 45)}px dashed ${ink}` : `${Math.max(4, Math.round(size / 28))}px double ${ink}`;
-  return `<div class="stamp${isExp ? ' is-express' : ''}" style="width:${w}px;height:${h}px;border-radius:${shape.r};border:${border};color:${text};transform:rotate(${rot}deg)">
-    ${iconSVG(cfg, def.icon, { size: Math.round(size * 0.3), color: text })}
+  const w = Math.round(size * shape.w); const h = Math.round(size * shape.h);
+  const title = topic.place.toUpperCase();
+  const fs = Math.min(size * 0.19, (w * 0.82) / (title.length * 0.47));
+  const sub = Math.max(9, size * 0.07).toFixed(1);
+  return `<div class="stamp" style="width:${w}px;height:${h}px;border-radius:${shape.r};border:${Math.max(4, Math.round(size / 28))}px double ${def.ink};color:${def.ink}">
+    ${iconSVG(cfg, def.icon, { size: Math.round(size * 0.3), color: def.ink })}
     <span class="stamp-title" style="font-size:${fs.toFixed(1)}px">${esc(title)}</span>
-    <span class="stamp-sub" style="font-size:${Math.max(9, size * 0.073).toFixed(1)}px">${esc(sub)}</span>
-    ${date ? `<span class="stamp-sub" style="font-size:${Math.max(9, size * 0.073).toFixed(1)}px">${esc(date)}</span>` : ''}
+    <span class="stamp-sub" style="font-size:${sub}px">${esc(topic.name.toUpperCase())}</span>
+    ${date ? `<span class="stamp-sub" style="font-size:${sub}px">${esc(date)}</span>` : ''}
+    ${stars != null ? `<span class="stamp-stars">${starsHTML(stars, { size: Math.round(size * 0.12) })}</span>` : ''}
+  </div>`;
+}
+
+export function slotHTML(topic, { size = 130, state = 'later', route = null } = {}) {
+  const square = route && route.shape === 'square';
+  const color = state === 'now' && route ? route.color : '#CDBC9E';
+  return `<div class="slot slot-${state}" style="width:${size}px;height:${size}px;border-radius:${square ? '18px' : '50%'};border-color:${color};${state === 'now' && route ? `background:${route.soft}` : ''}">
+    <span class="slot-n" style="${state === 'now' && route ? `color:${route.color}` : ''}">${esc(topic.number || '?')}</span>
+    <span class="slot-place">${esc(topic.place)}</span>
+    <span class="slot-sub">${state === 'now' ? 'now (jetzt)' : state === 'soon' ? 'coming soon' : ''}</span>
+  </div>`;
+}
+
+export function badgeHTML(cfg, a, unlocked, size = 64) {
+  return `<div class="badge ${unlocked ? 'on' : 'off'}" title="${esc(a.de)}">
+    <span class="badge-disc" style="width:${size}px;height:${size}px">${iconSVG(cfg, a.icon, { size: Math.round(size * 0.5), color: unlocked ? '#7A4E00' : '#A99A80', width: 2 })}</span>
+    <span class="badge-name">${esc(a.name)}</span>
+    <span class="badge-de">${esc(a.de)}</span>
   </div>`;
 }
 
@@ -321,11 +296,9 @@ export function parseFromURL(search) {
   return { code: g('code'), kurs: g('kurs'), station: g('st'), n: g('n'), self: g('self'), h: g('h'), f: g('f'), s: g('s'), fb: g('fb') };
 }
 
-// Einzeiliger Block: CODE | KURS | STATION | NIVEAU | SELBST | HILFEN | FEHLER | STAERKE | FOERDER
+// Einzeiliger Block: CODE | KURS | SCHRITT | NIVEAU | SELBST | HILFEN | FEHLER | STAERKE | TIPP
 export function parseBlock(text) {
-  const line = String(text || '')
-    .replace(/```[a-z]*/gi, '')
-    .split(/\r?\n/)
+  const line = String(text || '').replace(/```[a-z]*/gi, '').split(/\r?\n/)
     .map((l) => l.trim().replace(/^`+|`+$/g, ''))
     .find((l) => (l.match(/\|/g) || []).length >= 6);
   if (!line) return null;
@@ -340,92 +313,62 @@ function cleanText(s) {
 }
 
 export function validate(cfg, raw) {
-  const errors = [];
-  const warnings = [];
+  const errors = []; const warnings = [];
   const code = normaliseCode(raw.code);
   const station = String(raw.station || '').trim().toUpperCase();
   const int = (v) => (/^\s*\d+\s*$/.test(String(v)) ? Number(v) : NaN);
   const n = int(raw.n);
-  const selfMissing = raw.self == null || String(raw.self).trim() === '' || String(raw.self).trim() === '-';
+  const selfMissing = raw.self == null || ['', '-'].includes(String(raw.self).trim());
   const self = selfMissing ? null : int(raw.self);
   const h = int(raw.h === '' || raw.h == null ? 0 : raw.h);
-  const step = stepInfo(cfg, station); // neues Format der Themen-Coaches, z. B. SPR-W1
+  const step = stepInfo(cfg, station);
 
   if (!cfg.codeRe.test(code)) errors.push(`Der Code "${code || '?'}" hat nicht das richtige Format (z. B. ${cfg.codeExample}).`);
-  if (!cfg.byId[station] && !step) errors.push(`Die Station "${station || '?'}" gibt es nicht.`);
+  if (!step) errors.push(`Den Schritt "${station || '?'}" gibt es nicht.`);
   if (!(n >= 1 && n <= 4)) errors.push('Das Niveau muss eine Zahl von 1 bis 4 sein.');
   if (!selfMissing && !(self >= 1 && self <= 4)) errors.push('Die Selbsteinschätzung muss eine Zahl von 1 bis 4 sein.');
   if (!(h >= 0 && h <= 3)) errors.push('Die Hilfen müssen eine Zahl von 0 bis 3 sein.');
 
-  const fRaw = String(raw.f || '').split(/[,;\s]+/).map((x) => x.trim().toUpperCase()).filter((x) => x && x !== '-' && x !== 'NONE');
+  const areas = step?.topic.areas || [];
   const f = [];
-  const areas = step ? step.topic.areas : null;
-  for (const c of fRaw) {
-    const known = areas ? areas.includes(c) : !!cfg.errorCatalog[c];
-    if (known) { if (!f.includes(c)) f.push(c); } else warnings.push(`Unbekannter Fehlercode "${c}" wurde ignoriert.`);
+  for (const c of String(raw.f || '').split(/[,;\s]+/).map((x) => x.trim().toUpperCase()).filter((x) => x && x !== '-' && x !== 'NONE')) {
+    if (areas.includes(c)) { if (!f.includes(c)) f.push(c); } else warnings.push(`Unbekannter Fehlercode "${c}" wurde ignoriert.`);
   }
-  const s = cleanText(raw.s);
-  const fb = cleanText(raw.fb);
   const kurs = cleanText(raw.kurs).replace(/^-$/, '');
-
-  return { ok: errors.length === 0, errors, warnings, result: { code, kurs, station, n, self, h, f, s, fb } };
-}
-
-// Schritt-ID der Themen-Coaches: <THEMA>-W1 (Blatt), -W2 … (Zusatzblatt), -P (Üben), -F (Final check)
-export function stepInfo(cfg, id) {
-  const m = String(id || '').toUpperCase().match(/^([A-Z]{2,6})-(W(\d)|P|F)$/);
-  const topic = m && cfg.topics?.[m[1]];
-  if (!topic) return null;
-  const kind = m[2] === 'P' ? 'practice' : m[2] === 'F' ? 'final' : m[3] === '1' ? 'sheet' : 'extra';
-  const label = { sheet: 'Worksheet', extra: `Extra worksheet ${m[3]}`, practice: 'Practice', final: 'Final check' }[kind];
-  return {
-    kind, topic,
-    station: {
-      id: String(id).toUpperCase(), place: topic.place, topic: topic.name, skill: `${topic.name} · ${label}`,
-      medium: kind === 'sheet' || kind === 'extra' ? 'paper' : 'digital', coach: 'grammar',
-      stamp: { shape: 'circle', ink: '#1B2A55', icon: topic.icon, caption: label.toUpperCase() },
-    },
-  };
+  return { ok: errors.length === 0, errors, warnings, result: { code, kurs, station, n, self, h, f, s: cleanText(raw.s), fb: cleanText(raw.fb) } };
 }
 
 /* ---------- An das Google-Formular senden ---------- */
 
 export async function submitToForm(cfg, r) {
   const form = cfg.backend.form;
-  if (!form.action) return { sent: false, reason: 'not-configured' };
+  if (!form.action) return { sent: false };
   const e = form.entries;
   const body = new URLSearchParams();
   const put = (k, v) => { if (e[k]) body.append(`entry.${String(e[k]).replace(/^entry\./, '')}`, String(v)); };
-  put('code', r.code);
-  put('kurs', r.kurs || '-');
-  put('station', r.station);
-  put('niveau', r.n);
-  put('selbst', r.self ?? '-');
-  put('hilfen', r.h);
-  put('fehler', r.f.join(', ') || '-');
-  put('staerke', r.s || '-');
-  put('foerder', r.fb || '-');
+  put('code', r.code); put('kurs', r.kurs || '-'); put('station', r.station); put('niveau', r.n);
+  put('selbst', r.self ?? '-'); put('hilfen', r.h); put('fehler', r.f.join(', ') || '-');
+  put('staerke', r.s || '-'); put('foerder', r.fb || '-');
   await fetch(form.action, { method: 'POST', mode: 'no-cors', body });
   return { sent: true };
 }
 
-/* ---------- UI-Helfer ---------- */
+/* ---------- UI-Symbole ---------- */
 
+const ico = (d, s = 18, w = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 export const UI = {
-  person: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
-  passport: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="11" r="3"/><path d="M9 17h6"/></svg>',
-  back: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>',
-  copy: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
-  image: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></svg>',
-  paper: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 13h8M8 17h5"/></svg>',
-  tablet: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M11 18h2"/></svg>',
-  check: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>',
-  plus: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
-  pin: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
-  close: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  person: ico('<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>'),
+  passport: ico('<rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="11" r="3"/><path d="M9 17h6"/>'),
+  help: ico('<circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 4.9.7c0 1.7-2.4 2.3-2.4 3.8"/><path d="M12 17h.01"/>'),
+  back: ico('<path d="M15 18l-6-6 6-6"/>'),
+  copy: ico('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>', 20),
+  book: ico('<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7M8 11h7"/>', 20),
+  paper: ico('<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 13h8M8 17h5"/>', 17),
+  tablet: ico('<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M11 18h2"/>', 17),
+  check: ico('<path d="M5 12l5 5L20 7"/>', 22, 2.6),
+  bulb: ico('<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>', 22),
+  close: ico('<path d="M6 6l12 12M18 6L6 18"/>', 22, 2.2),
+  image: ico('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/>', 30, 1.8),
+  lock: ico('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', 18),
   brush: (w) => `<svg class="brush" width="${w}" height="12" viewBox="0 0 ${w} 12" aria-hidden="true"><path d="M4 8 C${w * 0.28} 2, ${w * 0.66} 3, ${w - 4} 6" stroke="var(--sky)" stroke-width="7" stroke-linecap="round" fill="none"/></svg>`,
 };
-
-export function reducedMotion() {
-  return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}

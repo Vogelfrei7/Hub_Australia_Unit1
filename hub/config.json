@@ -1,22 +1,16 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "hl5u1",
   "unit": {
     "title": "Australia Road Trip",
     "subtitle": "Headlight 5 · Unit 1",
-    "destination": "Australia",
-    "passportTitle": "Travel Passport"
+    "passportTitle": "My Passport"
   },
   "baseUrl": "https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/",
   "courses": ["09c"],
+  "classSizes": { "09c": 29 },
   "codePattern": "^[A-Z]{3,8}-[A-Z0-9]{4}$",
-  "codeExample": "FUCHS-K7Q2",
-  "sheetIdPattern": "^AUS1-(G[0-8]|W[1-3])-[A-Z]$",
-
-  "agents": {
-    "grammar": { "name": "Grammar Coach", "url": "" },
-    "writing": { "name": "Writing Coach", "url": "" }
-  },
+  "codeExample": "TIGER-K7Q2",
 
   "backend": {
     "appsScriptUrl": "https://script.google.com/macros/s/AKfycbzAivk36uh69nqofdTPMxWjjovB2ZwHhc7cIHcbsxJz-ALQe-22Dy5HhluuTovkgIF9/exec",
@@ -37,10 +31,90 @@
     }
   },
 
-  "routing": {
-    "checkIn": "G0",
-    "allMandatoryAtOrBelow": 1,
-    "nextPriority": ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "W1", "W2", "W3"]
+  "routes": [
+    {
+      "id": "grammar", "name": "Grammar Road", "nameDe": "Grammatik", "hint": "along the coast",
+      "color": "#1B2A55", "soft": "#DCEAF5", "shape": "circle",
+      "stops": ["START", "SPR", "SP", "PROG", "PP", "GOING", "TEST"],
+      "path": [[868, 610], [905, 470], [885, 265], [690, 330], [480, 215], [250, 300], [150, 440], [140, 570], [755, 680], [770, 560]],
+      "label": { "x": 535, "y": 92 }
+    },
+    {
+      "id": "writing", "name": "Writing Track", "nameDe": "Schreiben", "hint": "in the desert",
+      "color": "#C2410C", "soft": "#FDE6D8", "shape": "square",
+      "stops": ["W1", "W2", "W3"],
+      "path": [[560, 400], [420, 470], [500, 520]],
+      "label": { "x": 420, "y": 375 }
+    }
+  ],
+
+  "topics": {
+    "START": {
+      "route": "grammar", "number": "Start", "place": "Sydney", "name": "Check-in", "topic": "Arrival: Life down under",
+      "x": 868, "y": 610, "label": "below", "status": "soon", "optional": true,
+      "stamp": { "shape": "circle", "ink": "#1B2A55", "icon": "opera" }
+    },
+    "SPR": {
+      "route": "grammar", "number": "1", "place": "Gold Coast", "name": "Simple present", "topic": "Beach rules & animals",
+      "x": 905, "y": 470, "label": "left", "status": "active",
+      "coach": { "name": "Simple Present Coach", "input": "https://agent.sidekick.ki/input/99792-08935/CIA-6C19A?colorMode=0" },
+      "sheets": { "W1": "AUS1-SPR-1", "W2": "AUS1-SPR-2" },
+      "areas": ["S", "NEG", "Q", "WH", "USE"],
+      "areaLabels": { "S": "he/she/it: -s und Schreibung", "NEG": "Verneinung: don't/doesn't + Grundform", "Q": "Ja-/Nein-Fragen und Kurzantworten", "WH": "Fragen mit Fragewort / Who", "USE": "Gebrauch und Signalwörter" },
+      "rules": [
+        { "title": "When?", "de": "Wann?", "text": "Things that happen **again and again** – or **never**.", "textDe": "Was immer wieder oder nie passiert.", "ex": "I **always** swim between the flags." },
+        { "title": "he / she / it → -s", "de": "he/she/it: ein -s an das Verb", "text": "Watch the spelling: go → **goes**, watch → **watches**, try → **tries**.", "textDe": "Achte auf die Schreibung.", "ex": "Mia **likes** surfing." },
+        { "title": "Not", "de": "Verneinung", "text": "**don't / doesn't** + base form", "textDe": "don't/doesn't + Grundform", "ex": "Tom **doesn't like** sharks." },
+        { "title": "Questions", "de": "Ja-/Nein-Fragen", "text": "**Do / Does** + base form? Short answer: Yes, I **do**. / No, he **doesn't**.", "textDe": "Frage mit Do/Does, Kurzantwort mit do/does.", "ex": "**Does** Ava **surf**? – Yes, she **does**." },
+        { "title": "Question words", "de": "Fragen mit Fragewort", "text": "Question word + **do / does** + base form", "textDe": "Fragewort + do/does + Grundform", "ex": "Why **do** they **love** the beach?" },
+        { "title": "Signal words", "de": "Signalwörter", "text": "always · usually · often · sometimes · never · every day · on Mondays", "textDe": "Diese Wörter zeigen: simple present!", "ex": "We **often** **play** volleyball." }
+      ],
+      "challenge": { "title": "Challenge: Who?", "text": "Who asks for the **subject** (wer?): no do/does → **Who likes** Ben? · Who asks for the **object** (wen?): with do/does → **Who does** Ben like?" },
+      "stamp": { "shape": "rect", "ink": "#A9502B", "icon": "sunWave" }
+    },
+    "SP":    { "route": "grammar", "number": "2", "place": "Great Barrier Reef", "name": "Simple past", "topic": "What happened to the reef?", "x": 885, "y": 265, "label": "below", "status": "soon", "stamp": { "shape": "oval", "ink": "#2F7983", "icon": "fish" } },
+    "PROG":  { "route": "grammar", "number": "3", "place": "Outback", "name": "Past progressive", "topic": "The Royal Flying Doctors", "x": 690, "y": 330, "label": "above", "status": "soon", "stamp": { "shape": "circle", "ink": "#A9502B", "icon": "doctorPlane" } },
+    "PP":    { "route": "grammar", "number": "4", "place": "Perth", "name": "Present perfect", "topic": "Life on a sheep station", "x": 140, "y": 570, "label": "right", "status": "soon", "stamp": { "shape": "circle", "ink": "#1B2A55", "icon": "sheep" } },
+    "GOING": { "route": "grammar", "number": "5", "place": "Melbourne", "name": "going to-future", "topic": "Sydney or Melbourne? Your plans", "x": 755, "y": 680, "label": "below", "status": "soon", "stamp": { "shape": "rect", "ink": "#4F7449", "icon": "tram" } },
+    "TEST":  { "route": "grammar", "number": "Test", "place": "Blue Mountains", "name": "Practice test", "topic": "A bush fire story", "x": 770, "y": 560, "label": "left", "status": "soon", "stamp": { "shape": "rect", "ink": "#A9502B", "icon": "mountainFire" } },
+    "W1":    { "route": "writing", "number": "1", "place": "Alice Springs", "name": "Plan your article", "topic": "Aboriginal Australians", "x": 560, "y": 400, "label": "right", "status": "soon", "stamp": { "shape": "circle", "ink": "#C2410C", "icon": "notebook" } },
+    "W2":    { "route": "writing", "number": "2", "place": "Kata Tjuta", "name": "Write your article", "topic": "Is Australia worth visiting?", "x": 420, "y": 470, "label": "left", "status": "soon", "stamp": { "shape": "circle", "ink": "#C2410C", "icon": "domes" } },
+    "W3":    { "route": "writing", "number": "3", "place": "Uluru", "name": "Final draft – your goal!", "topic": "Make your article better", "x": 500, "y": 520, "label": "below", "status": "soon", "goal": true, "stamp": { "shape": "oval", "ink": "#C2410C", "icon": "uluru" } }
+  },
+
+  "bonus": {
+    "FINAL": { "name": "Final check", "place": "Sydney Harbour", "x": 955, "y": 740, "label": "none", "opens": "Thursday, 15 October", "opensDe": "Donnerstag, 15. Oktober", "status": "soon" }
+  },
+
+  "steps": [
+    { "id": "W1", "star": "Worksheet", "de": "Arbeitsblatt", "medium": "paper" },
+    { "id": "P", "star": "Practice", "de": "Üben mit dem Coach", "medium": "digital" },
+    { "id": "EXTRA", "star": "Extra", "de": "Zusatz: Blatt 2 oder noch eine Übung", "medium": "both", "optional": true }
+  ],
+
+  "achievements": [
+    { "id": "levelup", "name": "Level up!", "de": "Beim Üben besser als auf dem Blatt", "icon": "rocket" },
+    { "id": "allfive", "name": "All 5 tenses", "de": "Alle fünf Zeiten geschafft", "icon": "trophy" },
+    { "id": "stars", "name": "Star collector", "de": "Bei allen fünf Zeiten 3 Sterne", "icon": "star" }
+  ],
+
+  "theme": {},
+
+  "icons": {
+    "opera":        { "viewBox": "0 0 40 30", "body": "<path d='M3 25h34'/><path d='M7 25c0-8 4-15 11-18-2 6-1 12 2 18'/><path d='M16 25c0-6 3-11 8-13-1 5 0 9 3 13'/><path d='M25 25c0-4 2-7 6-8-1 3 0 6 2 8'/>" },
+    "mountainFire": { "viewBox": "0 0 42 28", "body": "<path d='M2 26l11-15 7 8 6-7 14 14z'/><path d='M30 3c1.5 2.5 4 4 4 7a4 4 0 0 1-8 0c0-3 2.5-4.5 4-7z'/>" },
+    "sunWave":      { "viewBox": "0 0 40 30", "body": "<circle cx='28' cy='9' r='4.5'/><path d='M28 1.5v1.5M35.5 9H34M33.3 3.7l-1 1M22.7 3.7l1 1'/><path d='M2 19c3 0 3-2.5 6-2.5s3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5'/><path d='M2 25c3 0 3-2.5 6-2.5s3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5 3-2.5 6-2.5 3 2.5 6 2.5'/><path d='M7 15c1.5-5 5-8 10-8'/>" },
+    "fish":         { "viewBox": "0 0 40 24", "body": "<path d='M3 12c5-7 15-9 23-2 3-2 6-4 10-5-2 4-2 10 0 14-4-1-7-3-10-5-8 7-18 5-23-2z'/><circle cx='11' cy='11' r='1.4'/>" },
+    "doctorPlane":  { "viewBox": "0 0 24 15", "body": "<path d='M1 9l20-5c1.5-.4 2.5.8 1.5 1.8L19 8l-9 2.5-3 4H5l1.5-3.5L3 12 1.5 11z'/><path d='M9 5l2 2'/>" },
+    "sheep":        { "viewBox": "0 0 24 24", "body": "<path d='M6.5 15.5a3 3 0 0 1-.3-6 3.5 3.5 0 0 1 6.3-2 3.5 3.5 0 0 1 5.8 2.3 2.8 2.8 0 0 1-.8 5.7z'/><path d='M18.2 9.6l3.3-.6v3.6l-2.6.6'/><path d='M8 15.5v4M11 15.5v4M14 15.5v4M17 15.5v4'/>" },
+    "tram":         { "viewBox": "0 0 24 24", "body": "<path d='M6 6h12a2 2 0 0 1 2 2v9H4V8a2 2 0 0 1 2-2z'/><path d='M7 9h4v3H7zM13 9h4v3h-4z'/><path d='M12 6V3M9 3h6'/><circle cx='8' cy='19.5' r='1.5'/><circle cx='16' cy='19.5' r='1.5'/>" },
+    "notebook":     { "viewBox": "0 0 24 24", "body": "<path d='M5 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5z'/><path d='M8 3v18M11 8h4M11 12h4'/><path d='M20.5 6.5l1 1-6 6-1.5.5.5-1.5z'/>" },
+    "uluru":        { "viewBox": "0 0 46 20", "body": "<path d='M2 18c3-8 8-12 21-12s18 4 21 12z'/><path d='M14 18v-5M23 18v-7M32 18v-5'/>" },
+    "domes":        { "viewBox": "0 0 24 24", "body": "<path d='M1 19h22'/><path d='M2.5 19c.8-5 2.6-7.5 4.6-7.5S10 14 10.6 16c.8-6 2.8-9 5-9s4.4 4 5.4 12'/>" },
+    "rocket":       { "viewBox": "0 0 24 24", "body": "<path d='M12 2c3.5 2.5 5 6 5 10l-2.5 4h-5L7 12c0-4 1.5-7.5 5-10z'/><circle cx='12' cy='9' r='1.8'/><path d='M7 12l-3 3 1 3 3.5-2M17 12l3 3-1 3-3.5-2M10 19l2 3 2-3'/>" },
+    "trophy":       { "viewBox": "0 0 24 24", "body": "<path d='M7 3h10v6a5 5 0 0 1-10 0z'/><path d='M7 5H3.5a3 3 0 0 0 3.5 4M17 5h3.5a3 3 0 0 1-3.5 4'/><path d='M12 14v4M8 21h8M9.5 18h5'/>" },
+    "star":         { "viewBox": "0 0 24 24", "body": "<path d='M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z'/>" },
+    "flag":         { "viewBox": "0 0 24 24", "body": "<path d='M5 22V3'/><path d='M5 4h12l-2.5 4L17 12H5'/>" }
   },
 
   "map": {
@@ -50,280 +124,23 @@
       "M790,735 L850,730 L840,785 L805,790 Z"
     ],
     "seas": [
-      { "text": "Coral Sea", "x": 990, "y": 120, "anchor": "end", "size": 30 },
-      { "text": "Indian Ocean", "x": 40, "y": 740, "anchor": "start", "size": 30 },
-      { "text": "Southern Ocean", "x": 500, "y": 770, "anchor": "middle", "size": 28 }
-    ],
-    "seaCenter": [500, 420],
-    "routes": [
-      { "id": "grammar", "stations": ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G0"] },
-      { "id": "writing", "stations": ["G0", "W1", "W2", "W3"] }
+      { "text": "Coral Sea", "x": 990, "y": 150, "anchor": "end", "size": 28 },
+      { "text": "Indian Ocean", "x": 40, "y": 745, "anchor": "start", "size": 28 }
     ]
   },
 
-  "stations": [
-    {
-      "id": "G0", "place": "Sydney", "topic": "Arrival: Life down under",
-      "skill": "Check-in: all five tenses", "competence": "Check-in",
-      "medium": "digital", "coach": "grammar",
-      "x": 868, "y": 610, "label": "below",
-      "unlock": { "after": [] },
-      "image": "assets/img/G0.webp", "alt": "",
-      "stamp": { "shape": "circle", "ink": "#1B2A55", "icon": "opera", "caption": "CHECK-IN", "rotate": -8 }
-    },
-    {
-      "id": "G1", "place": "Blue Mountains", "topic": "Bush fires",
-      "skill": "Simple past", "competence": "Simple past",
-      "medium": "paper", "coach": "grammar", "sheet": "AUS1-G1-A",
-      "x": 800, "y": 585, "label": "left",
-      "adaptive": true, "unlock": { "after": ["G0"] },
-      "image": "assets/img/G1.webp", "alt": "",
-      "stamp": { "shape": "rect", "ink": "#A9502B", "icon": "mountainFire", "caption": "BUSH FIRES", "rotate": 6 }
-    },
-    {
-      "id": "G2", "place": "Gold Coast", "topic": "Beaches, animals & rip currents",
-      "skill": "Present perfect", "competence": "Present perfect",
-      "medium": "digital", "coach": "grammar",
-      "x": 905, "y": 470, "label": "left",
-      "adaptive": true, "unlock": { "after": ["G0"] },
-      "image": "assets/img/G2.webp", "alt": "",
-      "stamp": { "shape": "rect", "ink": "#A9502B", "icon": "wave", "caption": "RIP CURRENTS", "rotate": -4 }
-    },
-    {
-      "id": "G3", "place": "Great Barrier Reef", "topic": "Saving the reef",
-      "skill": "going to-future", "competence": "going to-future",
-      "medium": "paper", "coach": "grammar", "sheet": "AUS1-G3-A",
-      "x": 885, "y": 265, "label": "above",
-      "adaptive": true, "unlock": { "after": ["G0"] },
-      "image": "assets/img/G3.webp", "alt": "",
-      "stamp": { "shape": "oval", "ink": "#2F7983", "icon": "fish", "caption": "SAVING THE REEF", "rotate": -11 }
-    },
-    {
-      "id": "G4", "place": "Outback", "topic": "The Royal Flying Doctors",
-      "skill": "Past progressive", "competence": "Past progressive",
-      "medium": "paper", "coach": "grammar", "sheet": "AUS1-G4-A",
-      "x": 690, "y": 330, "label": "above",
-      "adaptive": true, "unlock": { "after": ["G0"] },
-      "image": "assets/img/G4.webp", "alt": "",
-      "stamp": { "shape": "circle", "ink": "#A9502B", "icon": "doctorPlane", "caption": "FLYING DOCTORS", "rotate": -9 }
-    },
-    {
-      "id": "G5", "place": "The Kimberley", "topic": "Life in the Kimberley",
-      "skill": "Simple present", "competence": "Simple present",
-      "medium": "paper", "coach": "grammar", "sheet": "AUS1-G5-A",
-      "x": 330, "y": 230, "label": "above",
-      "adaptive": true, "unlock": { "after": ["G0"] },
-      "image": "assets/img/G5.webp", "alt": "",
-      "stamp": { "shape": "rect", "ink": "#4F7449", "icon": "boab", "caption": "KIMBERLEY LIFE", "rotate": 4 }
-    },
-    {
-      "id": "G6", "place": "Coral Coast", "topic": "Marine wildlife: jellyfish",
-      "skill": "Simple past vs. past progressive", "competence": "Simple past vs. past progressive",
-      "medium": "digital", "coach": "grammar",
-      "x": 135, "y": 430, "label": "right",
-      "unlock": { "after": ["G1", "G2", "G3", "G4", "G5"] },
-      "image": "assets/img/G6.webp", "alt": "",
-      "stamp": { "shape": "oval", "ink": "#1F5F68", "icon": "jellyfish", "caption": "JELLYFISH", "rotate": 7 }
-    },
-    {
-      "id": "G7", "place": "Perth", "topic": "Life on a sheep station",
-      "skill": "Simple past vs. present perfect", "competence": "Simple past vs. present perfect",
-      "medium": "paper", "coach": "grammar", "sheet": "AUS1-G7-A",
-      "x": 140, "y": 570, "label": "right",
-      "unlock": { "after": ["G6"] },
-      "image": "assets/img/G7.webp", "alt": "",
-      "stamp": { "shape": "circle", "ink": "#1B2A55", "icon": "sheep", "caption": "SHEEP STATION", "rotate": -6 }
-    },
-    {
-      "id": "G8", "place": "Melbourne", "topic": "Sydney or Melbourne?",
-      "skill": "Mixed tenses – test format", "competence": "Mixed tenses",
-      "medium": "paper", "coach": "grammar", "sheet": "AUS1-G8-A",
-      "x": 755, "y": 680, "label": "below",
-      "unlock": { "after": ["G7"] },
-      "image": "assets/img/G8.webp", "alt": "",
-      "stamp": { "shape": "rect", "ink": "#A9502B", "icon": "tram", "caption": "TEST READY", "rotate": 5 }
-    },
-    {
-      "id": "W1", "place": "Alice Springs", "topic": "Aboriginal Australians",
-      "skill": "Plan your article", "competence": "Planning",
-      "medium": "paper", "coach": "writing", "sheet": "AUS1-W1-A",
-      "x": 560, "y": 420, "label": "right",
-      "unlock": { "after": ["G0"] },
-      "image": "assets/img/W1.webp", "alt": "",
-      "stamp": { "shape": "circle", "ink": "#4F7449", "icon": "dots", "caption": "PLANNING", "rotate": 9 }
-    },
-    {
-      "id": "W2", "place": "Uluru", "topic": "Uluru",
-      "skill": "Article: Is Australia worth visiting?", "competence": "Article",
-      "medium": "paper", "coach": "writing", "sheet": "AUS1-W2-A",
-      "x": 470, "y": 490, "label": "below",
-      "unlock": { "after": ["W1"] },
-      "image": "assets/img/W2.webp", "alt": "",
-      "stamp": { "shape": "oval", "ink": "#A9502B", "icon": "uluru", "caption": "ARTICLE", "rotate": -6 }
-    },
-    {
-      "id": "W3", "place": "Kata Tjuta", "topic": "Final draft",
-      "skill": "Revise your article", "competence": "Revision",
-      "medium": "digital", "coach": "writing",
-      "x": 400, "y": 500, "label": "left",
-      "unlock": { "after": ["W2"] },
-      "image": "assets/img/W3.webp", "alt": "",
-      "stamp": { "shape": "circle", "ink": "#1B2A55", "icon": "domes", "caption": "FINAL DRAFT", "rotate": 3 }
-    }
-  ],
-
-  "topics": {
-    "SPR": {
-      "name": "Simple present", "place": "Gold Coast", "icon": "wave",
-      "areas": ["S", "NEG", "Q", "WH", "USE"],
-      "areaLabels": { "S": "he/she/it: -s und Schreibung", "NEG": "Verneinung: don't/doesn't + Grundform", "Q": "Ja-/Nein-Fragen und Kurzantworten", "WH": "Fragen mit Fragewort / Who", "USE": "Gebrauch und Signalwörter" }
-    },
-    "SPPP": {
-      "name": "Simple past or present perfect", "place": "Perth", "icon": "sheep",
-      "areas": ["CHOICE", "TIME", "SIGNAL", "PPFORM", "SPFORM"],
-      "areaLabels": { "CHOICE": "falsche Zeitform gewählt", "TIME": "present perfect mit Zeitpunkt", "SIGNAL": "Signalwort übersehen", "PPFORM": "Form present perfect", "SPFORM": "Form simple past" }
-    }
-  },
-
-  "expressStamp": { "shape": "rect", "ink": "#3F8E99", "text": "#1F5F68", "icon": "plane", "caption": "EXPRESS" },
-
-  "errorCatalog": {
-    "SPR-S":     { "structure": "Simple present", "station": "G5", "label": "he/she/it: -s missing or wrong", "tip": "He, she, it: the -s must go. She lives, he works." },
-    "SPR-DO":    { "structure": "Simple present", "station": "G5", "label": "do/does in questions and negatives", "tip": "Questions and negatives need do or does: Does she live …? He doesn't work." },
-    "SPR-USE":   { "structure": "Simple present", "station": "G5", "label": "simple present for facts and routines", "tip": "Facts and routines (always, usually, every day) take the simple present." },
-    "SP-IRREG":  { "structure": "Simple past", "station": "G1", "label": "irregular past forms", "tip": "Some verbs have their own past form: go – went, see – saw. This stop trains them." },
-    "SP-ED":     { "structure": "Simple past", "station": "G1", "label": "regular -ed forms and spelling", "tip": "Regular verbs get -ed. Watch the spelling: stop – stopped, try – tried." },
-    "SP-DID":    { "structure": "Simple past", "station": "G1", "label": "did + infinitive in questions and negatives", "tip": "After did and didn't, use the infinitive: Did you see …? We didn't go." },
-    "PP-FORM":   { "structure": "Present perfect", "station": "G2", "label": "have/has + past participle", "tip": "Present perfect = have/has + 3rd form: I have seen, she has swum." },
-    "PP-HAS":    { "structure": "Present perfect", "station": "G2", "label": "has with he/she/it", "tip": "He, she, it: has, not have. She has never seen a shark." },
-    "PP-USE":    { "structure": "Present perfect", "station": "G2", "label": "present perfect with ever, never, already, yet, just", "tip": "Ever, never, already, yet, just: these words like the present perfect." },
-    "PP-SINCE":  { "structure": "Present perfect", "station": "G2", "label": "since vs. for", "tip": "Since + a point in time (since 2020), for + a period (for two years)." },
-    "GOING-BE":  { "structure": "going to-future", "station": "G3", "label": "am/is/are missing before going to", "tip": "Don't forget am, is or are: We are going to help the reef." },
-    "GOING-INF": { "structure": "going to-future", "station": "G3", "label": "infinitive after going to", "tip": "After going to comes the infinitive: going to visit, not going to visiting." },
-    "GOING-NEG": { "structure": "going to-future", "station": "G3", "label": "going to in questions and negatives", "tip": "Questions and negatives: Are you going to …? I'm not going to …" },
-    "PROG-FORM": { "structure": "Past progressive", "station": "G4", "label": "was/were + -ing", "tip": "Past progressive = was/were + -ing: The doctor was flying." },
-    "PROG-WAS":  { "structure": "Past progressive", "station": "G4", "label": "was vs. were", "tip": "I/he/she/it was, you/we/they were." },
-    "PROG-USE":  { "structure": "Simple past vs. past progressive", "station": "G6", "label": "background (while) vs. action (when)", "tip": "While + past progressive is the background, when + simple past is the action that interrupts." },
-    "PP-TIME":   { "structure": "Simple past vs. present perfect", "station": "G7", "label": "present perfect with finished time (yesterday, last year, ago)", "tip": "Yesterday, last year, ago, in 2019: finished time needs the simple past, not the present perfect." },
-    "SPPP-USE":  { "structure": "Simple past vs. present perfect", "station": "G7", "label": "choice: finished past vs. link to now", "tip": "Finished past: simple past. Result or experience up to now: present perfect." },
-    "TENSE-MIX": { "structure": "Mixed tenses", "station": "G8", "label": "wrong tense for the time in the context", "tip": "Look for signal words first, then choose the tense. Melbourne is a good place to practise." },
-    "W-TASK":    { "structure": "Writing", "station": null, "label": "task not fully answered", "tip": "Answer every part of the task." },
-    "W-FORM":    { "structure": "Writing", "station": null, "label": "article features (headline, intro, ending)", "tip": "An article needs a headline, an introduction and an ending." },
-    "W-PARA":    { "structure": "Writing", "station": null, "label": "paragraphs", "tip": "Start a new paragraph for each new idea." },
-    "W-LINK":    { "structure": "Writing", "station": null, "label": "linking words", "tip": "Use linking words: first, also, however, because, finally." },
-    "W-ARG":     { "structure": "Writing", "station": null, "label": "reasons and examples", "tip": "Give a reason and an example for each point." },
-    "W-VOC":     { "structure": "Writing", "station": null, "label": "vocabulary range", "tip": "Use words from the unit to make your text more interesting." },
-    "W-SPELL":   { "structure": "Writing", "station": null, "label": "spelling", "tip": "Check the spelling of the unit words." },
-    "W-SENT":    { "structure": "Writing", "station": null, "label": "sentence structure and word order", "tip": "English word order: subject – verb – object." }
-  },
-
-  "levels": {
-    "1": { "label": "Starting out", "stars": 1 },
-    "2": { "label": "On the way", "stars": 2 },
-    "3": { "label": "Confident", "stars": 3 },
-    "4": { "label": "Expert", "stars": 4 }
-  },
-
-  "feedback": {
-    "G0": { "1": "Your route starts with the basics. Every stop on the coast helps you.", "2": "You know some tenses well. Your route trains the others.", "3": "Good start! Only a few stops are on your route.", "4": "Great check-in! You can take many express routes." },
-    "G1": { "1": "Learn five irregular verbs a day: go – went, see – saw.", "2": "Check the -ed spelling and the forms after did.", "3": "Try the questions and negatives with did once more.", "4": "Ready for the contrasts at the Coral Coast." },
-    "G2": { "1": "Practise have/has + 3rd form with short sentences.", "2": "Remember has for he, she and it.", "3": "Train since and for.", "4": "Ready for the contrast in Perth." },
-    "G3": { "1": "Say three plans: I am going to …", "2": "Check am/is/are before going to.", "3": "Practise questions: Are you going to …?", "4": "You can use going to for plans and predictions." },
-    "G4": { "1": "Practise was/were + -ing with pictures from the unit.", "2": "Check was or were.", "3": "Try longer sentences with while.", "4": "Ready for the when/while story at the Coral Coast." },
-    "G5": { "1": "Practise he/she/it with -s.", "2": "Check do and does in questions.", "3": "Use signal words like usually and every day.", "4": "Facts and routines – no problem for you." },
-    "G6": { "1": "Draw a time line: background first, then the action.", "2": "While + -ing, when + simple past.", "3": "Tell a short jellyfish story with when and while.", "4": "You can tell stories in the past." },
-    "G7": { "1": "Sort signal words: yesterday, ago – ever, never, yet.", "2": "Finished time takes the simple past.", "3": "Practise mixed sentences about life on a farm.", "4": "You know when to use which past form." },
-    "G8": { "1": "Look for signal words first, then choose the tense.", "2": "Repeat the stop where your passport shows the fewest stars.", "3": "Do one more mixed task in test format.", "4": "You are ready for the test!" },
-    "W1": { "1": "Collect three ideas and one reason for each.", "2": "Put your ideas in order: introduction, main part, ending.", "3": "Add an example to each idea.", "4": "Your plan is ready for the article." },
-    "W2": { "1": "Use your plan and write one paragraph per idea.", "2": "Add linking words and a clear ending.", "3": "Make your text more interesting with unit words.", "4": "Great article! Polish the details in your final draft." },
-    "W3": { "1": "Correct one thing at a time – start with the tenses.", "2": "Check your coach's tips one by one.", "3": "Read your text out loud and check the flow.", "4": "Your final draft is ready to publish." }
-  },
-
   "texts": {
-    "status": {
-      "done": "Stamp collected",
-      "next": "Your next stop",
-      "open": "Open – ready when you are",
-      "skipped": "Express route – you can skip this",
-      "locked": "Not open yet"
-    },
-    "note": {
-      "nextPaper": "Get worksheet {sheet} from the box. Work on paper, then scan it with your iPad and upload it in the {coach}.",
-      "nextDigital": "Work directly with the {coach}. It adapts the tasks to your answers.",
-      "skipped": "Your check-in in Sydney showed you already know this. You can still visit for an extra stamp.",
-      "locked": "This stop opens when you finish the stops before it on your route.",
-      "done": "Visit again any time – your best result counts."
-    },
-    "help": {
-      "paper": "Papier-Station: Blatt holen, bearbeiten, mit dem iPad scannen und im Coach hochladen. Danach bekommst du deinen Stempel.",
-      "digital": "Digitale Station: Startcode kopieren, Coach öffnen, Code als erste Nachricht einfügen.",
-      "locked": "Diese Station ist noch gesperrt. Schließe zuerst die Stationen davor auf deiner Route ab."
-    },
-    "calibration": {
-      "higher": "You did better than you expected. Trust yourself more here!",
-      "same": "Spot on – you know yourself well.",
-      "lower": "Trickier than you thought. Your next step will help."
-    },
     "privacy": "Deine Lehrkraft sieht dein Ergebnis nur unter deinem Code – nicht unter deinem Namen.",
     "codeHelp": "Deinen Code findest du auf deiner Code-Karte. Gib niemals deinen Namen ein. Der Code wird nur auf diesem iPad gespeichert."
   },
 
-  "theme": {
-    "--navy": "#1B2A55",
-    "--navy-dark": "#0F1A38",
-    "--cream": "#F2EADA",
-    "--paper": "#FFFBF3",
-    "--sky": "#8DB9E2",
-    "--sky-light": "#DCEAF5",
-    "--ocean": "#A9CDEB",
-    "--ocean-ink": "#2C5E86",
-    "--teal": "#3F8E99",
-    "--teal-ink": "#1F5F68",
-    "--teal-light": "#DDEFF0",
-    "--terracotta": "#C9643B",
-    "--terra-ink": "#A9502B",
-    "--terra-light": "#F8E1D3",
-    "--terra-dark": "#6A2C12",
-    "--sage": "#4F7449",
-    "--land": "#EBD9BC",
-    "--land-trail": "#E9A26C",
-    "--coast": "#B9763F",
-    "--route-open": "#7D6A52",
-    "--locked": "#DCCFB8",
-    "--text-muted": "#3D4560",
-    "--line": "#E2D4BA"
-  },
-
-  "icons": {
-    "opera":        { "viewBox": "0 0 40 30", "body": "<path d='M3 25h34'/><path d='M7 25c0-8 4-15 11-18-2 6-1 12 2 18'/><path d='M16 25c0-6 3-11 8-13-1 5 0 9 3 13'/><path d='M25 25c0-4 2-7 6-8-1 3 0 6 2 8'/>" },
-    "mountainFire": { "viewBox": "0 0 42 28", "body": "<path d='M2 26l11-15 7 8 6-7 14 14z'/><path d='M30 3c1.5 2.5 4 4 4 7a4 4 0 0 1-8 0c0-3 2.5-4.5 4-7z'/>" },
-    "wave":         { "viewBox": "0 0 24 24", "body": "<path d='M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2'/><path d='M2 19.5c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2'/><path d='M5 10c1-4 4-6 8-6 2 0 4 1 5 3-2-1-4 0-4 2 0 1.5 1 2.5 2.5 2.5'/>" },
-    "plane":        { "viewBox": "0 0 24 24", "body": "<path d='M2 16l20-6-4-2-6 2-5-6H5l3 7-4 1-2-2H0z'/>" },
-    "fish":         { "viewBox": "0 0 40 24", "body": "<path d='M3 12c5-7 15-9 23-2 3-2 6-4 10-5-2 4-2 10 0 14-4-1-7-3-10-5-8 7-18 5-23-2z'/><circle cx='11' cy='11' r='1.4'/>" },
-    "doctorPlane":  { "viewBox": "0 0 24 15", "body": "<path d='M1 9l20-5c1.5-.4 2.5.8 1.5 1.8L19 8l-9 2.5-3 4H5l1.5-3.5L3 12 1.5 11z'/><path d='M9 5l2 2'/>" },
-    "boab":         { "viewBox": "0 0 24 24", "body": "<path d='M3 22h18'/><path d='M9 22c-1.2-4-1.5-8 0-12h6c1.5 4 1.2 8 0 12'/><path d='M10 10C8 8.5 5.5 8.5 4 6.5M11 10c-.5-2-1.5-4-3-6M13 10c.5-2 1.5-4 3-6M14 10c2-1.5 4.5-1.5 6-3.5'/>" },
-    "jellyfish":    { "viewBox": "0 0 24 24", "body": "<path d='M4.5 11a7.5 7.5 0 0 1 15 0z'/><path d='M7 11c0 3 1.5 4.5 0 7.5M10.5 11c0 4 1.5 6 0 10.5M13.5 11c0 4-1.5 6 0 10.5M17 11c0 3-1.5 4.5 0 7.5'/>" },
-    "sheep":        { "viewBox": "0 0 24 24", "body": "<path d='M6.5 15.5a3 3 0 0 1-.3-6 3.5 3.5 0 0 1 6.3-2 3.5 3.5 0 0 1 5.8 2.3 2.8 2.8 0 0 1-.8 5.7z'/><path d='M18.2 9.6l3.3-.6v3.6l-2.6.6'/><path d='M8 15.5v4M11 15.5v4M14 15.5v4M17 15.5v4'/>" },
-    "tram":         { "viewBox": "0 0 24 24", "body": "<path d='M6 6h12a2 2 0 0 1 2 2v9H4V8a2 2 0 0 1 2-2z'/><path d='M7 9h4v3H7zM13 9h4v3h-4z'/><path d='M12 6V3M9 3h6'/><circle cx='8' cy='19.5' r='1.5'/><circle cx='16' cy='19.5' r='1.5'/>" },
-    "dots":         { "viewBox": "0 0 24 24", "body": "<circle cx='12' cy='12' r='2'/><circle cx='12' cy='12' r='6' stroke-dasharray='1 3'/><circle cx='12' cy='12' r='10' stroke-dasharray='1 3'/>" },
-    "uluru":        { "viewBox": "0 0 46 20", "body": "<path d='M2 18c3-8 8-12 21-12s18 4 21 12z'/><path d='M14 18v-5M23 18v-7M32 18v-5'/>" },
-    "domes":        { "viewBox": "0 0 24 24", "body": "<path d='M1 19h22'/><path d='M2.5 19c.8-5 2.6-7.5 4.6-7.5S10 14 10.6 16c.8-6 2.8-9 5-9s4.4 4 5.4 12'/>" }
-  },
-
-  "rewards": {
-    "avatar": null,
-    "souvenirs": []
-  },
+  "stations": [],
 
   "demo": {
-    "code": "KOALA-DEMO",
+    "code": "TIGER-DEMO",
     "course": "09c",
     "events": [
-      { "station": "G0", "n": 3, "self": 2, "h": 1, "f": ["SP-IRREG", "GOING-BE", "PROG-FORM", "SPR-S"], "s": "You know the present perfect very well.", "fb": "Your route trains simple past, going to and past progressive.", "ts": "2026-10-07T08:10:00Z" },
-      { "station": "G1", "n": 2, "self": 3, "h": 0, "f": ["SP-IRREG"], "s": "Regular -ed forms are correct.", "fb": "Learn the irregular verbs from the list: go - went, see - saw.", "ts": "2026-10-08T08:20:00Z" },
-      { "station": "G3", "n": 2, "self": 2, "h": 0, "f": ["GOING-BE"], "s": "You use going to for plans.", "fb": "Check am/is/are before going to.", "ts": "2026-10-09T09:05:00Z" },
-      { "station": "W1", "n": 3, "self": 2, "h": 0, "f": [], "s": "Clear ideas with good reasons.", "fb": "Add an example to each idea.", "ts": "2026-10-12T10:00:00Z" },
-      { "station": "W2", "n": 2, "self": 3, "h": 0, "f": ["PP-TIME", "W-LINK"], "s": "Interesting headline and a clear opinion.", "fb": "Use linking words between your paragraphs.", "ts": "2026-10-13T10:00:00Z" }
+      { "station": "SPR-W1", "n": 2, "self": 0, "h": 0, "f": ["S", "NEG"], "s": "Your questions with Do and Does are correct.", "fb": "After doesn't, use the base form.", "ts": "2026-10-05T08:20:00Z" }
     ]
   }
 }
