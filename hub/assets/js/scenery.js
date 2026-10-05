@@ -104,6 +104,20 @@ export function motifsSVG(pr, fresh) {
   }).join('');
 }
 
+// Lagerfeuer (gemeinsame Unterrichtsphase): Holzscheite; angezündet mit flackernden Flammen und Funken
+export function campSVG(lit) {
+  return `<svg viewBox="0 0 40 40" width="38" height="38" aria-hidden="true">
+    <ellipse cx="20" cy="35" rx="15" ry="3.5" fill="#000" opacity=".12"/>
+    ${lit ? `<g class="fl">
+      <path class="fl-o" d="M20,6 C26,13 30,18 28,25 C27,30 23,32 20,32 C16,32 12,30 12,25 C11,20 15,17 16,12 C18,15 19,16 20,6 Z" fill="#E8692C"/>
+      <path class="fl-i" d="M20,15 C23,19 25,22 24,26 C23,29 21,30 20,30 C18,30 16,29 16,26 C16,23 18,21 20,15 Z" fill="#F7C548"/>
+    </g>
+    <circle class="spark s1" cx="15" cy="10" r="1.3" fill="#F7C548"/><circle class="spark s2" cx="25" cy="8" r="1.1" fill="#F0A13A"/>` : ''}
+    <path d="M7,33 L33,27" stroke="#7A4E2A" stroke-width="5" stroke-linecap="round"/>
+    <path d="M7,27 L33,33" stroke="#946039" stroke-width="5" stroke-linecap="round"/>
+  </svg>`;
+}
+
 // Reisemobil mit Avatar an der aktuellen Station (ersetzt dort das NOW-Schild)
 export function vanHTML(avatar, side) {
   return `<span class="van ${side}" aria-hidden="true">

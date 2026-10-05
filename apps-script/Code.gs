@@ -48,7 +48,68 @@ function doGet(e) {
   var events = readEvents_().filter(function (r) { return r.code === code; }).map(function (r) {
     return { station: r.station, n: r.n, self: r.self, h: r.h, f: r.f, s: r.s, fb: r.fb, ts: r.ts };
   });
-  return json_({ ok: true, code: code, events: events });
+  return json_({ ok: true, code: code, events: events, klass: classState_() });
+}
+
+/* ===================== Unterricht steuern (Lagerfeuer, „Today in class“) ===================== */
+
+// Stand für alle Kinder: { camps: { SPR: '2026-10-05T…' | false }, today: { mode, text, at } | null }
+function classState_() {
+  var raw = PropertiesService.getScriptProperties().getProperty('CLASS_STATE');
+  var s = raw ? JSON.parse(raw) : {};
+  return { camps: s.camps || {}, today: s.today || null };
+}
+
+function saveClassState_(s) {
+  PropertiesService.getScriptProperties().setProperty('CLASS_STATE', JSON.stringify(s));
+}
+
+// Protokoll im Blatt "Unterricht" (Grundlage für die Zeitleiste in der KI-Auswertung)
+function logLesson_(action, id, title) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName('Unterricht') || ss.insertSheet('Unterricht');
+  if (sh.getLastRow() === 0) {
+    sh.appendRow(['Zeitpunkt', 'Aktion', 'Station', 'Titel']);
+    sh.getRange(1, 1, 1, 4).setFontWeight('bold').setFontColor('#FFFFFF').setBackground(SETTINGS.HEADER_COLOR);
+  }
+  sh.appendRow([new Date(), action, id, title]);
+}
+
+// Lagerfeuer mit Datum: aus dem Dashboard gesetzt, sonst Vorgabe "lit" aus config.json
+function campList_() {
+  var cfg = loadConfig_();
+  var st = classState_();
+  return Object.keys(cfg.topics).filter(function (id) { return cfg.topics[id].camp; }).map(function (id) {
+    var t = cfg.topics[id]; var c = t.camp;
+    var lit = Object.prototype.hasOwnProperty.call(st.camps, id) ? st.camps[id] : (c.lit || false);
+    return { id: id, place: t.place, name: t.name, title: c.title, titleDe: c.titleDe, lit: lit };
+  });
+}
+
+function getClassControl() {
+  if (!isOwner_()) throw new Error('Kein Zugriff');
+  return { camps: campList_(), today: classState_().today };
+}
+
+function setCamp(id, lit) {
+  if (!isOwner_()) throw new Error('Kein Zugriff');
+  var cfg = loadConfig_();
+  if (!cfg.topics[id] || !cfg.topics[id].camp) throw new Error('Unbekanntes Lagerfeuer: ' + id);
+  var s = classState_();
+  s.camps[id] = lit ? new Date().toISOString() : false;
+  saveClassState_(s);
+  logLesson_(lit ? 'Lagerfeuer angezündet' : 'Lagerfeuer gelöscht', id, cfg.topics[id].camp.titleDe || cfg.topics[id].camp.title);
+  return getClassControl();
+}
+
+function setToday(mode, text) {
+  if (!isOwner_()) throw new Error('Kein Zugriff');
+  if (['together', 'coach', 'book', ''].indexOf(mode) < 0) throw new Error('Unbekannter Modus');
+  var s = classState_();
+  s.today = mode ? { mode: mode, text: String(text || '').slice(0, 120), at: new Date().toISOString() } : null;
+  saveClassState_(s);
+  if (mode) logLesson_('Today in class: ' + mode, '', s.today.text);
+  return getClassControl();
 }
 
 function json_(obj) {
@@ -114,7 +175,7 @@ function loadConfig_() {
   var res = UrlFetchApp.fetch(SETTINGS.CONFIG_URL + '?t=' + Date.now(), { muteHttpExceptions: true });
   if (res.getResponseCode() !== 200) throw new Error('config.json nicht erreichbar: ' + SETTINGS.CONFIG_URL);
   var txt = res.getContentText();
-  try { cache.put('config', txt, 3600); } catch (e) { /* zu gross fuer Cache */ }
+  try { cache.put('config', txt, 300); } catch (e) { /* zu gross fuer Cache */ }
   return JSON.parse(txt);
 }
 
@@ -585,6 +646,7 @@ function getDashboardData() {
   var order = { plenum: 0, blind: 1, gruppe: 2, gut: 3 };
   out.recommendations.sort(function (a, b) { return order[a.type] - order[b.type]; });
   out.lastReport = lastAiReport_();
+  out.klass = { camps: campList_(), today: classState_().today };
   out.aiReady = !!PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
   return JSON.parse(JSON.stringify(out));
 }
@@ -622,6 +684,8 @@ var AI_SYSTEM = [
   '- Lernzuwachs misst du gegen den Check-in (B) als Ausgangswert: Klassenmittel vorher/nachher und Anteil der Kinder, die sich verbessert haben.',
   '  Wichtig: Check-in (4 Aufgaben je Zeitform, teils Auswahl) und Arbeitsblatt/Üben sind unterschiedliche Aufgabenformate. Nenne diese Entwicklung "Lernzuwachs (Entwicklung seit dem Check-in)",',
   '  deute sie vorsichtig und weise darauf hin, dass der genaue Vorher-Nachher-Vergleich erst mit dem Post-Test (Parallelfassung) möglich ist.',
+  '- „Lagerfeuer“ sind gemeinsame Unterrichtsphasen ohne KI (z. B. Regeln aus einem Text herleiten), mit Datum. Prüfe vorsichtig, ob sich',
+  '  Fehlerbereiche vor und nach einer solchen Phase unterscheiden, und benenne, dass das ein Hinweis ist und kein Beweis.',
   '- Empfehlungen müssen im Unterricht einer heterogenen 9. Klasse in 45 Minuten umsetzbar sein.',
   '- Schreib auf Deutsch, klar und knapp, für eine Lehrkraft. Keine Fachsprache ohne Erklärung. Der ganze Bericht umfasst höchstens etwa 1200 Wörter.',
   '',
@@ -655,6 +719,11 @@ function buildAiInput_() {
   });
   var size = cfg.classSizes ? Object.keys(cfg.classSizes).map(function (k) { return k + ': ' + cfg.classSizes[k] + ' Kinder'; }).join(', ') : 'unbekannt';
   lines.push('Klassengröße: ' + size + '. Abgaben insgesamt: ' + events.length + '. Stand: ' + Utilities.formatDate(new Date(), tz, 'dd.MM.yyyy HH:mm'));
+  var lessons = campList_().filter(function (c) { return c.lit; }).map(function (c) {
+    var d = new Date(c.lit);
+    return (isNaN(d) ? String(c.lit) : Utilities.formatDate(d, tz, 'dd.MM.yyyy')) + ' ' + c.name + ' (' + c.id + '): ' + (c.titleDe || c.title);
+  });
+  lines.push('Gemeinsame Unterrichtsphasen ohne KI (Lagerfeuer): ' + (lessons.length ? lessons.join(' · ') : 'keine eingetragen'));
   Object.keys(topics).forEach(function (tid) {
     var t = topics[tid];
     lines.push('');

@@ -100,10 +100,12 @@ export async function loadEvents(cfg, code) {
     let fresh = false;
     try { fresh = sessionStorage.getItem('arh.fresh') === '1'; } catch { /* */ }
     const extra = (store.get(cfg, 'demoExtra', []) || []).map(normaliseEvent);
-    return { events: (fresh ? [] : cfg.demo.events.map(normaliseEvent)).concat(extra), source: 'demo' };
+    const k = cfg.demo.klass || {};
+    const klass = { camps: k.camps || {}, today: k.today ? { ...k.today, at: k.today.at === 'today' ? new Date().toISOString() : k.today.at } : null };
+    return { events: (fresh ? [] : cfg.demo.events.map(normaliseEvent)).concat(extra), source: 'demo', klass };
   }
   const cacheName = `cache.${code}`;
-  let server = null;
+  let server = null; let klass = null;
   if (cfg.backend.appsScriptUrl) {
     try {
       const ctrl = new AbortController();
@@ -114,6 +116,7 @@ export async function loadEvents(cfg, code) {
       if (data && data.ok && Array.isArray(data.events)) {
         server = data.events.map(normaliseEvent);
         store.set(cfg, cacheName, { at: Date.now(), events: server });
+        if (data.klass) { klass = data.klass; store.set(cfg, 'klass', klass); }
       }
     } catch { /* offline oder blockiert → Cache */ }
   }
@@ -128,7 +131,24 @@ export async function loadEvents(cfg, code) {
     events: base.concat(pending.filter((e) => !known.has(signature(e)))),
     source: server ? 'live' : cached ? 'cache' : 'none',
     pending: pending.length,
+    klass: klass || store.get(cfg, 'klass', null),
   };
+}
+
+// Lagerfeuer (gemeinsame Unterrichtsphase): Datum aus dem Dashboard, sonst Vorgabe "lit" aus config.json; false = noch nicht
+export function campLit(cfg, klass, id) {
+  const camp = cfg.topics[id]?.camp;
+  if (!camp) return false;
+  const st = klass?.camps || {};
+  return Object.prototype.hasOwnProperty.call(st, id) ? st[id] : (camp.lit || false);
+}
+
+// "Today in class" gilt nur am Tag, an dem die Lehrkraft ihn gesetzt hat
+export function todayInfo(klass) {
+  const t = klass?.today;
+  if (!t || !t.mode) return null;
+  const d = new Date(t.at);
+  return !isNaN(d) && d.toDateString() === new Date().toDateString() ? t : null;
 }
 
 export function addPending(cfg, code, ev) {

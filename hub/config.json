@@ -236,7 +236,16 @@
         "icon": "sunWave",
         "image": "assets/img/stamps/SPR.webp"
       },
-      "image": "assets/img/SPR.webp"
+      "image": "assets/img/SPR.webp",
+      "camp": {
+        "x": 862,
+        "y": 548,
+        "lit": "2026-10-05",
+        "title": "Start: we read the rules together",
+        "titleDe": "Start: Regeln gemeinsam gelesen",
+        "text": "We started our trip, did the check-in and read the **rules** of the simple present together.",
+        "textDe": "Wir haben die Reise gestartet, den Check-in gemacht und die Regeln des simple present gemeinsam gelesen."
+      }
     },
     "SP": {
       "route": "grammar",
@@ -324,7 +333,54 @@
         "icon": "fish",
         "image": "assets/img/stamps/SP.webp"
       },
-      "image": "assets/img/SP.webp"
+      "image": "assets/img/SP.webp",
+      "camp": {
+        "x": 800,
+        "y": 402,
+        "title": "Lena's blog: we found the rules",
+        "titleDe": "Lenas Blog: Regeln selbst herleiten",
+        "text": "We read Lena's travel blog, marked the verbs in colours and found the **rules** of the simple past ourselves.",
+        "textDe": "Wir haben Lenas Reiseblog gelesen, die Verben farbig markiert und die Regeln des simple past selbst herausgefunden.",
+        "reading": {
+          "title": "Lena's travel blog: My week at the Great Barrier Reef",
+          "introItalic": true,
+          "paragraphs": [
+            "Hi, I'm Lena (15) from Münster. Last summer I stayed with a host family in Cairns, Australia. Here is my best week!",
+            "On Monday we went to the reef with our guide, Mr Lee. The water looked like a postcard, and the coral was so colourful! I tried snorkelling for the first time. I jumped into the water – and then I saw a turtle. It swam right under me!",
+            "On Wednesday we took a boat to a small island. We didn't sleep in a hotel – we slept in tents on the beach. In the evening we cooked fish on a fire and watched the stars. My host brother Jack wasn't hungry, so I ate his fish too.",
+            "Mr Lee also told us a sad story. In 2016 the water was too warm, and a lot of coral died. \"People didn't do enough for the reef,\" he said. So the next morning Jack and I collected rubbish on the beach.",
+            "On Friday the sea was rough, and the boat stopped early. I didn't feel well, and the other tourists weren't happy either.",
+            "When I got home two weeks ago, my little cousin Ben had a lot of questions:"
+          ],
+          "dialog": [
+            [
+              "Ben",
+              "Did you see sharks?"
+            ],
+            [
+              "Lena",
+              "No, I didn't. But I saw a turtle!"
+            ],
+            [
+              "Ben",
+              "Were you scared in the water?"
+            ],
+            [
+              "Lena",
+              "Yes, I was – but only for a minute."
+            ],
+            [
+              "Ben",
+              "What did you eat on the island?"
+            ],
+            [
+              "Lena",
+              "Fish! It was delicious."
+            ]
+          ],
+          "vocab": "host family – Gastfamilie · coral – Koralle · turtle – Schildkröte · tent – Zelt · rubbish – Müll · rough – stürmisch · scared – ängstlich · delicious – lecker"
+        }
+      }
     },
     "PROG": {
       "route": "grammar",
@@ -689,7 +745,17 @@
         "fb": "After doesn't, use the base form.",
         "ts": "2026-10-05T08:20:00Z"
       }
-    ]
+    ],
+    "klass": {
+      "camps": {
+        "SP": "2026-10-07T08:00:00Z"
+      },
+      "today": {
+        "mode": "together",
+        "text": "Lena's blog – we find the rules together.",
+        "at": "today"
+      }
+    }
   },
   "checkin": {
     "sheet": "AUS1-START",

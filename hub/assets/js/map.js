@@ -1,9 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
-  loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc,
-} from './core.js?v=2.5';
-import { openCodeDialog, openRules, copyText, headerHTML, wireCodePill } from './ui.js?v=2.5';
-import { terrainSVG, motifsSVG, vanHTML } from './scenery.js?v=2.5';
+  loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo,
+} from './core.js?v=2.6';
+import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=2.6';
+import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=2.6';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -59,14 +59,15 @@ function render() {
     ${headerHTML(cfg, { code: trav.code, stamps: pr.stamps, slots: pr.stampSlots })}
     <div class="map-layout">
       <section aria-label="Map">
-        <div class="map-scroll"><div class="map" id="map">${mapSVG()}${markers()}</div></div>
+        ${todayBanner()}
+        <div class="map-scroll"><div class="map" id="map">${mapSVG()}${camps()}${markers()}</div></div>
         ${legend()}
         <div class="status-line">${statusLine()}</div>
       </section>
       <aside class="panel" id="panel" aria-live="polite"></aside>
     </div>`;
   wireCodePill(cfg);
-  app.querySelectorAll('.marker').forEach((b) => b.addEventListener('click', () => {
+  app.querySelectorAll('.marker, .camp').forEach((b) => b.addEventListener('click', () => {
     view.sel = b.dataset.id; view.copied = false;
     app.querySelectorAll('.marker').forEach((m) => m.classList.toggle('is-selected', m.dataset.id === view.sel));
     renderPanel();
@@ -77,6 +78,42 @@ function render() {
   if (waking.length) setTimeout(() => waking.forEach((g) => g.classList.remove('sleep')), 700);
   const sc = app.querySelector('.map-scroll'); const s = cfg.topics[view.sel] || cfg.bonus?.[view.sel];
   if (sc && s && sc.scrollWidth > sc.clientWidth) sc.scrollLeft = (s.x / 1000) * sc.scrollWidth - sc.clientWidth / 2;
+}
+
+const TODAY = {
+  together: ['🔥', 'Today we work together in class – look at the board.', 'Heute arbeiten wir gemeinsam – schau nach vorne.'],
+  coach: ['🤖', 'Coach time! Work at your stop on the map.', 'Coach-Zeit! Arbeite an deiner Station.'],
+  book: ['📖', 'Today: book and paper – no iPad needed.', 'Heute: Buch und Papier – kein iPad nötig.'],
+};
+function todayBanner() {
+  const t = todayInfo(info?.klass);
+  if (!t || !TODAY[t.mode]) return '';
+  const [ic, en, de] = TODAY[t.mode];
+  return `<div class="today ${t.mode}" role="status"><span class="today-ic" aria-hidden="true">${ic}</span>
+    <span><b>${esc(en)}</b> <span class="de">(${esc(de)})</span>${t.text ? `<br><span class="today-note">${esc(t.text)}</span>` : ''}</span></div>`;
+}
+
+// Lagerfeuer auf der Route: gemeinsame Phasen der ganzen Klasse (keine Sterne)
+function camps() {
+  return Object.entries(cfg.topics).filter(([, d]) => d.camp).map(([id, d]) => {
+    const lit = campLit(cfg, info?.klass, id);
+    return `<div class="spot" style="left:${d.camp.x / 10}%;top:${d.camp.y / 8}%">
+      <button type="button" class="camp ${lit ? 'lit' : 'unlit'}" data-id="${id}" aria-label="${esc(`Together in class: ${d.camp.title}${lit ? '' : ' (coming up)'}`)}">${campSVG(!!lit)}</button>
+    </div>`;
+  }).join('');
+}
+
+function campRow(id, def) {
+  const lit = campLit(cfg, info?.klass, id);
+  const when = lit ? new Date(lit) : null;
+  const date = when && !isNaN(when) ? when.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }) : '';
+  return `<div class="camp-row ${lit ? 'lit' : 'unlit'}">
+    <span class="camp-ic">${campSVG(!!lit)}</span>
+    <span><b>Together in class</b> <span class="de-inline">(Gemeinsam im Unterricht)</span><br>${esc(def.camp.title)}
+      <span class="de">(${esc(def.camp.titleDe)})</span></span>
+    <span class="camp-side">${lit ? `<span class="step-tag">done ✓ ${esc(date)}</span><button type="button" class="btn ghost round" id="missed">Missed it? <span class="de-inline">(Gefehlt?)</span></button>`
+      : '<span class="step-tag">coming up</span>'}</span>
+  </div>`;
 }
 
 function statusLine() {
@@ -218,11 +255,13 @@ function renderPanel() {
       <div class="topic">Topic: ${esc(def.topic)}</div>
     </div>
     ${def.rules ? `<button type="button" class="btn ghost" id="rules">${UI.book}<span>Rules <span class="de-inline">(Regeln)</span></span></button>` : ''}
+    ${def.camp && state !== 'soon' ? campRow(id, def) : ''}
     ${state !== 'soon' && route?.shape === 'circle' && !def.optional && !t.checkin ? `<ul class="steps">${steps}</ul>` : ''}
     ${body}`;
 
   panel.querySelector('.postcard img')?.addEventListener('error', (e) => e.target.remove());
   panel.querySelector('#rules')?.addEventListener('click', () => openRules(cfg, def));
+  panel.querySelector('#missed')?.addEventListener('click', () => openMissed(cfg, def));
   panel.querySelector('#copy')?.addEventListener('click', () => {
     copyText(panel.querySelector('#startcode').textContent);
     view.copied = true;

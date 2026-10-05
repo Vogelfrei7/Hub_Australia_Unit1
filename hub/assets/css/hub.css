@@ -237,8 +237,36 @@ button.cell:hover { background: rgba(141, 185, 226, .15); }
 .van svg { display: block; }
 .van img { position: absolute; left: 4px; top: -8px; width: 26px; height: 26px; border-radius: 50%; object-fit: cover; background: #FFFBF3; border: 2px solid #FFFBF3; }
 
+/* ---------- Lagerfeuer, „Today in class“, „Missed it?“ ---------- */
+.camp { position: absolute; left: -22px; top: -26px; width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.camp.unlit svg { opacity: .55; }
+.camp:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; border-radius: 50%; }
+.camp .spark { opacity: 0; }
+.today { display: flex; gap: 12px; align-items: center; margin: 0 0 10px; padding: 10px 14px; border-radius: var(--radius-card); background: var(--paper); border: 2px solid var(--line); }
+.today.together { background: #FDEBDD; border-color: #E9A26C; }
+.today.coach { background: var(--sky-light); border-color: var(--sky); }
+.today.book { background: var(--teal-light); border-color: #9CCBCF; }
+.today-ic { font-size: 26px; line-height: 1; }
+.today-note { font-weight: 700; }
+.camp-row { display: grid; grid-template-columns: 40px 1fr; gap: 4px 10px; align-items: center; padding: 10px 12px; border-radius: var(--radius-card); background: #FDF1E6; border: 1.5px solid #EBC9A8; }
+.camp-row.unlit { background: var(--paper); border-style: dashed; border-color: var(--line); }
+.camp-row.unlit .camp-ic svg { opacity: .55; }
+.camp-ic { display: flex; }
+.camp-side { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.camp-side .btn { min-height: 40px; font-size: 14px; }
+.reading { background: var(--paper); border: 1.5px solid var(--line); border-radius: var(--radius-card); padding: 12px 16px; line-height: 1.55; }
+.reading h3 { margin: 0 0 6px; font-family: var(--font-hand); font-weight: 400; font-size: 24px; line-height: 1.1; }
+.reading p { margin: 0 0 8px; }
+.reading .intro { font-style: italic; }
+.reading .talk p { margin: 0 0 2px; }
+.reading .vocab { font-size: 13px; color: var(--text-muted); border-top: 1px dashed var(--line); padding-top: 6px; margin: 8px 0 0; }
+
 /* ---------- Animation (Freischalten, dezente Bewegung auf der Karte) ---------- */
 @media (prefers-reduced-motion: no-preference) {
+  .camp.lit .fl, .camp-row.lit .fl { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker 1.3s ease-in-out infinite alternate; }
+  .camp.lit .fl-i, .camp-row.lit .fl-i { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker 0.9s ease-in-out infinite alternate-reverse; }
+  .camp.lit .spark { animation: spark 2.6s ease-out infinite; }
+  .camp.lit .spark.s2 { animation-delay: 1.3s; }
   .sc.waking, .sc.waking * { transition: fill 1.2s ease, stroke 1.2s ease, opacity 1.2s ease; }
   .sc-wave { animation: scWave 4.5s ease-in-out infinite alternate; }
   .sc-wave.b { animation-duration: 5.5s; animation-delay: -2s; }
@@ -254,5 +282,7 @@ button.cell:hover { background: rgba(141, 185, 226, .15); }
 @keyframes scDrift { from { transform: translate(-3px, 1px); } to { transform: translate(3px, -2px); } }
 @keyframes scHop { 0%, 80%, 100% { transform: translateY(0); } 86% { transform: translateY(-9px); } 92% { transform: translateY(0); } 95% { transform: translateY(-4px); } }
 @keyframes scSpout { 0%, 55%, 100% { opacity: 0; } 65%, 85% { opacity: .9; } }
+@keyframes flicker { 0% { transform: scale(1, 1) skewX(0deg); } 50% { transform: scale(.94, 1.06) skewX(-3deg); } 100% { transform: scale(1.04, .95) skewX(3deg); } }
+@keyframes spark { 0% { opacity: 0; transform: translateY(6px); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-10px); } }
 @keyframes vanBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.5px); } }
 @keyframes pop { 0% { transform: scale(.4); opacity: .2; } 100% { transform: scale(1); opacity: 1; } }

@@ -73,7 +73,13 @@
   .md p { margin: 6px 0; }
   .md .visit { background: var(--accent-soft); border-radius: 12px; padding: 4px 16px 10px; margin-top: 10px; }
   button[disabled] { opacity: .55; cursor: wait; }
-</style>
+  .lesson { display: grid; grid-template-columns: 1fr 1.3fr; gap: 18px; }
+  @media (max-width: 900px) { .lesson { grid-template-columns: 1fr; } }
+  .lesson input { font: inherit; width: 100%; min-height: 40px; padding: 0 12px; border: 1.5px solid var(--line); border-radius: 10px; margin: 8px 0 6px; }
+  .camp { display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .camp:last-child { border-bottom: 0; }
+  .camp .ic { font-size: 22px; text-align: center; }
+  .camp.off .ic { filter: grayscale(1); opacity: .45; }</style>
 </head>
 <body>
 <div class="wrap">
@@ -88,7 +94,27 @@
     </div>
   </header>
   <div id="demo"></div>
-  <div class="grid kpis" id="kpis"></div>
+  <section class="card" id="lesson" style="margin-bottom:16px">
+    <h2>🔥 Unterricht steuern</h2>
+    <p class="sub" style="margin:-6px 0 12px">Das sehen die Kinder auf der Karte (nach dem nächsten Neuladen). Lagerfeuer bringen keine Sterne – sie zeigen gemeinsame Phasen ohne KI.</p>
+    <div class="lesson">
+      <div>
+        <h3>Today in class</h3>
+        <div class="btns" id="today-btns">
+          <button type="button" data-m="together">🔥 Together</button>
+          <button type="button" data-m="coach">🤖 Coach time</button>
+          <button type="button" data-m="book">📖 Book / paper</button>
+          <button type="button" data-m="">Aus</button>
+        </div>
+        <input id="today-text" maxlength="120" placeholder="Optionaler Hinweis, z. B. Book p. 14, ex. 3">
+        <div class="sub" id="today-state"></div>
+      </div>
+      <div>
+        <h3>Lagerfeuer</h3>
+        <div id="camps"></div>
+      </div>
+    </div>
+  </section>  <div class="grid kpis" id="kpis"></div>
   <section class="card">
     <h2>Empfehlungen für die nächsten Stunden</h2>
     <div class="recs" id="recs"></div>
@@ -143,6 +169,7 @@ function render(d) {
     ['auf Niveau 3 oder 4', k.share3 == null ? '–' : k.share3 + ' %']
   ].map(function (x) { return '<div class="card kpi"><b>' + esc(x[1]) + '</b><span>' + esc(x[0]) + '</span></div>'; }).join('');
   renderRecs();
+  renderLesson(d.klass);
   showReport(d.lastReport);
   if (LIVE && !d.aiReady) document.getElementById('ai-status').textContent = 'Noch kein API-Schlüssel hinterlegt (Sheet: Road Trip → KI-Schlüssel hinterlegen). „Für Claude-Chat kopieren“ funktioniert trotzdem.';
   document.getElementById('tabs').innerHTML = d.topics.map(function (t, i) {
@@ -150,6 +177,41 @@ function render(d) {
   }).join('');
   document.querySelectorAll('#tabs button').forEach(function (b) { b.onclick = function () { TOPIC = +b.dataset.i; OPEN = null; render(DATA); }; });
   renderTopic();
+}
+
+var MODES = { together: '🔥 Together – gemeinsam im Unterricht', coach: '🤖 Coach time – Arbeit mit dem Coach', book: '📖 Book / paper – ohne iPad' };
+function sameDay(ts) { var d = new Date(ts), n = new Date(); return !isNaN(d) && d.toDateString() === n.toDateString(); }
+function renderLesson(k) {
+  k = k || { camps: [], today: null };
+  if (DATA) DATA.klass = k;
+  var td = k.today && sameDay(k.today.at) ? k.today : null;
+  document.querySelectorAll('#today-btns button').forEach(function (b) { b.classList.toggle('on', td ? b.dataset.m === td.mode : b.dataset.m === ''); });
+  document.getElementById('today-state').textContent = td
+    ? 'Aktiv seit ' + fmt(td.at) + ': ' + MODES[td.mode] + (td.text ? ' · „' + td.text + '“' : '') + '. Gilt nur heute.'
+    : 'Kein Hinweis aktiv. Die Karte zeigt die normale Ansicht.';
+  document.getElementById('camps').innerHTML = k.camps.length ? k.camps.map(function (c) {
+    return '<div class="camp ' + (c.lit ? 'on' : 'off') + '"><span class="ic">🔥</span><span><b>' + esc(c.place) + '</b> · ' + esc(c.name) +
+      '<br><span class="sub">' + esc(c.titleDe || c.title) + (c.lit ? ' · angezündet am ' + esc(fmt(c.lit).split(' ')[0]) : '') + '</span></span>' +
+      '<button type="button" data-c="' + esc(c.id) + '" data-lit="' + (c.lit ? '0' : '1') + '">' + (c.lit ? 'Löschen' : 'Anzünden') + '</button></div>';
+  }).join('') : '<div class="empty">Noch keine Lagerfeuer in config.json.</div>';
+  document.querySelectorAll('#camps button').forEach(function (b) {
+    b.onclick = function () {
+      b.disabled = true;
+      var lit = b.dataset.lit === '1';
+      if (LIVE) google.script.run.withSuccessHandler(renderLesson).withFailureHandler(function (e) { b.disabled = false; alert(e.message); }).setCamp(b.dataset.c, lit);
+      else { k.camps.forEach(function (c) { if (c.id === b.dataset.c) c.lit = lit ? new Date().toISOString() : false; }); renderLesson(k); }
+    };
+  });
+}
+function wireLesson() {
+  document.querySelectorAll('#today-btns button').forEach(function (b) {
+    b.onclick = function () {
+      var text = document.getElementById('today-text').value.trim();
+      var k = (DATA && DATA.klass) || { camps: [], today: null };
+      if (LIVE) google.script.run.withSuccessHandler(renderLesson).withFailureHandler(function (e) { alert(e.message); }).setToday(b.dataset.m, text);
+      else { k.today = b.dataset.m ? { mode: b.dataset.m, text: text, at: new Date().toISOString() } : null; renderLesson(k); }
+    };
+  });
 }
 
 function renderRecs() {
@@ -344,11 +406,13 @@ function demoData() {
   var order = { plenum: 0, blind: 1, gruppe: 2, gut: 3 }; recs.sort(function (a, b) { return order[a.type] - order[b.type]; });
   var all = rows.map(function (r) { return r.current; });
   return { generated: new Date().toISOString(), classSizes: { '09c': 26 }, recommendations: recs,
+    klass: { today: null, camps: [{ id: 'SPR', place: 'Gold Coast', name: 'Simple present', titleDe: 'Start: Regeln gemeinsam gelesen', lit: '2026-10-05T08:00:00Z' }, { id: 'SP', place: 'Great Barrier Reef', name: 'Simple past', titleDe: 'Lenas Blog: Regeln selbst herleiten', lit: false }] },
     kids: rows.map(function (r) { return { code: r.code }; }),
     kpi: { kids: 24, submissions: 24 + compared, avgLevel: Math.round(10 * all.reduce(function (s, x) { return s + x; }, 0) / 24) / 10, share3: Math.round(100 * all.filter(function (x) { return x >= 3; }).length / 24) },
     topics: [{ id: 'SPR', name: 'Simple present', kids: 24, steps: steps, levels: levels, areas: areas, improved: improved, compared: compared, growth: { kids: 24, base: Math.round(10 * gB / 24) / 10, now: Math.round(10 * gC / 24) / 10, up: gU }, manyHelps: [], rows: rows }] };
 }
 
+wireLesson();
 load();
 </script>
 </body>

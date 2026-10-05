@@ -1,5 +1,5 @@
 // Gemeinsame UI-Bausteine: Kopfzeile, Code-Dialog, Regel-Fenster, Kopieren.
-import { esc, bold, normaliseCode, setTraveller, getTraveller, isDemo, link, avatarSrc, UI } from './core.js?v=2.5';
+import { esc, bold, normaliseCode, setTraveller, getTraveller, isDemo, link, avatarSrc, UI } from './core.js?v=2.6';
 
 export function copyText(text) {
   try {
@@ -93,6 +93,26 @@ export function openRules(cfg, topic) {
     <button class="btn full" type="button" id="rules-ok">Got it! (Verstanden)</button>`,
   { label: `Rules: ${topic.name}`, wide: true });
   document.getElementById('rules-ok').addEventListener('click', () => document.querySelector('#overlay .x').click());
+}
+
+// „Missed it?“: Was die Klasse am Lagerfeuer gemacht hat – für Kinder, die gefehlt haben
+export function openMissed(cfg, topic) {
+  const c = topic.camp; const rd = c.reading;
+  const reading = rd ? `<div class="reading">
+      <h3>${esc(rd.title)}</h3>
+      ${rd.paragraphs.map((p, i) => `<p${i === 0 && rd.introItalic ? ' class="intro"' : ''}>${esc(p)}</p>`).join('')}
+      ${rd.dialog ? `<div class="talk">${rd.dialog.map(([who, line]) => `<p><b>${esc(who)}:</b> ${esc(line)}</p>`).join('')}</div>` : ''}
+      ${rd.vocab ? `<p class="vocab">${esc(rd.vocab)}</p>` : ''}
+    </div>` : '';
+  openDialog(`
+    <h2>Missed it? <span class="de-inline">(Gefehlt?)</span></h2>
+    ${UI.brush(200)}
+    <p style="margin:0"><b>${esc(c.title)}</b><br><span class="de">(${esc(c.titleDe)})</span></p>
+    <p style="margin:0">${bold(c.text)}<br><span class="de">${esc(c.textDe)}</span></p>
+    ${reading}
+    ${topic.rules ? `<button class="btn full" type="button" id="missed-rules">${UI.book}<span>Now read the rules <span class="de-inline">(Jetzt die Regeln lesen)</span></span></button>` : ''}`,
+  { label: 'Missed it?', wide: true });
+  document.getElementById('missed-rules')?.addEventListener('click', () => openRules(cfg, topic));
 }
 
 export function headerHTML(cfg, { code, stamps, slots, page = 'map' }) {
