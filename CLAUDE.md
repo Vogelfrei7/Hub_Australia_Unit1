@@ -10,6 +10,8 @@ Kernbotschaft: KI macht Diagnostik zu einem mächtigen Werkzeug (Lehrkraft erfä
   Check-in-Aufgaben, Tiere, Achievements, Formular-IDs). JS-Module in `hub/assets/js/` (`core.js` = Logik ohne DOM).
   `scenery.js` = Landschaft, Motive (werden mit dem ersten Stempel ihrer Station farbig) und Reisemobil; rein dekorativ,
   Motive nie auf Stationen, Beschriftungen oder Routen legen.
+  Lagerfeuer = gemeinsame Unterrichtsphase ohne KI: `topics.<ID>.camp` (Position, Titel, Text, optional `reading` für „Missed it?“).
+  Angezündet wird im Dashboard (Script Property CLASS_STATE, Protokoll im Blatt „Unterricht“); keine Sterne.
 - `agents/` – Sidekick-Coaches: `core.md` (Kern-Prompt) + `topics/*.md` → `node agents/build.mjs` → `agents/dist/<ID>.md`.
 - `apps-script/` – `Code.gs` + `Dashboard.html`, werden **von Hand** in das Apps Script des Google Sheets kopiert.
 - `private/` und `Bilder_roh/` – **nicht im Repo** (Lösungen, Arbeitsblätter-Quellen, Rohbilder). Nur lokal.
