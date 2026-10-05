@@ -247,10 +247,10 @@
       "x": 885,
       "y": 265,
       "label": "below",
-      "status": "soon",
+      "status": "active",
       "coach": {
         "name": "Simple Past Coach",
-        "input": null
+        "input": "https://agent.sidekick.ki/input/99792-08935/CIA-ECB57?colorMode=0"
       },
       "sheets": {
         "W1": "AUS1-SP-1",

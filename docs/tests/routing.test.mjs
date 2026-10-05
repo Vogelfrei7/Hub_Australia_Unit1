@@ -15,7 +15,7 @@ const ev = (station, n, f = [], h = 0) => normaliseEvent({ station, n, h, f, ts:
 let p = progress(cfg, []);
 assert.equal(p.status.START, 'now');
 assert.equal(p.status.SPR, 'later');
-assert.equal(p.status.SP, 'soon');
+assert.equal(p.status.SP, 'later');
 assert.equal(p.now.writing, undefined);
 assert.equal(Object.values(p.status).filter((s) => s === 'now').length, 1);
 
@@ -50,6 +50,8 @@ assert.equal(p.topics.SPR.stars, 2);
 assert.equal(p.status.SPR, 'done');
 assert.equal(p.achievements.levelup, true);
 assert.deepEqual(diff(before, p).newAch, ['levelup']);
+assert.equal(progress(cfg, [...base, w1, p1]).status.SP, 'now', 'nach simple present geht es zum Great Barrier Reef');
+assert.equal(stepInfo(cfg, 'SP-W2').kind, 'extra');
 
 // 4. Dritter Stern: Zusatzblatt ODER zweite Übung
 assert.equal(progress(cfg, [w1, p1, ev('SPR-W2', 4)]).topics.SPR.stars, 3);
