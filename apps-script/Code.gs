@@ -593,8 +593,9 @@ function getDashboardData() {
 
 var AI = {
   MODEL: 'claude-opus-5-5',
-  EFFORT: 'medium',      // gründlich genug für die Auswertung, kurz genug für das Zeitlimit von Apps Script
-  MAX_TOKENS: 12000,
+  EFFORT: 'low',         // Nachdenken knapp halten: Zeitlimit von Apps Script (6 Min.) und genug Platz für den Bericht
+  MAX_TOKENS: 32000,     // Obergrenze für Nachdenken + Bericht zusammen (12000 reichten bei 125 Abgaben nicht)
+  MIN_REPORT: 1500,      // kürzerer, abgeschnittener Text gilt als gescheitert und überschreibt den alten Bericht nicht
   SHEET: 'KI-Auswertung'
 };
 
@@ -622,7 +623,7 @@ var AI_SYSTEM = [
   '  Wichtig: Check-in (4 Aufgaben je Zeitform, teils Auswahl) und Arbeitsblatt/Üben sind unterschiedliche Aufgabenformate. Nenne diese Entwicklung "Lernzuwachs (Entwicklung seit dem Check-in)",',
   '  deute sie vorsichtig und weise darauf hin, dass der genaue Vorher-Nachher-Vergleich erst mit dem Post-Test (Parallelfassung) möglich ist.',
   '- Empfehlungen müssen im Unterricht einer heterogenen 9. Klasse in 45 Minuten umsetzbar sein.',
-  '- Schreib auf Deutsch, klar und knapp, für eine Lehrkraft. Keine Fachsprache ohne Erklärung.',
+  '- Schreib auf Deutsch, klar und knapp, für eine Lehrkraft. Keine Fachsprache ohne Erklärung. Der ganze Bericht umfasst höchstens etwa 1200 Wörter.',
   '',
   'Gliederung (Markdown, genau diese Überschriften):',
   '## 1. Auf einen Blick',
@@ -697,13 +698,18 @@ function runAiAnalysis() {
     system: AI_SYSTEM,
     messages: [{ role: 'user', content: 'Hier sind die Daten der Klasse. Erstelle den Bericht.\n\n' + input.text }]
   };
-  var res = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
-    method: 'post',
-    contentType: 'application/json',
-    headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-beta': 'server-side-fallback-2026-07-01' },
-    payload: JSON.stringify(body),
-    muteHttpExceptions: true
-  });
+  var res;
+  try {
+    res = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-beta': 'server-side-fallback-2026-07-01' },
+      payload: JSON.stringify(body),
+      muteHttpExceptions: true
+    });
+  } catch (e) {
+    throw new Error('Keine Antwort von der KI (' + e.message + '). Bitte noch einmal versuchen oder den Weg „Für Claude-Chat kopieren“ nutzen.');
+  }
   var code = res.getResponseCode();
   var data;
   try { data = JSON.parse(res.getContentText()); } catch (e) { throw new Error('Antwort der API nicht lesbar (HTTP ' + code + ').'); }
@@ -716,7 +722,10 @@ function runAiAnalysis() {
   if (data.stop_reason === 'refusal') throw new Error('Die Anfrage wurde abgelehnt. Bitte den Weg „Für Claude-Chat kopieren“ nutzen.');
   var report = (data.content || []).filter(function (b) { return b.type === 'text'; }).map(function (b) { return b.text; }).join('\n').trim();
   if (!report) throw new Error('Die API hat keinen Text geliefert.');
-  if (data.stop_reason === 'max_tokens') report += '\n\n_(Bericht wurde gekürzt.)_';
+  if (data.stop_reason === 'max_tokens') {
+    if (report.length < AI.MIN_REPORT) throw new Error('Die KI ist nicht bis zum Bericht gekommen (Platz aufgebraucht). Der letzte Bericht bleibt erhalten. Bitte noch einmal versuchen oder den Weg „Für Claude-Chat kopieren“ nutzen.');
+    report += '\n\n_(Bericht wurde am Ende gekürzt.)_';
+  }
 
   var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(AI.SHEET) || SpreadsheetApp.getActiveSpreadsheet().insertSheet(AI.SHEET);
   if (sh.getLastRow() === 0) {
