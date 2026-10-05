@@ -248,21 +248,81 @@
       "y": 265,
       "label": "below",
       "status": "soon",
+      "coach": {
+        "name": "Simple Past Coach",
+        "input": null
+      },
+      "sheets": {
+        "W1": "AUS1-SP-1",
+        "W2": "AUS1-SP-2"
+      },
+      "areas": [
+        "ED",
+        "IRREG",
+        "WAS",
+        "DID",
+        "WH"
+      ],
+      "areaLabels": {
+        "ED": "regelmäßige Verben: -ed und Schreibung",
+        "IRREG": "unregelmäßige Verben",
+        "WAS": "was/were (auch wasn't/weren't, Fragen mit be)",
+        "DID": "didn't/did + Grundform (Verneinung, Fragen, Kurzantworten)",
+        "WH": "Fragen mit Fragewort / Who"
+      },
+      "rules": [
+        {
+          "title": "When?",
+          "de": "Wann?",
+          "text": "Finished actions at a **time in the past**: yesterday · last summer · two days ago · in 2016",
+          "textDe": "Was abgeschlossen ist und zu einem Zeitpunkt in der Vergangenheit passiert ist.",
+          "ex": "**Last summer** Lena **stayed** in Cairns."
+        },
+        {
+          "title": "Regular verbs → -ed",
+          "de": "Regelmäßige Verben: -ed",
+          "text": "Watch the spelling: stop → **stopped**, try → **tried**, love → **loved**.",
+          "textDe": "Achte auf die Schreibung.",
+          "ex": "The boat **stopped** near the island."
+        },
+        {
+          "title": "Irregular verbs",
+          "de": "Unregelmäßige Verben",
+          "text": "Learn them: go → **went**, see → **saw**, swim → **swam**, eat → **ate**, take → **took**.",
+          "textDe": "Eigene Form – lernen!",
+          "ex": "I **saw** a turtle. It **swam** under me."
+        },
+        {
+          "title": "was / were",
+          "de": "was / were",
+          "text": "I / he / she / it → **was** · you / we / they → **were** · not: **wasn't / weren't**",
+          "textDe": "be hat zwei Formen – ohne did.",
+          "ex": "The water **was** warm. We **weren't** scared."
+        },
+        {
+          "title": "Not",
+          "de": "Verneinung",
+          "text": "**didn't** + base form",
+          "textDe": "didn't + Grundform",
+          "ex": "We **didn't see** sharks."
+        },
+        {
+          "title": "Questions",
+          "de": "Fragen",
+          "text": "**Did** + subject + base form? Short answer: Yes, I **did**. / No, I **didn't**. With be: **Were** you …? – Yes, I **was**.",
+          "textDe": "Frage mit Did + Grundform; bei be mit Was/Were.",
+          "ex": "**Did** you **see** a turtle? – Yes, I **did**."
+        }
+      ],
+      "challenge": {
+        "title": "Challenge: Who?",
+        "text": "Who asks for the **subject** (wer?): no did → **Who saw** the turtle? · Who asks for the **object** (wen?): with did → **Who did** Lena **call**?"
+      },
       "stamp": {
         "shape": "oval",
         "ink": "#2F7983",
         "icon": "fish",
         "image": "assets/img/stamps/SP.webp"
-      },
-      "areas": [
-        "IRREG",
-        "ED",
-        "DID"
-      ],
-      "areaLabels": {
-        "IRREG": "unregelmäßige Verben",
-        "ED": "regelmäßige -ed-Formen und Schreibung",
-        "DID": "did + Grundform in Fragen und Verneinung"
       },
       "image": "assets/img/SP.webp"
     },

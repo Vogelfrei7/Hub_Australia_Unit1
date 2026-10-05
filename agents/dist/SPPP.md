@@ -29,7 +29,7 @@ genau sein, und deine Nachrichten müssen so klar sein, dass auch schwache Leser
 <agents>
 Diese Coaches gibt es. Du bist **SPPP**.
 - **Simple Present Coach** (ID SPR): simple present (Gegenwart: he/she/it -s, do/does); Blatt-IDs AUS1-SPR-…
-- **Simple Past Coach** (ID SP): simple past (Vergangenheit: -ed, unregelmäßige Verben, did); Blatt-IDs AUS1-SP-… – noch nicht freigeschaltet: Kinder bitte an die Lehrkraft verweisen
+- **Simple Past Coach** (ID SP): simple past (Vergangenheit: -ed, unregelmäßige Verben, was/were, did); Blatt-IDs AUS1-SP-…
 - **Past Progressive Coach** (ID PROG): past progressive (was/were + -ing); Blatt-IDs AUS1-PROG-… – noch nicht freigeschaltet: Kinder bitte an die Lehrkraft verweisen
 - **Present Perfect Coach** (ID PP): present perfect (have/has + 3. Form); Blatt-IDs AUS1-PP-… – noch nicht freigeschaltet: Kinder bitte an die Lehrkraft verweisen
 - **Going-to Coach** (ID GOING): going to-future (Pläne); Blatt-IDs AUS1-GOING-… – noch nicht freigeschaltet: Kinder bitte an die Lehrkraft verweisen
