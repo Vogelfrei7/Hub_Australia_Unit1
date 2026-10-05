@@ -101,7 +101,7 @@
         <button id="ai-copy" type="button">Für Claude-Chat kopieren</button>
       </div>
     </div>
-    <p class="sub" id="ai-status" style="margin:8px 0 0">Claude wertet alle Ergebnisse aus: Trends, Zusammenhänge, blinde Flecken und ein Vorschlag für die nächsten zwei Stunden. Dauert etwa 1–2 Minuten.</p>
+    <p class="sub" id="ai-status" style="margin:8px 0 0">Claude wertet alle Ergebnisse aus: Trends, Zusammenhänge, blinde Flecken und ein Vorschlag für die nächsten zwei Stunden. Dauert etwa 2–4 Minuten.</p>
     <div id="ai-report" class="md"></div>
   </section>
   <div class="tabs" id="tabs"></div>
@@ -264,7 +264,7 @@ function showReport(r) {
 document.getElementById('ai-run').onclick = function () {
   var btn = this, status = document.getElementById('ai-status');
   if (!LIVE) { SHOWN_DEMO = DEMO_REPORT; showReport(DEMO_REPORT); return; }
-  btn.disabled = true; status.textContent = 'Claude wertet aus … (etwa 1–2 Minuten, Fenster bitte offen lassen)';
+  btn.disabled = true; status.textContent = 'Claude wertet aus … (etwa 2–4 Minuten, Fenster bitte offen lassen)';
   google.script.run.withSuccessHandler(function (r) { btn.disabled = false; DATA.lastReport = r; showReport(r); })
     .withFailureHandler(function (e) { btn.disabled = false; status.textContent = '⚠ ' + e.message; }).runAiAnalysis();
 };
