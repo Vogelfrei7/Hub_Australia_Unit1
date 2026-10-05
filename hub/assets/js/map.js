@@ -1,8 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
-  loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion,
-} from './core.js?v=2.4';
-import { openCodeDialog, openRules, copyText, headerHTML, wireCodePill } from './ui.js?v=2.4';
+  loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc,
+} from './core.js?v=2.5';
+import { openCodeDialog, openRules, copyText, headerHTML, wireCodePill } from './ui.js?v=2.5';
+import { terrainSVG, motifsSVG, vanHTML } from './scenery.js?v=2.5';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -72,6 +73,8 @@ function render() {
     if (window.innerWidth < 960) document.getElementById('panel').scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth' });
   }));
   if (trav.code) renderPanel();
+  const waking = app.querySelectorAll('.sc.waking');   // neuer Stempel: Motive dieser Station werden farbig
+  if (waking.length) setTimeout(() => waking.forEach((g) => g.classList.remove('sleep')), 700);
   const sc = app.querySelector('.map-scroll'); const s = cfg.topics[view.sel] || cfg.bonus?.[view.sel];
   if (sc && s && sc.scrollWidth > sc.clientWidth) sc.scrollLeft = (s.x / 1000) * sc.scrollWidth - sc.clientWidth / 2;
 }
@@ -108,9 +111,8 @@ function mapSVG() {
       <text x="${r.label.x}" y="${r.label.y + 24}" font-family="Atkinson Hyperlegible, sans-serif" font-size="17" font-weight="700" fill="${r.color}" text-anchor="middle">(${esc(r.nameDe)} – ${esc(r.hint)})</text>`;
   }).join('');
   return `<svg class="base" viewBox="${cfg.map.viewBox}" preserveAspectRatio="none" aria-hidden="true">
-    <defs><pattern id="fog" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <rect width="14" height="14" fill="var(--land)"/><line x1="0" y1="0" x2="0" y2="14" stroke="var(--land-hatch)" stroke-width="5"/></pattern></defs>
-    ${lands.map((d) => `<path d="${d}" fill="url(#fog)" stroke="var(--coast)" stroke-width="3" stroke-linejoin="round"/>`).join('')}
+    ${terrainSVG(lands)}
+    <g class="scenery">${motifsSVG(pr, view.just?.topic)}</g>
     ${routeSVG}
     ${(cfg.map.seas || []).map((s) => `<text class="sea-label" x="${s.x}" y="${s.y}" font-size="${s.size}" text-anchor="${s.anchor}">${esc(s.text)}</text>`).join('')}
   </svg>`;
@@ -121,6 +123,7 @@ function markers() {
   for (const r of cfg.routes) for (const id of r.stops) items.push({ id, def: cfg.topics[id], route: r, state: pr.status[id], t: pr.topics[id] });
   for (const [id, b] of Object.entries(cfg.bonus || {})) items.push({ id, def: { ...b, number: 'Final' }, route: null, state: pr.finalDone ? 'done' : b.status, bonus: true });
   const pops = new Set([view.just?.topic].filter(Boolean));
+  const vanAt = trav.code ? (pr.now.grammar || pr.now.writing) : null;
   return items.map(({ id, def, route, state, t, bonus }) => {
     const sel = id === view.sel;
     const color = route ? route.color : '#1F5F68';
@@ -130,7 +133,7 @@ function markers() {
     const dots = route && !def.optional && route.shape === 'circle' && t && !t.checkin
       ? `<span class="dots">${[0, 1, 2].map((i) => `<i class="${i < t.stars ? 'on' : ''}"></i>`).join('')}</span>` : '';
     return `<div class="spot" style="left:${def.x / 10}%;top:${def.y / 8}%;--rc:${color}">
-      ${state === 'now' ? '<span class="now-flag">NOW</span>' : ''}
+      ${id === vanAt ? vanHTML(esc(avatarSrc(cfg, trav.code)), def.label === 'above' ? 'side' : 'top') : state === 'now' ? '<span class="now-flag">NOW</span>' : ''}
       <button type="button" class="${cls}" data-id="${id}" aria-pressed="${sel}" aria-label="${esc(label)}">
         ${state === 'done' ? UI.check : `<span>${esc(def.number)}</span>`}
       </button>

@@ -227,10 +227,32 @@ button.cell:hover { background: rgba(141, 185, 226, .15); }
 .how-pic { height: 88px; border-radius: 12px; background: var(--sky-light); display: flex; align-items: center; justify-content: center; gap: 14px; color: var(--navy); }
 .how-card b.big { font-size: 18px; line-height: 1.3; }
 
-/* ---------- Animation (nur beim Freischalten) ---------- */
+/* ---------- Landschaft, Motive, Reisemobil ---------- */
+.scenery, .scenery * { pointer-events: none; }
+.sc.sleep { opacity: .4; }
+.sc.sleep [fill]:not([fill="none"]) { fill: #8C8170; }
+.sc.sleep [stroke]:not([stroke="none"]) { stroke: #8C8170; }
+.van { position: absolute; left: 0; top: -74px; width: 64px; height: 42px; transform: translateX(-50%); pointer-events: none; filter: drop-shadow(0 2px 0 rgba(27, 42, 85, .25)); }
+.van.side { left: 30px; top: -40px; transform: none; }
+.van svg { display: block; }
+.van img { position: absolute; left: 4px; top: -8px; width: 26px; height: 26px; border-radius: 50%; object-fit: cover; background: #FFFBF3; border: 2px solid #FFFBF3; }
+
+/* ---------- Animation (Freischalten, dezente Bewegung auf der Karte) ---------- */
 @media (prefers-reduced-motion: no-preference) {
+  .sc.waking, .sc.waking * { transition: fill 1.2s ease, stroke 1.2s ease, opacity 1.2s ease; }
+  .sc-wave { animation: scWave 4.5s ease-in-out infinite alternate; }
+  .sc-wave.b { animation-duration: 5.5s; animation-delay: -2s; }
+  .sc-drift { animation: scDrift 6s ease-in-out infinite alternate; }
+  .sc-hop { animation: scHop 7s ease-in-out infinite; }
+  .sc-spout { animation: scSpout 6s ease-in-out infinite; }
+  .van svg { animation: vanBob 1.6s ease-in-out infinite; }
   .stamp-land { animation: stampLand var(--dur-unlock) cubic-bezier(.2, .9, .3, 1.2) both; }
   .marker.pop { animation: pop var(--dur-unlock) cubic-bezier(.2, .9, .3, 1.3) both; }
 }
 @keyframes stampLand { 0% { transform: scale(1.6) rotate(-16deg); opacity: 0; } 70% { opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+@keyframes scWave { from { transform: translateX(-5px); } to { transform: translateX(5px); } }
+@keyframes scDrift { from { transform: translate(-3px, 1px); } to { transform: translate(3px, -2px); } }
+@keyframes scHop { 0%, 80%, 100% { transform: translateY(0); } 86% { transform: translateY(-9px); } 92% { transform: translateY(0); } 95% { transform: translateY(-4px); } }
+@keyframes scSpout { 0%, 55%, 100% { opacity: 0; } 65%, 85% { opacity: .9; } }
+@keyframes vanBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.5px); } }
 @keyframes pop { 0% { transform: scale(.4); opacity: .2; } 100% { transform: scale(1); opacity: 1; } }

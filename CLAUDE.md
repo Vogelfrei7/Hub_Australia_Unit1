@@ -8,6 +8,8 @@ Kernbotschaft: KI macht Diagnostik zu einem mächtigen Werkzeug (Lehrkraft erfä
 - `hub/` – Website (GitHub Pages, öffentlich): `index.html` Karte · `checkin.html` Pre-Test · `passport.html` Pass ·
   `abgabe.html` Ergebnis-Annahme · `how.html` So geht's. **Alle Inhalte in `hub/config.json`** (Stationen, Routen,
   Check-in-Aufgaben, Tiere, Achievements, Formular-IDs). JS-Module in `hub/assets/js/` (`core.js` = Logik ohne DOM).
+  `scenery.js` = Landschaft, Motive (werden mit dem ersten Stempel ihrer Station farbig) und Reisemobil; rein dekorativ,
+  Motive nie auf Stationen, Beschriftungen oder Routen legen.
 - `agents/` – Sidekick-Coaches: `core.md` (Kern-Prompt) + `topics/*.md` → `node agents/build.mjs` → `agents/dist/<ID>.md`.
 - `apps-script/` – `Code.gs` + `Dashboard.html`, werden **von Hand** in das Apps Script des Google Sheets kopiert.
 - `private/` und `Bilder_roh/` – **nicht im Repo** (Lösungen, Arbeitsblätter-Quellen, Rohbilder). Nur lokal.
