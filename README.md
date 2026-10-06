@@ -35,3 +35,4 @@ Ereignisbasiert: eine Zeile pro Abgabe, nichts wird überschrieben, der beste Ve
 
 Keine personenbezogenen Daten im Repo, keine Buchseiten, nur eigene Illustrationen.
 Gamification macht Fortschritt sichtbar, ohne zu belohnen: keine Rangliste, keine Streaks, kein Zeitdruck, keine Sounds.
+
