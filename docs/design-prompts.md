@@ -76,6 +76,12 @@ No text.
 | seal.png | A baby seal avatar with big dark eyes. |
 | fox.png | A red fox avatar with a fluffy tail curled around. |
 
+**Gast-Avatar** (nur für die Gast-Codes GAST-…, nicht für Kinder):
+
+| Datei | Motiv |
+|---|---|
+| koala.png | A koala avatar hugging a eucalyptus branch, fluffy grey ears with white tufts, big dark nose, friendly smile, wearing a small khaki traveller's hat – a welcoming guest on a road trip. |
+
 ---
 
 ## B) Stempel (Reisepass)

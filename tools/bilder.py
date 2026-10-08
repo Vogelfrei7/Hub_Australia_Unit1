@@ -18,7 +18,7 @@ IMG = os.path.join(ROOT, 'hub', 'assets', 'img')
 CONFIG = os.path.join(ROOT, 'hub', 'config.json')
 
 ANIMALS = {'wolf', 'bear', 'tiger', 'lion', 'shark', 'eagle', 'falcon', 'cobra', 'viper', 'rhino', 'gorilla', 'jaguar', 'panther', 'orca', 'lynx',
-           'panda', 'bunny', 'kitten', 'puppy', 'otter', 'hamster', 'penguin', 'fawn', 'lamb', 'alpaca', 'hedgehog', 'squirrel', 'dolphin', 'seal', 'fox'}
+           'panda', 'bunny', 'kitten', 'puppy', 'otter', 'hamster', 'penguin', 'fawn', 'lamb', 'alpaca', 'hedgehog', 'squirrel', 'dolphin', 'seal', 'fox', 'koala'}
 BADGES = {'levelup', 'allfive', 'stars'}
 SRC_TIME = [0]
 

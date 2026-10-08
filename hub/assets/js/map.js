@@ -1,9 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
-  loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo,
-} from './core.js?v=2.7';
-import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=2.7';
-import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=2.7';
+  loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo, isGuest,
+} from './core.js?v=2.8';
+import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=2.8';
+import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=2.8';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -273,7 +273,13 @@ function renderPanel() {
 
 function actionBox(def, t, color) {
   let todo; let mode = '';
-  if (!t.w1 && t.gold) {
+  if (isGuest(cfg, trav.code)) {   // Gäste: kein Arbeitsblatt, direkt eine Übungsrunde
+    mode = ' PRACTICE';
+    todo = [
+      ['Welcome on board! <b>Practise</b> with the coach – just like the class.', 'Willkommen! Üben Sie mit dem Coach – genau wie die Klasse.'],
+      ['Copy the start code, tap into the coach field, paste and send.', 'Startcode kopieren, ins Coach-Feld tippen, einfügen, senden.'],
+    ];
+  } else if (!t.w1 && t.gold) {
     todo = [
       ['Your check-in shows: you are good at this! Take the <b>GOLD worksheet</b> from the box.', 'Dein Check-in zeigt: Das kannst du schon gut! Nimm das goldene Arbeitsblatt.'],
       ['Copy your start code and tap into the coach field below.', 'Kopiere deinen Startcode und tippe unten in das Coach-Feld.'],

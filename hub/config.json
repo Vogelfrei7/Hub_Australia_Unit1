@@ -392,10 +392,10 @@
       "x": 690,
       "y": 330,
       "label": "above",
-      "status": "soon",
+      "status": "active",
       "coach": {
         "name": "Present Perfect Coach",
-        "input": null
+        "input": "https://agent.sidekick.ki/input/99792-08935/CIA-9A124?colorMode=0"
       },
       "sheets": {
         "W1": "AUS1-PP-1",
@@ -404,7 +404,8 @@
       "stamp": {
         "shape": "circle",
         "ink": "#A9502B",
-        "icon": "doctorPlane"
+        "icon": "doctorPlane",
+        "image": "assets/img/stamps/PP.webp"
       },
       "areas": [
         "FORM",
@@ -487,11 +488,11 @@
       "x": 480,
       "y": 215,
       "label": "below",
-      "status": "soon",
+      "status": "active",
       "contrast": true,
       "coach": {
         "name": "Past or Perfect Coach",
-        "input": null
+        "input": "https://agent.sidekick.ki/input/99792-08935/CIA-8632E?colorMode=0"
       },
       "sheets": {
         "W1": "AUS1-SPPP-1",
@@ -500,7 +501,8 @@
       "stamp": {
         "shape": "oval",
         "ink": "#4F7449",
-        "icon": "croc"
+        "icon": "croc",
+        "image": "assets/img/stamps/SPPP.webp"
       },
       "areas": [
         "CHOICE",
@@ -622,7 +624,8 @@
           ],
           "vocab": "huge – riesig · to touch – berühren · to show – zeigen · suitcase – Koffer · hall – Flur · to unpack – auspacken"
         }
-      }
+      },
+      "image": "assets/img/SPPP.webp"
     },
     "PROG": {
       "route": "grammar",
