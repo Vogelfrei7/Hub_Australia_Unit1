@@ -1,9 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
   loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo, isGuest,
-} from './core.js?v=2.8';
-import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=2.8';
-import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=2.8';
+} from './core.js?v=2.9';
+import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=2.9';
+import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=2.9';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };

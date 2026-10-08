@@ -18,7 +18,7 @@ Thema der Stunde: **simple past oder present perfect?** (Station 4 Darwin). Die 
 |---|---|---|---|
 | vor den Gästen | **Lagerfeuer:** Lenas Interview (AUS1-SPPP-R) lesen, markieren, Regel-Detektiv, Tafelbild. Danach AUS1-SPPP-1 bearbeiten. Im Dashboard: Darwin anzünden, „Today in class“ auf 🤖 Coach time. | normale Stunde | AUS1-SPPP-R, Tafel |
 | 0–3 | **Gäste kommen**, die Kinder fotografieren gerade ihr Blatt. Kurze Einordnung an der Tür oder am Beamer (Karte im Demo-Modus oder eigener Code). | Kernsatz 1 | Beamer: Karte |
-| 3–10 | **Hochladen und Rückmeldung:** Die Gäste stehen bei Kindern, sehen Foto → Rückmeldung → „Get your stamp“ → Stern auf der Karte. Danach Stufe 2: adaptives Üben. | Kernsatz 2, du gehst mit | iPads der Kinder |
+| 3–10 | **Hochladen und Rückmeldung:** Jeder Gast steht bei seinem Lotsen. Der Lotse zeigt seinen **eigenen** Weg: Foto → Rückmeldung → „Get your stamp“ → Stern auf der Karte → adaptives Üben (Runde 1 nach Blatt-Ergebnis, Runde 2 angepasst). | Kernsatz 2, du gehst mit | iPads der Kinder |
 | 10–20 | **Gäste reisen mit:** Gast-Karte scannen, Lotse daneben, eine Übungsrunde mit dem Coach. Die Kinder üben weiter. | Kernsatz 3 | Gast-Karten, Gast-iPads |
 | 20–27 | **Dashboard am Beamer** (Präsentationsmodus): Lernzuwachs seit dem Check-in (simple past, present perfect), Fehlermuster von heute live, ein Satz aus der KI-Kurzfassung, deine Entscheidung daraus. | Kernsatz 4 | Dashboard-Adresse |
 | 27–30 | **Ausblick:** „Was ihr heute oft verwechselt habt, üben wir morgen.“ Ein Kind sagt einen Satz, du sagst deinen Schlusssatz. | Kernsatz 5 | – |
@@ -32,8 +32,13 @@ Thema der Stunde: **simple past oder present perfect?** (Station 4 Darwin). Die 
 
 ## Lotsen-Briefing (Mi 14.10., 5 Minuten)
 - **Wer:** 4–5 Kinder, die sicher mit dem iPad sind und gern erklären. Jedes Kind betreut einen Gast.
-- **Was sie tun:** Gast begrüßen („Hello, I'm your guide!“ – gern auf Deutsch weiter), Gast-Karte scannen lassen, auf Darwin tippen,
-  Startcode kopieren und einfügen zeigen, **Practice** wählen, beim Antworten helfen („1 saw, 2 have been …“), am Ende „Get your stamp“.
+- **Teil 1 – der eigene Weg (Minute 3–10):** Gast begrüßen („Hello, I'm your guide!“ – gern auf Deutsch weiter). Dann zeigen sie, wie **sie selbst**
+  mit ihrem Arbeitsblatt weitermachen: Foto ans Coach-Feld → Rückmeldung lesen und kurz erklären („Hier sagt er mir, was ich falsch hatte – und warum.“)
+  → „Get your stamp“ → Stern auf der Karte → **Practice** starten. Hier sieht der Gast das **Adaptive**: Runde 1 richtet sich nach dem Blatt-Ergebnis,
+  Runde 2 wird je nach Ergebnis schwerer („Round 2 is a bit harder“) oder leichter (mit Hilfebox).
+- **Teil 2 – der Gast probiert selbst (Minute 10–20):** Gast-Karte scannen lassen, auf Darwin tippen, Startcode kopieren und einfügen (der Gast-Startcode
+  startet direkt das Üben), beim Antworten helfen („1 saw, 2 have been …“), am Ende „Get your stamp“. Gäste machen **eine** Runde auf Stufe B –
+  ohne Arbeitsblatt gibt es nichts, woran sich der Coach anpassen könnte. Die Anpassung haben sie in Teil 1 beim Lotsen gesehen.
 - **Was sie erzählen dürfen:** ihren eigenen Pass zeigen, was der Coach ihnen gesagt hat, was sie schwer fanden. Nichts auswendig lernen.
 - **Generalprobe:** Mittwoch macht jeder Lotse einmal selbst eine Runde mit einem Gast-Code (GAST-KO01 … KO06). Danach im Dashboard prüfen: Die Gast-Abgaben erscheinen nicht.
 

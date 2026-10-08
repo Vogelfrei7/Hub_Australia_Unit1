@@ -37,6 +37,8 @@ export function isDemo() {
   const p = new URLSearchParams(location.search);
   if (p.get('demo') === '0') { try { sessionStorage.removeItem('arh.demo'); } catch { /* */ } return false; }
   if (p.get('demo') === '1') { try { sessionStorage.setItem('arh.demo', '1'); } catch { /* */ } return true; }
+  // Echter Code in der Adresse (QR-Karte, Stempel-Link) beendet einen alten Demo-Modus im selben Tab
+  if (p.has('code')) { try { sessionStorage.removeItem('arh.demo'); } catch { /* */ } return false; }
   try { return sessionStorage.getItem('arh.demo') === '1'; } catch { return false; }
 }
 

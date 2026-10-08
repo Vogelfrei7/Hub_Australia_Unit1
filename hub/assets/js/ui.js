@@ -1,5 +1,5 @@
 // Gemeinsame UI-Bausteine: Kopfzeile, Code-Dialog, Regel-Fenster, Kopieren.
-import { esc, bold, normaliseCode, setTraveller, getTraveller, isDemo, link, avatarSrc, UI } from './core.js?v=2.8';
+import { esc, bold, normaliseCode, setTraveller, getTraveller, isDemo, link, avatarSrc, UI } from './core.js?v=2.9';
 
 export function copyText(text) {
   try {
