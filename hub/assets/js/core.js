@@ -64,6 +64,7 @@ export function normaliseCode(raw) {
 // Tier zum Code: deutsches Codewort (BAER) → Anzeigename (Bär) und Bilddatei (bear.webp); Liste in config.animals
 function animalEntry(cfg, code) {
   const w = String(code || '').split('-')[0];
+  if (cfg && cfg.guest && w === cfg.guest.prefix) return cfg.guest.animal;
   const list = cfg && cfg.animals ? [...(cfg.animals.wild || []), ...(cfg.animals.cute || [])] : [];
   return list.find((a) => a.code === w) || { code: w, de: w ? w.charAt(0) + w.slice(1).toLowerCase() : '', file: w.toLowerCase() };
 }
@@ -127,12 +128,18 @@ export async function loadEvents(cfg, code) {
   const pending = (store.get(cfg, `pending.${code}`, []) || []).map(normaliseEvent)
     .filter((e) => !(server && known.has(signature(e))) && e.ts > limit);
   store.set(cfg, `pending.${code}`, pending);
+  const pre = isGuest(cfg, code) ? (cfg.guest.events || []).map(normaliseEvent) : [];
   return {
-    events: base.concat(pending.filter((e) => !known.has(signature(e)))),
+    events: pre.concat(base, pending.filter((e) => !known.has(signature(e)))),
     source: server ? 'live' : cached ? 'cache' : 'none',
     pending: pending.length,
     klass: klass || store.get(cfg, 'klass', null),
   };
+}
+
+// Gast-Codes (z. B. GAST-KO01): starten mit einer vorbereiteten Reise, ihre Abgaben zählen nicht in der Klassenauswertung
+export function isGuest(cfg, code) {
+  return !!(cfg.guest && String(code || '').startsWith(cfg.guest.prefix + '-'));
 }
 
 // Lagerfeuer (gemeinsame Unterrichtsphase): Datum aus dem Dashboard, sonst Vorgabe "lit" aus config.json; false = noch nicht
@@ -176,7 +183,9 @@ export function stepInfo(cfg, id) {
 
 /* ---------- Fortschritt ableiten (rein, ohne DOM) ---------- */
 
-export function progress(cfg, rawEvents) {
+// opts.open: Stationen, an denen die Klasse schon ist (Lagerfeuer angezündet) – dort darf jedes Kind arbeiten
+export function progress(cfg, rawEvents, opts = {}) {
+  const open = new Set(opts.open || []);
   const events = rawEvents.map((e) => ({ ...e, si: stepInfo(cfg, e.station) })).filter((e) => e.si).sort((a, b) => a.ts - b.ts);
   const topics = {};
   for (const id of Object.keys(cfg.topics)) topics[id] = { id, w1: null, p: null, final: null, base: null, extra: false, attempts: [], last: null };
@@ -205,7 +214,8 @@ export function progress(cfg, rawEvents) {
   const start = cfg.checkin && topics.START;
   if (start) { start.complete = checkinDone; start.stamp = checkinDone; start.stars = 0; start.checkin = true; }
 
-  // Zustand je Station: done · now · later · soon. Genau ein "now" pro Route; "soon"-Stationen blockieren nicht.
+  // Zustand je Station: done · now · open · later · soon. Genau ein "now" pro Route (dort steht der Van);
+  // "open" = später auf der Route, aber die Klasse ist schon dort. "soon"-Stationen blockieren nicht.
   const status = {};
   const now = {};
   for (const r of cfg.routes) {
@@ -215,11 +225,11 @@ export function progress(cfg, rawEvents) {
       if (t.complete) status[id] = 'done';
       else if (def.status === 'soon' && !t.attempts.length) status[id] = 'soon';
       else if (!found) { status[id] = 'now'; now[r.id] = id; found = true; }
-      else status[id] = 'later';
+      else status[id] = open.has(id) ? 'open' : 'later';
     }
   }
 
-  const tenses = cfg.routes.find((r) => r.id === 'grammar').stops.filter((id) => /^\d+$/.test(cfg.topics[id].number));
+  const tenses = cfg.routes.find((r) => r.id === 'grammar').stops.filter((id) => /^\d+$/.test(cfg.topics[id].number) && !cfg.topics[id].contrast);
   const achievements = {
     levelup: Object.values(topics).some((t) => t.w1 && t.p && t.p.n > t.w1.n),
     allfive: tenses.length > 0 && tenses.every((id) => topics[id].complete),

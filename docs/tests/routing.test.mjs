@@ -52,6 +52,20 @@ assert.equal(p.achievements.levelup, true);
 assert.deepEqual(diff(before, p).newAch, ['levelup']);
 assert.equal(progress(cfg, [...base, w1, p1]).status.SP, 'now', 'nach simple present geht es zum Great Barrier Reef');
 assert.equal(stepInfo(cfg, 'SP-W2').kind, 'extra');
+// 3b. Neue Reihenfolge: SP → PP (Outback) → SPPP (Darwin); Lagerfeuer öffnet eine spätere Station für alle
+assert.deepEqual(cfg.routes[0].stops.slice(2, 6), ['SP', 'PP', 'SPPP', 'PROG']);
+p = progress(cfg, [...base, w1, p1], { open: ['PP'] });
+assert.equal(p.status.SP, 'now', 'Van bleibt beim simple past');
+assert.equal(p.status.PP, cfg.topics.PP.status === 'soon' ? 'soon' : 'open');
+assert.equal(Object.values(p.status).filter((s) => s === 'now').length, 1);
+// 3c. Kontrast-Station zählt nicht als eigene Zeitform (Achievement „All 5 tenses“)
+assert.equal(cfg.topics.SPPP.contrast, true);
+assert.equal(cfg.routes[0].stops.filter((id) => /^\d+$/.test(cfg.topics[id].number) && !cfg.topics[id].contrast).length, 5);
+// 3d. Gast-Codes: Koala, vorbereitete Reise bis Darwin
+assert.equal(avatarSrc(cfg, 'GAST-KO01'), 'assets/img/animals/koala.webp');
+const guestPr = progress(cfg, cfg.guest.events.map(normaliseEvent), { open: ['SPPP'] });
+assert.equal(guestPr.status.PP, 'done');
+assert.ok(['now', 'soon'].includes(guestPr.status.SPPP));
 
 // 4. Dritter Stern: Zusatzblatt ODER zweite Übung
 assert.equal(progress(cfg, [w1, p1, ev('SPR-W2', 4)]).topics.SPR.stars, 3);

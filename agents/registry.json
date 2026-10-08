@@ -4,12 +4,57 @@
   "finalCheckOpen": false,
   "finalCheckDate": "Thursday, 15 October (Donnerstag, 15. Oktober)",
   "agents": [
-    { "id": "SPR",  "file": "topics/simple-present.md",          "covers": "simple present (Gegenwart: he/she/it -s, do/does)", "sheets": "AUS1-SPR-…",  "active": true },
-    { "id": "SP",   "file": "topics/simple-past.md",            "covers": "simple past (Vergangenheit: -ed, unregelmäßige Verben, was/were, did)", "sheets": "AUS1-SP-…",   "active": true },
-    { "id": "PROG", "file": null, "name": "Past Progressive Coach",  "covers": "past progressive (was/were + -ing)", "sheets": "AUS1-PROG-…", "active": false },
-    { "id": "PP",   "file": null, "name": "Present Perfect Coach",   "covers": "present perfect (have/has + 3. Form)", "sheets": "AUS1-PP-…",   "active": false },
-    { "id": "GOING","file": null, "name": "Going-to Coach",          "covers": "going to-future (Pläne)", "sheets": "AUS1-GOING-…", "active": false },
-    { "id": "SPPP", "file": "topics/past-vs-present-perfect.md", "covers": "simple past oder present perfect? (Kontrast)", "sheets": "AUS1-SPPP-…", "active": false },
-    { "id": "WRITE","file": null, "name": "Writing Coach",           "covers": "Schreiben: Artikel planen, schreiben, verbessern", "sheets": "AUS1-W…",     "active": true }
+    {
+      "id": "SPR",
+      "file": "topics/simple-present.md",
+      "covers": "simple present (Gegenwart: he/she/it -s, do/does)",
+      "sheets": "AUS1-SPR-…",
+      "active": true
+    },
+    {
+      "id": "SP",
+      "file": "topics/simple-past.md",
+      "covers": "simple past (Vergangenheit: -ed, unregelmäßige Verben, was/were, did)",
+      "sheets": "AUS1-SP-…",
+      "active": true
+    },
+    {
+      "id": "PP",
+      "file": "topics/present-perfect.md",
+      "covers": "present perfect (have/has + 3. Form)",
+      "sheets": "AUS1-PP-…",
+      "active": true
+    },
+    {
+      "id": "SPPP",
+      "file": "topics/past-vs-present-perfect.md",
+      "covers": "simple past oder present perfect? (Kontrast)",
+      "sheets": "AUS1-SPPP-…",
+      "active": true
+    },
+    {
+      "id": "PROG",
+      "file": null,
+      "name": "Past Progressive Coach",
+      "covers": "past progressive (was/were + -ing)",
+      "sheets": "AUS1-PROG-…",
+      "active": false
+    },
+    {
+      "id": "GOING",
+      "file": null,
+      "name": "Going-to Coach",
+      "covers": "going to-future (Pläne)",
+      "sheets": "AUS1-GOING-…",
+      "active": false
+    },
+    {
+      "id": "WRITE",
+      "file": null,
+      "name": "Writing Coach",
+      "covers": "Schreiben: Artikel planen, schreiben, verbessern",
+      "sheets": "AUS1-W…",
+      "active": true
+    }
   ]
 }

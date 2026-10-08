@@ -46,8 +46,9 @@
         "START",
         "SPR",
         "SP",
-        "PROG",
         "PP",
+        "SPPP",
+        "PROG",
         "GOING",
         "TEST"
       ],
@@ -94,7 +95,7 @@
         ]
       ],
       "label": {
-        "x": 535,
+        "x": 225,
         "y": 92
       }
     },
@@ -382,16 +383,24 @@
         }
       }
     },
-    "PROG": {
+    "PP": {
       "route": "grammar",
       "number": "3",
       "place": "Outback",
-      "name": "Past progressive",
+      "name": "Present perfect",
       "topic": "The Royal Flying Doctors",
       "x": 690,
       "y": 330,
       "label": "above",
       "status": "soon",
+      "coach": {
+        "name": "Present Perfect Coach",
+        "input": null
+      },
+      "sheets": {
+        "W1": "AUS1-PP-1",
+        "W2": "AUS1-PP-2"
+      },
       "stamp": {
         "shape": "circle",
         "ink": "#A9502B",
@@ -399,20 +408,227 @@
       },
       "areas": [
         "FORM",
-        "WAS",
-        "USE"
+        "HAS",
+        "Q",
+        "USE",
+        "SINCE"
       ],
       "areaLabels": {
-        "FORM": "was/were + -ing",
-        "WAS": "was oder were",
-        "USE": "Hintergrund (while) vs. Handlung (when)"
+        "FORM": "have/has + 3. Form (auch unregelmäßig)",
+        "HAS": "has bei he/she/it",
+        "Q": "Verneinung, Fragen und Kurzantworten (haven't, Have you …? – Yes, I have.)",
+        "USE": "Signalwörter: ever, never, already, just, yet",
+        "SINCE": "since oder for"
+      },
+      "image": "assets/img/PP.webp",
+      "rules": [
+        {
+          "title": "When?",
+          "de": "Wann?",
+          "text": "Something happened **at some time** – the exact time is **not important**.",
+          "textDe": "Etwas ist irgendwann passiert, der Zeitpunkt ist egal.",
+          "ex": "I **have seen** a kangaroo."
+        },
+        {
+          "title": "have / has + 3rd form",
+          "de": "have/has + 3. Form",
+          "text": "he / she / it → **has** · regular: help → **helped** · irregular: see → **seen**, fly → **flown**, be → **been**",
+          "textDe": "Immer mit have/has – auch wenn man im Deutschen „sein“ sagt.",
+          "ex": "Dr Lee **has flown** 500 times."
+        },
+        {
+          "title": "Not",
+          "de": "Verneinung",
+          "text": "**haven't / hasn't** + 3rd form",
+          "textDe": "haven't/hasn't + 3. Form",
+          "ex": "The doctor **hasn't arrived** yet."
+        },
+        {
+          "title": "Questions",
+          "de": "Fragen",
+          "text": "**Have / Has** + subject + 3rd form? Short answer: Yes, I **have**. / No, she **hasn't**.",
+          "textDe": "Frage mit Have/Has, Kurzantwort mit have/has.",
+          "ex": "**Have** you ever **ridden** a camel? – No, I **haven't**."
+        },
+        {
+          "title": "Signal words",
+          "de": "Signalwörter",
+          "text": "**just · already · ever · never · not … yet** – yet goes at the end.",
+          "textDe": "Diese Wörter zeigen: present perfect! yet steht am Ende.",
+          "ex": "I **have already finished**."
+        },
+        {
+          "title": "since or for?",
+          "de": "since oder for?",
+          "text": "**since** + point in time (since 1928, since Monday) · **for** + period (for two hours, for ten years)",
+          "textDe": "Seit wann / wie lange – im Deutschen oft Präsens!",
+          "ex": "We **have lived** here **for** ten years."
+        }
+      ],
+      "challenge": {
+        "title": "Challenge: where does the signal word go?",
+        "text": "just, already, ever, never → between **have/has** and the 3rd form: I have **already** finished. · **yet** → at the end: Have you finished **yet**?"
+      },
+      "camp": {
+        "x": 780,
+        "y": 285,
+        "title": "Present perfect: a quick review",
+        "titleDe": "Present perfect: kurze Wiederholung",
+        "text": "We repeated the **present perfect** together: have/has + 3rd form, signal words, since and for.",
+        "textDe": "Wir haben das present perfect gemeinsam wiederholt: have/has + 3. Form, Signalwörter, since und for."
       }
     },
-    "PP": {
+    "SPPP": {
       "route": "grammar",
       "number": "4",
+      "place": "Darwin",
+      "name": "Simple past or present perfect?",
+      "topic": "Have you ever seen a croc?",
+      "x": 480,
+      "y": 215,
+      "label": "below",
+      "status": "soon",
+      "contrast": true,
+      "coach": {
+        "name": "Past or Perfect Coach",
+        "input": null
+      },
+      "sheets": {
+        "W1": "AUS1-SPPP-1",
+        "W2": "AUS1-SPPP-2"
+      },
+      "stamp": {
+        "shape": "oval",
+        "ink": "#4F7449",
+        "icon": "croc"
+      },
+      "areas": [
+        "CHOICE",
+        "TIME",
+        "SIGNAL",
+        "PPFORM",
+        "SPFORM"
+      ],
+      "areaLabels": {
+        "CHOICE": "falsche Zeitform gewählt (Kontext)",
+        "TIME": "present perfect mit Zeitpunkt (yesterday, ago, last …, When …?)",
+        "SIGNAL": "Signalwort des present perfect übersehen (ever, never, just, already, yet, since, for)",
+        "PPFORM": "Form des present perfect (have/has + 3. Form)",
+        "SPFORM": "Form des simple past (-ed, unregelmäßig, did)"
+      },
+      "rules": [
+        {
+          "title": "Simple past: when exactly",
+          "de": "simple past: genauer Zeitpunkt",
+          "text": "A **finished** action at a **time in the past**: yesterday · last week · in July · two years ago · in 2015",
+          "textDe": "Zu einer bestimmten Zeit passiert – auch in Erzählungen.",
+          "ex": "I **saw** a croc **yesterday**."
+        },
+        {
+          "title": "Present perfect: at some time",
+          "de": "present perfect: irgendwann",
+          "text": "The time is **not important** – an experience or a result **now**: just · already · ever · never · not … yet · before",
+          "textDe": "Irgendwann passiert, oft mit Folgen für jetzt.",
+          "ex": "Oh no! I **have lost** my key."
+        },
+        {
+          "title": "When …? → simple past",
+          "de": "Fragen mit When",
+          "text": "Questions with **When** are always in the simple past.",
+          "textDe": "Fragen mit When → simple past.",
+          "ex": "**When did** you **come** home?"
+        },
+        {
+          "title": "since / for → present perfect",
+          "de": "since/for",
+          "text": "How long until **now**? → present perfect – even if German uses the present tense!",
+          "textDe": "Im Deutschen Präsens: „Ich wohne seit …“",
+          "ex": "I **have lived** here **since** 2015."
+        },
+        {
+          "title": "Talking about it",
+          "de": "Im Gespräch",
+          "text": "Experience → present perfect, then the details → simple past.",
+          "textDe": "Erst die Erfahrung, dann die Einzelheiten.",
+          "ex": "**Have** you ever **seen** a croc? – Yes! I **saw** one in Darwin."
+        }
+      ],
+      "challenge": {
+        "title": "Challenge: German traps",
+        "text": "Ich wohne **seit** 2015 hier → I **have lived** here since 2015. · Ich habe ihn **gestern** gesehen → I **saw** him yesterday. · Ich war **noch nie** dort → I **have never been** there."
+      },
+      "camp": {
+        "x": 545,
+        "y": 250,
+        "title": "Lena's interview: past or perfect?",
+        "titleDe": "Lenas Interview: simple past oder present perfect?",
+        "text": "We read Lena's interview with Ben, marked the signal words and found out when we use the **simple past** and when the **present perfect**.",
+        "textDe": "Wir haben Lenas Interview mit Ben gelesen, die Signalwörter markiert und herausgefunden, wann man simple past und wann present perfect benutzt.",
+        "reading": {
+          "title": "Lena's travel blog, part 2: Back home",
+          "introItalic": true,
+          "paragraphs": [
+            "Hi, it's Lena again! I have been back in Münster for two weeks now. Since then, my little cousin Ben has asked me a hundred questions. So here is our interview!"
+          ],
+          "dialog": [
+            [
+              "Ben",
+              "Have you ever seen a crocodile?"
+            ],
+            [
+              "Lena",
+              "Yes, I have! I saw a huge one in Darwin. We went on a boat trip there in August."
+            ],
+            [
+              "Ben",
+              "Cool! Have you ever touched a shark?"
+            ],
+            [
+              "Lena",
+              "No, I have never touched a shark. But last summer I swam with a turtle."
+            ],
+            [
+              "Ben",
+              "Have you shown me all your photos yet?"
+            ],
+            [
+              "Lena",
+              "No, I haven't shown you the best ones yet. I have just put them on my laptop."
+            ],
+            [
+              "Ben",
+              "When did you come home?"
+            ],
+            [
+              "Lena",
+              "I came home two weeks ago. My suitcase is still in the hall – I haven't unpacked it yet!"
+            ],
+            [
+              "Ben",
+              "Have you talked to Jack since then?"
+            ],
+            [
+              "Lena",
+              "Yes, we have talked on the phone three times. We have been friends for six months now."
+            ],
+            [
+              "Ben",
+              "What did you like best?"
+            ],
+            [
+              "Lena",
+              "The reef! I have seen a lot of beautiful places, but that day at the reef was the best day of my life."
+            ]
+          ],
+          "vocab": "huge – riesig · to touch – berühren · to show – zeigen · suitcase – Koffer · hall – Flur · to unpack – auspacken"
+        }
+      }
+    },
+    "PROG": {
+      "route": "grammar",
+      "number": "5",
       "place": "Perth",
-      "name": "Present perfect",
+      "name": "Past progressive",
       "topic": "Life on a sheep station",
       "x": 140,
       "y": 570,
@@ -425,20 +641,19 @@
       },
       "areas": [
         "FORM",
-        "HAS",
-        "USE",
-        "SINCE"
+        "WAS",
+        "USE"
       ],
       "areaLabels": {
-        "FORM": "have/has + 3. Form",
-        "HAS": "has bei he/she/it",
-        "USE": "ever, never, already, yet, just",
-        "SINCE": "since oder for"
-      }
+        "FORM": "was/were + -ing",
+        "WAS": "was oder were",
+        "USE": "Hintergrund (while) vs. Handlung (when)"
+      },
+      "image": "assets/img/PROG.webp"
     },
     "GOING": {
       "route": "grammar",
-      "number": "5",
+      "number": "6",
       "place": "Melbourne",
       "name": "going to-future",
       "topic": "Sydney or Melbourne? Your plans",
@@ -460,7 +675,8 @@
         "BE": "am/is/are vor going to",
         "INF": "Grundform nach going to",
         "NEG": "Fragen und Verneinung mit going to"
-      }
+      },
+      "image": "assets/img/GOING.webp"
     },
     "TEST": {
       "route": "grammar",
@@ -476,7 +692,8 @@
         "shape": "rect",
         "ink": "#A9502B",
         "icon": "mountainFire"
-      }
+      },
+      "image": "assets/img/TEST.webp"
     },
     "W1": {
       "route": "writing",
@@ -492,7 +709,8 @@
         "shape": "circle",
         "ink": "#C2410C",
         "icon": "notebook"
-      }
+      },
+      "image": "assets/img/W1.webp"
     },
     "W2": {
       "route": "writing",
@@ -508,7 +726,8 @@
         "shape": "circle",
         "ink": "#C2410C",
         "icon": "domes"
-      }
+      },
+      "image": "assets/img/W2.webp"
     },
     "W3": {
       "route": "writing",
@@ -525,7 +744,8 @@
         "shape": "oval",
         "ink": "#C2410C",
         "icon": "uluru"
-      }
+      },
+      "image": "assets/img/W3.webp"
     }
   },
   "bonus": {
@@ -566,19 +786,22 @@
       "id": "levelup",
       "name": "Level up!",
       "de": "Beim Üben besser als auf dem Blatt",
-      "icon": "rocket"
+      "icon": "rocket",
+      "image": "assets/img/badges/levelup.webp"
     },
     {
       "id": "allfive",
       "name": "All 5 tenses",
-      "de": "Alle fünf Zeiten geschafft",
-      "icon": "trophy"
+      "de": "Alle Zeitformen geschafft",
+      "icon": "trophy",
+      "image": "assets/img/badges/allfive.webp"
     },
     {
       "id": "stars",
       "name": "Star collector",
-      "de": "Bei allen fünf Zeiten 3 Sterne",
-      "icon": "star"
+      "de": "Bei allen Zeitformen 3 Sterne",
+      "icon": "star",
+      "image": "assets/img/badges/stars.webp"
     }
   ],
   "theme": {},
@@ -1170,6 +1393,149 @@
         "code": "FUCHS",
         "de": "Fuchs",
         "file": "fox"
+      }
+    ]
+  },
+  "guest": {
+    "prefix": "GAST",
+    "codes": [
+      "GAST-KO01",
+      "GAST-KO02",
+      "GAST-KO03",
+      "GAST-KO04",
+      "GAST-KO05",
+      "GAST-KO06"
+    ],
+    "animal": {
+      "code": "GAST",
+      "de": "Koala (Gast)",
+      "file": "koala"
+    },
+    "note": "Gäste starten mit einer vorbereiteten Reise bis Darwin. Ihre Abgaben erscheinen nicht in der Klassenauswertung.",
+    "events": [
+      {
+        "station": "SPR-B",
+        "n": 2,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "NEG"
+        ],
+        "s": "2 of 4 correct",
+        "fb": "",
+        "ts": "2026-10-05T08:10:00Z"
+      },
+      {
+        "station": "SP-B",
+        "n": 2,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "IRREG"
+        ],
+        "s": "2 of 4 correct",
+        "fb": "",
+        "ts": "2026-10-05T08:10:00Z"
+      },
+      {
+        "station": "PROG-B",
+        "n": 2,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "FORM"
+        ],
+        "s": "2 of 4 correct",
+        "fb": "",
+        "ts": "2026-10-05T08:10:00Z"
+      },
+      {
+        "station": "PP-B",
+        "n": 2,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "SINCE"
+        ],
+        "s": "2 of 4 correct",
+        "fb": "",
+        "ts": "2026-10-05T08:10:00Z"
+      },
+      {
+        "station": "GOING-B",
+        "n": 3,
+        "self": 0,
+        "h": 0,
+        "f": [],
+        "s": "3 of 4 correct",
+        "fb": "",
+        "ts": "2026-10-05T08:10:00Z"
+      },
+      {
+        "station": "SPR-W1",
+        "n": 3,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "S"
+        ],
+        "s": "Questions with Do and Does correct.",
+        "fb": "",
+        "ts": "2026-10-05T08:30:00Z"
+      },
+      {
+        "station": "SPR-P",
+        "n": 4,
+        "self": 0,
+        "h": 0,
+        "f": [],
+        "s": "All sentences correct.",
+        "fb": "",
+        "ts": "2026-10-05T08:45:00Z"
+      },
+      {
+        "station": "SP-W1",
+        "n": 3,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "DID"
+        ],
+        "s": "Irregular verbs correct.",
+        "fb": "",
+        "ts": "2026-10-09T08:30:00Z"
+      },
+      {
+        "station": "SP-P",
+        "n": 4,
+        "self": 0,
+        "h": 0,
+        "f": [],
+        "s": "All sentences correct.",
+        "fb": "",
+        "ts": "2026-10-09T08:45:00Z"
+      },
+      {
+        "station": "PP-W1",
+        "n": 3,
+        "self": 0,
+        "h": 0,
+        "f": [
+          "SINCE"
+        ],
+        "s": "have/has correct.",
+        "fb": "",
+        "ts": "2026-10-12T08:30:00Z"
+      },
+      {
+        "station": "PP-P",
+        "n": 3,
+        "self": 0,
+        "h": 0,
+        "f": [],
+        "s": "Signal words correct.",
+        "fb": "",
+        "ts": "2026-10-14T08:45:00Z"
       }
     ]
   }

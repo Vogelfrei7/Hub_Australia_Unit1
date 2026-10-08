@@ -165,6 +165,11 @@ function readEvents_() {
   return out;
 }
 
+// Klassen-Abgaben ohne Gäste (Codes GAST-…): für Auswertung, Dashboard und KI
+function classEvents_() {
+  return readEvents_().filter(function (e) { return e.code.indexOf('GAST-') !== 0; });
+}
+
 function num_(v) { var n = Number(String(v).trim().replace(',', '.')); return isNaN(n) ? 0 : n; }
 function clean_(v) { var s = String(v || '').trim(); return s === '-' ? '' : s; }
 
@@ -272,7 +277,7 @@ function refreshAnalysis() {
   var cfg = loadConfig_();
   var stations = cfg.stations.map(function (s) { return s.id; });
   var catalog = cfg.errorCatalog || {};
-  var events = readEvents_().filter(function (e) { return stations.indexOf(e.station) !== -1 || stepInfo_(cfg, e.station); });
+  var events = classEvents_().filter(function (e) { return stations.indexOf(e.station) !== -1 || stepInfo_(cfg, e.station); });
   events.sort(function (a, b) { return String(a.ts) < String(b.ts) ? -1 : 1; });
 
   // pro Code: Kurs, bester Versuch, letzter Versuch je Station
@@ -548,7 +553,7 @@ function openDashboard() {
 function getDashboardData() {
   if (!isOwner_()) throw new Error('Kein Zugriff');
   var cfg = loadConfig_();
-  var events = readEvents_().filter(function (e) { return stepInfo_(cfg, e.station); });
+  var events = classEvents_().filter(function (e) { return stepInfo_(cfg, e.station); });
   events.sort(function (a, b) { return String(a.ts) < String(b.ts) ? -1 : 1; });
 
   var topics = {};
@@ -707,7 +712,7 @@ var AI_SYSTEM = [
 // Kompakte, pseudonyme Zusammenfassung aller Ergebnisse – Grundlage für die KI (und zum Kopieren in einen Claude-Chat).
 function buildAiInput_() {
   var cfg = loadConfig_();
-  var events = readEvents_().filter(function (e) { return stepInfo_(cfg, e.station); });
+  var events = classEvents_().filter(function (e) { return stepInfo_(cfg, e.station); });
   events.sort(function (a, b) { return String(a.ts) < String(b.ts) ? -1 : 1; });
   var lines = [];
   var tz = Session.getScriptTimeZone();

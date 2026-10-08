@@ -80,6 +80,8 @@ No text.
 
 ## B) Stempel (Reisepass)
 
+> **Neue Reihenfolge seit 08.10.:** 3 Outback = present perfect, 4 Darwin = simple past oder present perfect?, 5 Perth = past progressive.
+
 Gemeinsamer Zusatz:
 
 ```
@@ -93,8 +95,9 @@ Inside: a simple iconic illustration plus the text given below in bold hand-lett
 | START.png | Kreis | navy #1B2A55 | Sydney Opera House | "SYDNEY" / "CHECK-IN" |
 | SPR.png | abgerundetes Rechteck | terracotta #A9502B | Sonne über zwei Wellen, Surfbrett | "GOLD COAST" / "SIMPLE PRESENT" |
 | SP.png | Oval | teal #2F7983 | Fisch und Koralle | "GREAT BARRIER REEF" / "SIMPLE PAST" |
-| PROG.png | Kreis | terracotta #A9502B | kleines Propellerflugzeug über roter Erde | "OUTBACK" / "PAST PROGRESSIVE" |
-| PP.png | Kreis | navy #1B2A55 | Schaf und Windrad | "PERTH" / "PRESENT PERFECT" |
+| PP.png | Kreis | terracotta #A9502B | kleines Propellerflugzeug über roter Erde | "OUTBACK" / "PRESENT PERFECT" |
+| SPPP.png | Oval | sage #4F7449 | Krokodilkopf, der aus dem Wasser schaut, Mangroven | "DARWIN" / "PAST OR PERFECT?" |
+| PROG.png | Kreis | navy #1B2A55 | Schaf und Windrad | "PERTH" / "PAST PROGRESSIVE" |
 | GOING.png | Rechteck | sage #4F7449 | alte Straßenbahn | "MELBOURNE" / "GOING TO" |
 | TEST.png | Rechteck | terracotta #A9502B | Berge mit kleiner Flamme | "BLUE MOUNTAINS" / "TEST READY" |
 | W1.png | Kreis | burnt orange #C2410C | rote Bergkette (MacDonnell Ranges) mit Notizbuch und Stift | "ALICE SPRINGS" / "PLAN" |
@@ -136,8 +139,9 @@ Wide postcard illustration, 3:2 landscape format (1536×1024), same style, no te
 | POST-START.png | Sydney Harbour mit Opernhaus und Harbour Bridge, ein Flugzeug landet, Morgenlicht – „Ankunft“ |
 | POST-SPR.png | Gold Coast: sonniger Strand, Rettungsschwimmer-Turm, gelb-rote Flaggen, Surfer, Pelikan |
 | POST-SP.png | Great Barrier Reef: Taucher über bunten Korallen, Fischschwarm |
-| POST-PROG.png | Outback: kleines Flugzeug der Flying Doctors über roter Wüste |
-| POST-PP.png | Perth: Schaffarm mit Windrad, weite Felder |
+| POST-PP.png | Outback: kleines Flugzeug der Flying Doctors über roter Wüste *(schon da)* |
+| POST-SPPP.png | Darwin, Top End: Bootstour auf einem breiten, braunen Fluss bei Sonnenuntergang, ein großes Salzwasserkrokodil schaut aus dem Wasser, Mangroven am Ufer, Gewitterwolken in der Ferne, ein Seeadler am Himmel |
+| POST-PROG.png | Perth: Schaffarm mit Windrad, weite Felder *(schon da)* |
 | POST-GOING.png | Melbourne: Straßenbahn vor Skyline, Café-Straße |
 | POST-TEST.png | Blue Mountains: blaue Bergkette im Dunst |
 | POST-W1.png | Alice Springs: rote Bergkette, Eukalyptus, Sternenhimmel |

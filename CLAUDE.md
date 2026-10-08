@@ -18,6 +18,11 @@ Kernbotschaft: KI macht Diagnostik zu einem mächtigen Werkzeug (Lehrkraft erfä
 - `tools/` – `codekarten.html` (Codes + QR), `bilder.py` (Rohbilder → WebP + config).
 - `docs/` – Setup, Testplan, Stundenplan, Bild-Prompts, `tests/routing.test.mjs`.
 
+## Route (seit 08.10.)
+Grammar Road: Start Sydney → 1 SPR Gold Coast → 2 SP Great Barrier Reef → 3 PP Outback → 4 SPPP Darwin (Kontrast, `contrast: true`) →
+5 PROG Perth → 6 GOING Melbourne → Test. Gast-Codes `GAST-KO01…06` (Koala, vorbereitete Reise bis Darwin, im Apps Script herausgefiltert).
+Unterrichtsbesuch 15.10.: `docs/besuch-15-10.md`.
+
 ## Datenfluss
 Kind: Code (z. B. `LOEWE-K7Q2`, per QR) → Check-in (Startwert `<THEMA>-B`) → Arbeitsblatt (Foto an Coach, `-W1`/`-W2`)
 → Üben (`-P`) → Coach-Link „Get your stamp“ → `abgabe.html` → Google Formular → Sheet → Apps Script `doGet` → Karte.

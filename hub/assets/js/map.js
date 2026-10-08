@@ -1,9 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
   loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo,
-} from './core.js?v=2.6';
-import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=2.6';
-import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=2.6';
+} from './core.js?v=2.7';
+import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=2.7';
+import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=2.7';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -31,7 +31,9 @@ async function main() {
     return;
   }
   info = await loadEvents(cfg, trav.code);
-  pr = progress(cfg, info.events);
+  // Lagerfeuer angezündet = die Klasse ist dort → Station für alle offen
+  const open = Object.keys(cfg.topics).filter((id) => campLit(cfg, info.klass, id));
+  pr = progress(cfg, info.events, { open });
   if (!view.sel) view.sel = pr.now.grammar || pr.now.writing || 'SPR';
   render();
 }
@@ -170,7 +172,7 @@ function markers() {
     const dots = route && !def.optional && route.shape === 'circle' && t && !t.checkin
       ? `<span class="dots">${[0, 1, 2].map((i) => `<i class="${i < t.stars ? 'on' : ''}"></i>`).join('')}</span>` : '';
     return `<div class="spot" style="left:${def.x / 10}%;top:${def.y / 8}%;--rc:${color}">
-      ${id === vanAt ? vanHTML(esc(avatarSrc(cfg, trav.code)), def.label === 'above' ? 'side' : 'top') : state === 'now' ? '<span class="now-flag">NOW</span>' : ''}
+      ${id === vanAt ? vanHTML(esc(avatarSrc(cfg, trav.code)), (def.van || (def.label === 'above' ? 'side' : 'top'))) : state === 'now' ? '<span class="now-flag">NOW</span>' : ''}
       <button type="button" class="${cls}" data-id="${id}" aria-pressed="${sel}" aria-label="${esc(label)}">
         ${state === 'done' ? UI.check : `<span>${esc(def.number)}</span>`}
       </button>

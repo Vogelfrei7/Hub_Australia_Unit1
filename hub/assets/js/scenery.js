@@ -10,11 +10,11 @@ const MOTIFS = [
   { id: 'kata', wake: 'W2', x: 355, y: 528, svg: () => `
     <ellipse cx="2" cy="1" rx="48" ry="5" fill="#D9A066" opacity=".6"/>
     <path d="M-44,0 Q-42,-24 -26,-26 Q-12,-27 -9,-12 Q-4,-34 12,-32 Q27,-30 26,-12 Q32,-22 40,-16 Q47,-9 47,0 Z" fill="#C8673A"/>` },
-  { id: 'roo', wake: 'PROG', x: 598, y: 338, anim: 'hop', svg: () => `
+  { id: 'roo', wake: 'PP', x: 598, y: 338, anim: 'hop', svg: () => `
     <ellipse cx="2" cy="1" rx="22" ry="3.5" fill="#B9763F" opacity=".35"/>
     <path d="M-34,-2 Q-20,-5 -11,-15 Q-16,-31 -5,-40 Q1,-46 5,-50 L2,-60 L9,-53 L11,-61 L14,-52 Q21,-50 24,-46 Q20,-42 13,-43 Q10,-38 10,-33 L19,-29 L18,-26 L9,-28 Q11,-18 6,-10 Q11,-4 23,-3 L23,0 L-6,0 Q-14,-4 -34,-2 Z" fill="#8A5A2E"/>
     <circle cx="13" cy="-48" r="1.6" fill="#2A1A0E"/>` },
-  { id: 'croc', wake: 'PROG', x: 572, y: 186, svg: () => `
+  { id: 'croc', wake: 'SPPP', x: 572, y: 186, svg: () => `
     <path d="M-38,0 Q-30,-8 -14,-8 L18,-9 Q30,-9 40,-4 L40,0 Q30,-2 20,1 L-14,2 Q-28,3 -38,0 Z" fill="#5E7F3E"/>
     <path d="M-10,-8 l3,-4 l3,4 M0,-8 l3,-4 l3,4 M10,-9 l3,-4 l3,4" fill="#4A6830"/>
     <path d="M-8,2 l-3,6 M14,2 l3,6" stroke="#4A6830" stroke-width="4" stroke-linecap="round"/>
@@ -45,12 +45,12 @@ const MOTIFS = [
     <circle cx="2" cy="-23" r="10" fill="#A8A8AD"/>
     <ellipse cx="2" cy="-21" rx="3" ry="4" fill="#2E2E33"/>
     <circle cx="-3" cy="-26" r="1.4" fill="#2E2E33"/><circle cx="7" cy="-26" r="1.4" fill="#2E2E33"/>` },
-  { id: 'swan', wake: 'PP', x: 50, y: 512, anim: 'drift', svg: () => `
+  { id: 'swan', wake: 'PROG', x: 50, y: 512, anim: 'drift', svg: () => `
     <path d="M-20,0 Q-22,-12 -6,-12 L14,-12 Q20,-12 22,-6 Q16,-2 8,0 Z" fill="#2B2B35"/>
     <path d="M-12,-12 Q-14,-26 -6,-34 Q0,-40 4,-34" fill="none" stroke="#2B2B35" stroke-width="5" stroke-linecap="round"/>
     <path d="M4,-35 L12,-32 L4,-31 Z" fill="#D9443A"/>
     <path d="M-26,3 Q-12,-1 0,3 Q12,-1 26,3" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" opacity=".8"/>` },
-  { id: 'emu', wake: 'PP', x: 238, y: 476, svg: () => `
+  { id: 'emu', wake: 'PROG', x: 238, y: 476, svg: () => `
     <path d="M-4,-14 L-8,0 M4,-14 L6,0" stroke="#5B4636" stroke-width="2.6" stroke-linecap="round"/>
     <ellipse cx="0" cy="-22" rx="16" ry="11" fill="#6B5642"/>
     <path d="M10,-28 Q14,-44 12,-50" fill="none" stroke="#6B5642" stroke-width="5" stroke-linecap="round"/>
