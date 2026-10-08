@@ -8,7 +8,7 @@ Thema der Stunde: **simple past oder present perfect?** (Station 4 Darwin). Die 
 | Tag | Stunde | Lagerfeuer im Dashboard | Ergebnis für Donnerstag |
 |---|---|---|---|
 | Fr 09.10. | simple past abschließen: Üben, goldenes Blatt | – | simple past vollständig |
-| Mo 12.10. | present perfect: 10 Min. Wiederholung, dann AUS1-PP-1 + Coach | **Outback anzünden** (öffnet Station 3 für alle) | erste Present-Perfect-Werte |
+| Mo 12.10. | present perfect: Lagerfeuer mit Rubys E-Mail (AUS1-PP-R: lesen, markieren, Regel-Detektiv), dann AUS1-PP-1 + Coach | **Outback anzünden** (öffnet Station 3 für alle) | erste Present-Perfect-Werte |
 | Mi 14.10. | present perfect üben (adaptiv), goldenes Blatt AUS1-PP-2. Lotsen testen nebenbei den Kontrast-Coach. **Abends: KI-Auswertung erstellen.** | – | Lernzuwachs simple past + present perfect seit dem Check-in |
 | Do 15.10. | Kontrast (mit Gästen) | **Darwin anzünden** zu Stundenbeginn | live: Kontrast-Fehler |
 

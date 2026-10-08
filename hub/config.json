@@ -474,10 +474,23 @@
       "camp": {
         "x": 780,
         "y": 285,
-        "title": "Present perfect: a quick review",
-        "titleDe": "Present perfect: kurze Wiederholung",
-        "text": "We repeated the **present perfect** together: have/has + 3rd form, signal words, since and for.",
-        "textDe": "Wir haben das present perfect gemeinsam wiederholt: have/has + 3. Form, Signalwörter, since und for."
+        "title": "Ruby's email: we found the rules",
+        "titleDe": "Rubys E-Mail: Regeln selbst herleiten",
+        "text": "We read Ruby's email from the Outback, marked have/has and the 3rd forms and found the **rules** of the present perfect ourselves.",
+        "textDe": "Wir haben Rubys E-Mail aus dem Outback gelesen, have/has und die 3. Formen markiert und die Regeln des present perfect selbst herausgefunden.",
+        "reading": {
+          "title": "An email from the Outback",
+          "introItalic": true,
+          "paragraphs": [
+            "Lena met Ruby (14) at the airport in Cairns. Ruby lives on a cattle station in the Outback – and she has just sent Lena an email.",
+            "Hi Lena, how are you? Have you unpacked your suitcase yet? 😉 I have lived on Wirra Station all my life. Our nearest town is 300 kilometres away, so I have never been to a cinema! I have always done my lessons at home with the School of the Air. My teacher lives in Alice Springs – I have met her only twice.",
+            "This year has been very exciting. The Flying Doctors have visited our station three times. My little brother Sam has broken his arm twice since January – he climbs everything! And big news: Dad has just bought a small plane, and I have already flown with him four times.",
+            "It hasn't rained for six months, so everything is red and dusty. We haven't seen a kangaroo for weeks – they have all gone to the river.",
+            "Have you ever ridden a horse? I have had my horse, Biscuit, for three years. You must visit us! Write soon! – Ruby",
+            "P.S. Has Jack told you? He has found a summer job at the reef!"
+          ],
+          "vocab": "cattle station – Rinderfarm · nearest – nächste · School of the Air – Schule per Funk und Internet · to break – brechen · dusty – staubig · to ride – reiten"
+        }
       }
     },
     "SPPP": {

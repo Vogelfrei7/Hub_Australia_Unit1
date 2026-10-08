@@ -1,9 +1,9 @@
 // Abgabe v2 (abgabe.html): Ergebnis lesen, prüfen, Stempel + Stern zeigen, an das Google-Formular senden.
 import {
   loadConfig, loadEvents, progress, diff, getTraveller, setTraveller, isDemo, link, esc, stampHTML, badgeHTML,
-  UI, store, signature, addPending, parseFromURL, parseBlock, validate, submitToForm, normaliseEvent, stepInfo, fmtDate,
-} from './core.js?v=2.9';
-import { openDialog } from './ui.js?v=2.9';
+  UI, store, signature, addPending, parseFromURL, parseBlock, validate, submitToForm, normaliseEvent, isGuest, stepInfo, fmtDate,
+} from './core.js?v=3.0';
+import { openDialog } from './ui.js?v=3.0';
 
 const app = document.getElementById('app');
 let cfg;
@@ -98,7 +98,8 @@ function renderMoment(r, ev, before, after, warnings, already) {
   const head = firstStamp ? 'Stamp collected!' : newStar ? '+1 star!' : si.kind === 'final' ? 'Final check done!' : 'Well done!';
   const headDe = firstStamp ? 'Stempel bekommen!' : newStar ? 'Ein Stern mehr!' : si.kind === 'final' ? 'Final check geschafft!' : 'Gut gemacht!';
   let next;
-  if (!ta.w1) next = ['Do worksheet 1 next.', 'Als Nächstes: Arbeitsblatt 1.'];
+  if (isGuest(cfg, r.code)) next = ['Thank you for travelling with us! This is exactly what the class does.', 'Danke fürs Mitreisen! Genau so arbeitet die Klasse.'];
+  else if (!ta.w1) next = ['Do worksheet 1 next.', 'Als Nächstes: Arbeitsblatt 1.'];
   else if (!ta.p) next = ['Next: practise with the coach.', 'Als Nächstes: Üben mit dem Coach.'];
   else if (!ta.extra) next = ['Get your third star: worksheet 2 or one more practice round.', 'Dritter Stern: Arbeitsblatt 2 oder noch eine Übungsrunde.'];
   else next = ['All three stars – amazing! You can practise again any time.', 'Alle drei Sterne – super! Du kannst jederzeit weiter üben.'];
