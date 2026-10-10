@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Australia Road Trip – Intro</title>
+<link rel="stylesheet" href="assets/css/tokens.css?v=3.0">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body { background: var(--cream); color: var(--navy); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+  #stage { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  button { font: inherit; cursor: pointer; }
+  button:focus-visible, a:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+
+  #skip { position: fixed; top: 14px; right: 14px; z-index: 3; min-height: var(--touch); padding: 8px 16px; border: 2px solid var(--navy);
+    border-radius: var(--radius-tag); background: rgba(255, 251, 243, .85); color: var(--navy); font-weight: 700; }
+  #skip[hidden] { display: none; }
+
+  #end { position: fixed; left: 0; right: 0; bottom: max(20px, 6vh); z-index: 2; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 0 16px;
+    opacity: 0; transform: translateY(24px); transition: opacity .5s ease, transform .5s cubic-bezier(.2,.8,.2,1); pointer-events: none; }
+  #end.on { opacity: 1; transform: none; pointer-events: auto; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; min-height: var(--touch); padding: 12px 24px; border-radius: var(--radius-tag);
+    border: 2px solid var(--navy); background: var(--navy); color: var(--cream); font-weight: 700; font-size: 18px; text-decoration: none;
+    box-shadow: 0 3px 0 rgba(27, 42, 85, .25); }
+  .btn.ghost { background: var(--paper); color: var(--navy); }
+  .btn small { font-weight: 400; opacity: .8; }
+</style>
+<script type="module" src="assets/js/intro.js?v=6.0"></script>
+</head>
+<body>
+<svg id="stage" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Australia Road Trip – animated intro"></svg>
+<button id="skip" type="button">Skip ⏭</button>
+<nav id="end">
+  <a class="btn" id="tomap" href="index.html">Open the map <small>(Zur Karte)</small></a>
+  <button class="btn ghost" id="again" type="button">Watch again <small>(Nochmal)</small></button>
+</nav>
+</body>
+</html>

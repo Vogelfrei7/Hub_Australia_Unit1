@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "out=$(git pull --ff-only 2>&1); echo \"Automatischer git pull beim Sitzungsstart: $out\"",
+            "timeout": 30,
+            "statusMessage": "Hole den neuesten Stand von GitHub …"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "n=$(git rev-list --count @{u}..HEAD 2>/dev/null || echo 0); if [ \"$n\" -gt 0 ]; then printf '{\"systemMessage\":\"%s Commit(s) noch nicht auf GitHub - vor dem Geraetewechsel pushen.\"}\\n' \"$n\"; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
