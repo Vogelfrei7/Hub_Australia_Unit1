@@ -287,3 +287,32 @@ button.cell:hover { background: rgba(141, 185, 226, .15); }
 @keyframes spark { 0% { opacity: 0; transform: translateY(6px); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-10px); } }
 @keyframes vanBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.5px); } }
 @keyframes pop { 0% { transform: scale(.4); opacity: .2; } 100% { transform: scale(1); opacity: 1; } }
+
+/* ---------- Übungsseite ohne Coach (lesson.html) ---------- */
+.lesson { align-items: stretch; }
+.lesson > .stamp-land, .lesson > h1, .lesson > .brush { align-self: center; }
+.ls-h { margin: 0; font-size: 22px; line-height: 1.25; }
+.ls-task { margin: 0; font-size: 15px; }
+.ci-opts.long { flex-direction: column; }
+.ci-opts.long .ci-opt { text-align: left; padding: 10px 14px; font-weight: 400; line-height: 1.4; }
+.ci-opt.ok { background: #E7EFE3; border-color: #5E8A55; color: #2F4A2A; opacity: 1; }
+.ci-opt.bad { background: #FBE4DE; border-color: #C9715B; color: #7A3424; text-decoration: line-through; }
+.ci-opt:disabled { cursor: default; }
+.ls-msg { font-size: 15px; line-height: 1.4; }
+.ls-msg:empty { display: none; }
+.ls-msg.ok { color: #2F4A2A; }
+.ls-msg.bad { color: #7A3424; }
+.ls-built { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.ls-placed { display: flex; flex-direction: column; gap: 4px; padding: 10px 14px; border-radius: 12px; background: #E7EFE3; border: 1.5px solid #A9C49F; line-height: 1.45; }
+.ls-placed:first-child span:last-child { font-weight: 700; font-size: 18px; }
+.ls-tag { align-self: flex-start; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #2F4A2A; }
+.ls-pool { display: flex; flex-direction: column; gap: 8px; }
+.ls-pool:empty { display: none; }
+.ls-part { text-align: left; font: inherit; font-size: 16px; line-height: 1.45; padding: 12px 14px; border-radius: 12px; border: 2px dashed var(--line); background: #fff; color: var(--navy); cursor: pointer; }
+.ls-check { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.ls-check li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; background: #fff; border: 1.5px solid var(--line); line-height: 1.35; }
+.ls-box { flex-shrink: 0; width: 30px; height: 30px; border-radius: 8px; background: #C2410C; color: #fff; display: flex; align-items: center; justify-content: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .ls-part.shake { animation: shake .35s ease; border-color: #C9715B; }
+}
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }

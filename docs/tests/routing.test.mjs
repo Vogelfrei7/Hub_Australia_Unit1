@@ -106,4 +106,19 @@ assert.equal(animalOf(cfg, 'BAER-K7Q2'), 'Bär');
 assert.equal(avatarSrc(cfg, 'EICHHORN-K7Q2'), 'assets/img/animals/squirrel.webp');
 assert.equal(avatarSrc(cfg, 'TIGER-K7Q2'), 'assets/img/animals/tiger.webp');
 
+// 9. Writing Track: Übungsseite ohne Coach (ART) – ein Durchgang = Stempel, Station fertig, weiter zu ARG
+assert.equal(stepInfo(cfg, 'ART-P').kind, 'practice');
+p = progress(cfg, [ev('ART-P', 3, ['LINK'])]);
+assert.equal(p.topics.ART.complete, true);
+assert.equal(p.topics.ART.stamp, true);
+assert.equal(p.topics.ART.stars, 1);
+assert.equal(p.status.ART, 'done');
+for (const s of cfg.topics.ART.lesson.sections) {
+  for (const it of s.items || []) {
+    assert.ok(it.answer >= 0 && it.answer < it.options.length, `ART: Lösung fehlt bei „${it.q}“`);
+    assert.ok(cfg.topics.ART.areas.includes(it.area), `ART: unbekannter Bereich ${it.area}`);
+    if (s.gap) assert.equal(it.q.split('___').length, 2, `ART: genau eine Lücke in „${it.q}“`);
+  }
+}
+
 console.log('Alle Logik- und Validierungstests bestanden.');

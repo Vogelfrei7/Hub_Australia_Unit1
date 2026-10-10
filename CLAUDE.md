@@ -20,7 +20,10 @@ Kernbotschaft: KI macht Diagnostik zu einem mächtigen Werkzeug (Lehrkraft erfä
 
 ## Route (seit 08.10.)
 Grammar Road: Start Sydney → 1 SPR Gold Coast → 2 SP Great Barrier Reef → 3 PP Outback → 4 SPPP Darwin (Kontrast, `contrast: true`) →
-5 PROG Perth → 6 GOING Melbourne → Test. Gast-Codes `GAST-KO01…06` (Koala, vorbereitete Reise bis Darwin, im Apps Script herausgefiltert).
+5 PROG Perth → 6 GOING Melbourne → Test.
+Writing Track (Thema „Is Australia worth visiting?“, Klassenarbeit später: Artikel „High school year in Australia“ – Aufgabe nur in `private/`):
+ART Alice Springs (Info-Station, `lesson.html?st=ART`, ohne KI) → ARG Kata Tjuta (Argumente, geplant als `lesson.html`) → WRITE Uluru (Writing Coach).
+Stationen mit `page: true` + `lesson` in config: ein Durchgang = Stempel (Schritt `<ID>-P`). Stations-IDs nur Buchstaben (Schritt-Regex). Gast-Codes `GAST-KO01…06` (Koala, vorbereitete Reise bis Darwin, im Apps Script herausgefiltert).
 Unterrichtsbesuch 15.10.: `docs/besuch-15-10.md`.
 
 ## Datenfluss

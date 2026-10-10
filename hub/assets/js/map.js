@@ -1,9 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
   loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo, isGuest,
-} from './core.js?v=3.0';
-import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=3.0';
-import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=3.0';
+} from './core.js?v=3.1';
+import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=3.1';
+import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=3.1';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -237,6 +237,8 @@ function renderPanel() {
             <span class="de">(Starte mit dem Check-in: Zeig, was du schon kannst. Es zählt nicht für Punkte – es ist nur dein Startpunkt.)</span></p>
           <a class="btn" href="${link('checkin.html')}">Start the check-in (Check-in starten)</a>
         </div>`;
+  } else if (def.page && state !== 'soon' && state !== 'later') {
+    body = pageBox(id, t, color);
   } else if (state === 'soon') {
     body = `<div class="info-box">${UI.lock}<span><b>Coming soon.</b> This stop opens later. <span class="de">(Kommt bald. Diese Station öffnet später.)</span></span></div>`;
   } else if (state === 'later') {
@@ -269,6 +271,23 @@ function renderPanel() {
     view.copied = true;
     panel.querySelector('#copied').hidden = false;
   });
+}
+
+// Station mit eigener Übungsseite (lesson.html) statt Coach
+function pageBox(id, t, color) {
+  if (t.complete) {
+    return `<div class="info-box teal">${UI.check}<span><b>Station done!</b> You can do it again any time. <span class="de">(Geschafft! Du kannst die Station jederzeit wiederholen.)</span></span></div>
+      <a class="btn ghost" href="${link('lesson.html', { st: id })}">Do it again (Nochmal)</a>`;
+  }
+  return `<div class="action" style="--rc:${color}">
+    <div class="action-h">WHAT TO DO NOW <span class="de-inline">(Was du jetzt machst)</span></div>
+    <ol class="todo">
+      <li><span>Open the station and work through the <b>short tasks</b>.</span><span class="de">(Öffne die Station und mach die kurzen Aufgaben.)</span></li>
+      <li><span>At the end you get your <b>stamp</b>.</span><span class="de">(Am Ende bekommst du deinen Stempel.)</span></li>
+    </ol>
+    <a class="btn" href="${link('lesson.html', { st: id })}">Open the station (Station öffnen)</a>
+    <p class="hint-de" style="margin:0">Kein Coach nötig – das geht auch zu Hause.</p>
+  </div>`;
 }
 
 function actionBox(def, t, color) {

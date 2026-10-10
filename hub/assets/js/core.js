@@ -207,6 +207,10 @@ export function progress(cfg, rawEvents, opts = {}) {
   }
   const checkinDone = Object.values(topics).some((t) => t.base);
   for (const t of Object.values(topics)) {
+    if (cfg.topics[t.id].page) {   // Übungsseite ohne Coach (lesson.html): einmal durcharbeiten = Stempel
+      Object.assign(t, { extra: false, stars: t.p ? 1 : 0, complete: !!t.p, stamp: !!t.p, gold: false, single: true });
+      continue;
+    }
     t.extra = (sheets[t.id]?.size || 0) >= 2 || (practices[t.id] || 0) >= 2;   // zweites Blatt oder zweite Übung
     t.stars = (t.w1 ? 1 : 0) + (t.p ? 1 : 0) + (t.extra ? 1 : 0);
     t.complete = !!(t.w1 && t.p);

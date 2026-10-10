@@ -1,6 +1,6 @@
 // Pass v2 (passport.html): Steckbrief, Stempel nach Routen, Bonus, Achievements.
-import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, avatarSrc, UI } from './core.js?v=3.0';
-import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=3.0';
+import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, avatarSrc, UI } from './core.js?v=3.1';
+import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=3.1';
 
 const app = document.getElementById('app');
 let cfg; let trav; let pr;
@@ -54,7 +54,7 @@ function cell(id, route) {
   const def = cfg.topics[id]; const t = pr.topics[id];
   if (t.stamp) {
     return `<button type="button" class="cell" data-id="${id}" aria-label="${esc(def.place)} stamp, ${t.stars} of 3 stars. Show details.">
-      ${stampHTML(cfg, def, { size: 128, stars: t.checkin ? null : t.stars, date: t.checkin ? '' : fmtDate((t.p || t.w1 || t.last).ts) })}</button>`;
+      ${stampHTML(cfg, def, { size: 128, stars: t.checkin || t.single ? null : t.stars, date: t.checkin ? '' : fmtDate((t.p || t.w1 || t.last).ts) })}</button>`;
   }
   return `<div class="cell">${slotHTML(def, { size: 124, state: pr.status[id], route })}</div>`;
 }
@@ -64,7 +64,7 @@ function details(id) {
   const last = t.last;
   const row = (on, en, de) => `<li class="step ${on ? 'done' : ''}"><span>${on ? '✓' : '○'}</span><span><b>${en}</b><br><span class="de">${de}</span></span></li>`;
   openDialog(`
-    <div style="display:flex;justify-content:center">${stampHTML(cfg, def, { size: 160, stars: t.stars })}</div>
+    <div style="display:flex;justify-content:center">${stampHTML(cfg, def, { size: 160, stars: t.single ? null : t.stars })}</div>
     <h2>${esc(def.place)}</h2>
     <div class="skill">${esc(def.name)}</div>
     <ul class="steps">

@@ -3,11 +3,11 @@
 // Positionen sind so gewählt, dass sie keine Station, Beschriftung oder Route überdecken.
 
 const MOTIFS = [
-  { id: 'uluru', wake: 'W3', x: 600, y: 505, svg: () => `
+  { id: 'uluru', wake: 'WRITE', x: 600, y: 505, svg: () => `
     <ellipse cx="2" cy="1" rx="62" ry="6" fill="#D9A066" opacity=".6"/>
     <path d="M-56,0 C-52,-14 -40,-31 -16,-34 C8,-37 32,-33 44,-23 C52,-15 56,-7 59,0 Z" fill="#C4552E"/>
     <path d="M-30,-29 Q-33,-14 -28,0 M-6,-35 Q-9,-17 -4,0 M20,-33 Q17,-16 22,0 M40,-24 Q38,-12 42,0" fill="none" stroke="#9C3D1D" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>` },
-  { id: 'kata', wake: 'W2', x: 355, y: 528, svg: () => `
+  { id: 'kata', wake: 'ARG', x: 355, y: 528, svg: () => `
     <ellipse cx="2" cy="1" rx="48" ry="5" fill="#D9A066" opacity=".6"/>
     <path d="M-44,0 Q-42,-24 -26,-26 Q-12,-27 -9,-12 Q-4,-34 12,-32 Q27,-30 26,-12 Q32,-22 40,-16 Q47,-9 47,0 Z" fill="#C8673A"/>` },
   { id: 'roo', wake: 'PP', x: 598, y: 338, anim: 'hop', svg: () => `

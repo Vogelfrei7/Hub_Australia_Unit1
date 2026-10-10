@@ -108,9 +108,9 @@
       "soft": "#FDE6D8",
       "shape": "square",
       "stops": [
-        "W1",
-        "W2",
-        "W3"
+        "ART",
+        "ARG",
+        "WRITE"
       ],
       "path": [
         [
@@ -712,12 +712,12 @@
       },
       "image": "assets/img/TEST.webp"
     },
-    "W1": {
+    "ART": {
       "route": "writing",
       "number": "1",
       "place": "Alice Springs",
-      "name": "Plan your article",
-      "topic": "Aboriginal Australians",
+      "name": "How to write an article",
+      "topic": "Is Australia worth visiting?",
       "x": 560,
       "y": 400,
       "label": "right",
@@ -727,13 +727,509 @@
         "ink": "#C2410C",
         "icon": "notebook"
       },
-      "image": "assets/img/W1.webp"
+      "image": "assets/img/W1.webp",
+      "page": true,
+      "areas": [
+        "STRUCT",
+        "HEAD",
+        "INTRO",
+        "REASON",
+        "LINK",
+        "TIME",
+        "END"
+      ],
+      "areaLabels": {
+        "STRUCT": "Aufbau eines Artikels (Reihenfolge der Teile)",
+        "HEAD": "gute Überschrift erkennen",
+        "INTRO": "gute Einleitung erkennen (Hook + Thema)",
+        "REASON": "Argument mit Begründung oder Beispiel stützen",
+        "LINK": "linking words",
+        "TIME": "time phrases passend zur Zeitform",
+        "END": "guten Schluss erkennen (Meinung)"
+      },
+      "rules": [
+        {
+          "title": "Headline",
+          "de": "Überschrift",
+          "text": "Short and **catchy** – it makes people want to read.",
+          "textDe": "Kurz und neugierig machend.",
+          "ex": "**Down Under – worth the long trip?**"
+        },
+        {
+          "title": "Introduction",
+          "de": "Einleitung",
+          "text": "**Hook** the reader (a question or a surprising fact) and say what the article is about.",
+          "textDe": "Leser neugierig machen und das Thema nennen.",
+          "ex": "**Have you ever** dreamed of swimming with turtles? … But is Australia really worth the long trip?"
+        },
+        {
+          "title": "Main part",
+          "de": "Hauptteil",
+          "text": "**One paragraph for each argument:** the argument + a **reason** or an **example**.",
+          "textDe": "Ein Absatz pro Argument: Argument + Begründung oder Beispiel.",
+          "ex": "Firstly, Australia has amazing wildlife. **For example**, you can see koalas in the wild."
+        },
+        {
+          "title": "Linking words",
+          "de": "Verbindungswörter",
+          "text": "Connect your ideas: **firstly · also · in addition · however · on the other hand · for example · because · so · in conclusion**",
+          "textDe": "Verbinde deine Gedanken – so wird der Text flüssig.",
+          "ex": "The flight is long. **However**, it is worth it."
+        },
+        {
+          "title": "Time phrases",
+          "de": "Zeitangaben",
+          "text": "Time phrases show the **tense**: every year (simple present) · last summer, ago (simple past) · since, for, ever (present perfect)",
+          "textDe": "Zeitangaben zeigen dir die Zeitform.",
+          "ex": "**Every year**, millions of tourists **visit** Australia."
+        },
+        {
+          "title": "Conclusion",
+          "de": "Schluss",
+          "text": "Sum up and give **your opinion**. End with a strong last sentence.",
+          "textDe": "Zusammenfassen, deine Meinung, ein starker letzter Satz.",
+          "ex": "**In conclusion**, … **In my opinion**, … Go and see it for yourself!"
+        }
+      ],
+      "lesson": {
+        "intro": {
+          "en": "Learn what makes a good article – step by step. You need this for your own article and for the class test.",
+          "de": "Lerne Schritt für Schritt, was einen guten Artikel ausmacht. Das brauchst du für deinen eigenen Artikel und für die Klassenarbeit."
+        },
+        "facts": [
+          [
+            "7 short parts",
+            "kurze Teile"
+          ],
+          [
+            "about 15 minutes",
+            "etwa 15 Minuten"
+          ],
+          [
+            "wrong? just try again",
+            "falsch? einfach nochmal probieren"
+          ],
+          [
+            "you can do it at home, too",
+            "geht auch zu Hause"
+          ]
+        ],
+        "sections": [
+          {
+            "type": "learn",
+            "title": "What makes a good article?",
+            "de": "Was macht einen guten Artikel aus?",
+            "lead": {
+              "en": "An article is for the readers of a **magazine** or a **website**. It is not a letter – no \"Dear …\", no \"Love, …\".",
+              "de": "Ein Artikel ist für die Leser einer Zeitschrift oder Webseite. Er ist kein Brief."
+            }
+          },
+          {
+            "type": "order",
+            "area": "STRUCT",
+            "title": "Build the article",
+            "de": "Bau den Artikel zusammen",
+            "task": {
+              "en": "Tap the parts in the right order: first the headline, then …",
+              "de": "Tippe die Teile in der richtigen Reihenfolge an: zuerst die Überschrift, dann …"
+            },
+            "parts": [
+              {
+                "label": "Headline",
+                "text": "Down Under – worth the long trip?"
+              },
+              {
+                "label": "Introduction",
+                "text": "Have you ever dreamed of seeing a kangaroo in the wild? Every year, millions of tourists travel to Australia. But is it really worth visiting? Let’s take a look."
+              },
+              {
+                "label": "Argument 1",
+                "text": "Firstly, Australia has amazing nature. You can swim at the Great Barrier Reef, the biggest coral reef in the world. For example, you can see turtles and colourful fish there."
+              },
+              {
+                "label": "Argument 2",
+                "text": "However, there are also some problems. The flight from Germany takes more than 20 hours, and it is very expensive. That is why you should stay for at least three weeks."
+              },
+              {
+                "label": "Conclusion",
+                "text": "In conclusion, Australia is far away, but in my opinion it is definitely worth visiting. If you get the chance, go!"
+              }
+            ]
+          },
+          {
+            "type": "choice",
+            "title": "Headline and introduction",
+            "de": "Überschrift und Einleitung",
+            "items": [
+              {
+                "area": "HEAD",
+                "q": "Which is the best **headline**?",
+                "qDe": "Welche Überschrift ist die beste?",
+                "options": [
+                  "Australia: facts about the sixth biggest country in the world",
+                  "Sun, sharks and 20 hours on a plane – is it worth it?",
+                  "My holiday in Australia last summer"
+                ],
+                "answer": 1,
+                "why": "It makes you curious and shows the question of the article. The first one sounds like a fact file, the last one like a diary.",
+                "whyDe": "Sie macht neugierig und zeigt die Frage des Artikels. Die erste klingt nach Steckbrief, die letzte nach Tagebuch."
+              },
+              {
+                "area": "HEAD",
+                "q": "Which is the best **headline**?",
+                "qDe": "Welche Überschrift ist die beste?",
+                "options": [
+                  "Visiting Australia – some information",
+                  "Australia is the best country in the world and everybody should go there",
+                  "Down Under: dream trip or nightmare?"
+                ],
+                "answer": 2,
+                "why": "Short and catchy, and it shows there are two sides. The second one is too long and gives the answer away.",
+                "whyDe": "Kurz, macht neugierig und zeigt zwei Seiten. Die zweite ist zu lang und verrät schon die Antwort."
+              },
+              {
+                "area": "INTRO",
+                "q": "Which is the best **introduction**?",
+                "qDe": "Welche Einleitung ist die beste?",
+                "options": [
+                  "Australia is a very big country. It has six states and two territories. The capital is Canberra, and many people live in Sydney and Melbourne.",
+                  "Imagine you are snorkelling next to a turtle while it is snowing at home in Germany. Sounds great? But a trip to Australia is long and expensive. So is it really worth it?",
+                  "I think Australia is definitely worth visiting because it has great beaches, amazing animals and friendly people. The weather is nice, too."
+                ],
+                "answer": 1,
+                "why": "It hooks the reader with a picture in your head and then asks the question. The first one only gives facts, the last one already gives all the arguments.",
+                "whyDe": "Sie macht mit einem Bild im Kopf neugierig und stellt dann die Frage. Die erste nennt nur Fakten, die letzte verrät schon alle Argumente."
+              },
+              {
+                "area": "INTRO",
+                "q": "Which is the best **introduction**?",
+                "qDe": "Welche Einleitung ist die beste?",
+                "options": [
+                  "Hello! My name is Tim and I am 14 years old. Today I want to tell you something about Australia.",
+                  "Did you know that Australia has more than 10,000 beaches? Beaches are great. You can swim there and play volleyball with your friends.",
+                  "Did you know that Australia has more than 10,000 beaches? You could visit a new one every day for 27 years! But are beaches enough to make the long trip worth it?"
+                ],
+                "answer": 2,
+                "why": "A surprising fact as a hook – and then the question of the article. The second one has a hook, but no question. The first one sounds like a speech, not an article.",
+                "whyDe": "Ein überraschender Fakt als Hook – und dann die Frage. Die zweite hat einen Hook, aber keine Frage. Die erste klingt wie ein Vortrag."
+              }
+            ],
+            "task": {
+              "en": "All texts are about the question \"Is Australia worth visiting?\". Which one works best?",
+              "de": "Alle Texte gehören zur Frage „Is Australia worth visiting?“. Was funktioniert am besten?"
+            }
+          },
+          {
+            "type": "choice",
+            "title": "Argument + example",
+            "de": "Argument + Beispiel",
+            "task": {
+              "en": "Which sentence supports the argument best? Careful: all of them are about Australia.",
+              "de": "Welcher Satz stützt das Argument am besten? Vorsicht: Alle passen zum Thema Australien."
+            },
+            "items": [
+              {
+                "area": "REASON",
+                "q": "**Firstly, Australia has amazing wildlife.** …",
+                "options": [
+                  "Australia is a very big country with lots of different animals and plants.",
+                  "For example, you can watch koalas sleeping in eucalyptus trees and see wild kangaroos in the evening.",
+                  "However, some animals like snakes and spiders can be really dangerous."
+                ],
+                "answer": 1,
+                "why": "It gives a concrete example. The first one only repeats the argument, the last one is a counter-argument.",
+                "whyDe": "Er nennt ein konkretes Beispiel. Der erste wiederholt nur das Argument, der letzte ist ein Gegenargument."
+              },
+              {
+                "area": "REASON",
+                "q": "**On the other hand, a trip to Australia is very expensive.** …",
+                "options": [
+                  "For example, a flight from Germany costs about 1,500 euros, and hotels in Sydney are expensive, too.",
+                  "For example, Sydney is a very big and famous city with lots of tourists.",
+                  "But it is a great experience that you will never forget."
+                ],
+                "answer": 0,
+                "why": "It shows with numbers why it is expensive. The second example does not fit the argument, the last one argues against it.",
+                "whyDe": "Er zeigt mit Zahlen, warum es teuer ist. Das zweite Beispiel passt nicht zum Argument, der letzte widerspricht ihm."
+              },
+              {
+                "area": "REASON",
+                "q": "**Another good reason to go is the culture of the Aboriginal people.** …",
+                "options": [
+                  "Aboriginal culture is very interesting and it is also very important.",
+                  "Many tourists also visit the Sydney Opera House and Bondi Beach.",
+                  "Aboriginal people have lived in Australia for more than 50,000 years, so you can learn about one of the oldest cultures in the world."
+                ],
+                "answer": 2,
+                "why": "It gives a fact and a reason (so …). The first one stays too general, the second one is about something else.",
+                "whyDe": "Er nennt einen Fakt und einen Grund (so …). Der erste bleibt zu allgemein, der zweite handelt von etwas anderem."
+              },
+              {
+                "area": "REASON",
+                "q": "**The weather is another argument for a visit.** …",
+                "options": [
+                  "The weather in Australia is different in different parts of the country.",
+                  "In the north it is warm all year, so you can go swimming even at Christmas.",
+                  "When my uncle was in Melbourne, it rained every day."
+                ],
+                "answer": 1,
+                "why": "It explains why the weather is a reason to go. The first one is too general, the last one is an argument against.",
+                "whyDe": "Er erklärt, warum das Wetter für eine Reise spricht. Der erste ist zu allgemein, der letzte spricht dagegen."
+              }
+            ]
+          },
+          {
+            "type": "choice",
+            "gap": true,
+            "title": "Linking words",
+            "de": "Verbindungswörter",
+            "task": {
+              "en": "Tap the right linking word.",
+              "de": "Tippe das passende Verbindungswort an."
+            },
+            "items": [
+              {
+                "area": "LINK",
+                "q": "___, Australia has wonderful beaches.",
+                "options": [
+                  "Firstly",
+                  "However",
+                  "Because"
+                ],
+                "answer": 0
+              },
+              {
+                "area": "LINK",
+                "q": "You can ___ see kangaroos and koalas.",
+                "options": [
+                  "but",
+                  "also",
+                  "so"
+                ],
+                "answer": 1
+              },
+              {
+                "area": "LINK",
+                "q": "Australia is beautiful. ___, it is very far away.",
+                "options": [
+                  "For example",
+                  "In addition",
+                  "However"
+                ],
+                "answer": 2
+              },
+              {
+                "area": "LINK",
+                "q": "There are many dangerous animals, ___ snakes and spiders.",
+                "options": [
+                  "for example",
+                  "in conclusion",
+                  "firstly"
+                ],
+                "answer": 0
+              },
+              {
+                "area": "LINK",
+                "q": "Many people go to Sydney ___ the Opera House is so famous.",
+                "options": [
+                  "however",
+                  "because",
+                  "so"
+                ],
+                "answer": 1
+              },
+              {
+                "area": "LINK",
+                "q": "The flight is very long. ___, it is expensive.",
+                "options": [
+                  "In addition",
+                  "However",
+                  "For example"
+                ],
+                "answer": 0
+              },
+              {
+                "area": "LINK",
+                "q": "The sun is very strong, ___ you should always wear sun cream.",
+                "options": [
+                  "because",
+                  "but",
+                  "so"
+                ],
+                "answer": 2
+              },
+              {
+                "area": "LINK",
+                "q": "___, I think Australia is worth visiting.",
+                "options": [
+                  "For example",
+                  "In conclusion",
+                  "Firstly"
+                ],
+                "answer": 1
+              }
+            ]
+          },
+          {
+            "type": "choice",
+            "gap": true,
+            "title": "Time phrases",
+            "de": "Zeitangaben",
+            "task": {
+              "en": "Look at the verb. Which time phrase fits?",
+              "de": "Schau auf das Verb. Welche Zeitangabe passt?"
+            },
+            "items": [
+              {
+                "area": "TIME",
+                "q": "___, millions of tourists visit the Great Barrier Reef.",
+                "options": [
+                  "Every year",
+                  "Last year",
+                  "Since 2019"
+                ],
+                "answer": 0,
+                "why": "visit = simple present → every year",
+                "whyDe": "simple present → every year"
+              },
+              {
+                "area": "TIME",
+                "q": "___, my cousin travelled around Australia.",
+                "options": [
+                  "Since 2019",
+                  "Last summer",
+                  "Every summer"
+                ],
+                "answer": 1,
+                "why": "travelled = simple past → last summer",
+                "whyDe": "simple past → last summer"
+              },
+              {
+                "area": "TIME",
+                "q": "The reef has lost a lot of its coral ___.",
+                "options": [
+                  "two years ago",
+                  "tomorrow",
+                  "since 2016"
+                ],
+                "answer": 2,
+                "why": "has lost = present perfect → since",
+                "whyDe": "present perfect → since"
+              },
+              {
+                "area": "TIME",
+                "q": "Uluru has been a World Heritage Site ___.",
+                "options": [
+                  "for more than 30 years",
+                  "in 1987",
+                  "last year"
+                ],
+                "answer": 0,
+                "why": "has been = present perfect → for",
+                "whyDe": "present perfect → for"
+              },
+              {
+                "area": "TIME",
+                "q": "The first Europeans came to Australia more than 200 years ___.",
+                "options": [
+                  "since",
+                  "ago",
+                  "for"
+                ],
+                "answer": 1,
+                "why": "came = simple past → ago",
+                "whyDe": "simple past → ago"
+              }
+            ]
+          },
+          {
+            "type": "choice",
+            "title": "The conclusion",
+            "de": "Der Schluss",
+            "items": [
+              {
+                "area": "END",
+                "q": "Which is the best **conclusion**?",
+                "qDe": "Welcher Schluss ist der beste?",
+                "options": [
+                  "In conclusion, Australia has amazing wildlife, beautiful beaches and friendly people. Also, the flight is very long.",
+                  "In conclusion, I think Australia is worth visiting. Another reason is that you can go surfing at Bondi Beach.",
+                  "All in all, the long flight and the high costs are a problem. But in my opinion, the wildlife, the beaches and the friendly people make Australia worth every cent. So start saving!"
+                ],
+                "answer": 2,
+                "why": "It sums up both sides, gives an opinion and ends strongly. The first one has no opinion, the second one brings a new argument.",
+                "whyDe": "Er fasst beide Seiten zusammen, nennt die Meinung und endet stark. Der erste hat keine Meinung, der zweite bringt ein neues Argument."
+              },
+              {
+                "area": "END",
+                "q": "Which is the best **conclusion**?",
+                "qDe": "Welcher Schluss ist der beste?",
+                "options": [
+                  "To sum up, Australia is far away, but its nature is unique. If you love animals and the sea, it is the perfect place for you – just bring a lot of sun cream!",
+                  "To sum up, Australia is far away. Maybe it is worth visiting, maybe not. Everybody has to decide for themselves.",
+                  "To sum up, I think Australia is worth visiting. In this article I have written about Australia. Thank you for reading."
+                ],
+                "answer": 0,
+                "why": "Clear opinion and a strong, friendly last sentence. The second one has no clear opinion, the last one ends weakly.",
+                "whyDe": "Klare Meinung und ein starker letzter Satz. Der zweite hat keine klare Meinung, der letzte endet schwach."
+              }
+            ],
+            "task": {
+              "en": "A good conclusion sums up, gives your opinion and has a strong last sentence – but no new arguments.",
+              "de": "Ein guter Schluss fasst zusammen, nennt deine Meinung und hat einen starken letzten Satz – aber keine neuen Argumente."
+            }
+          },
+          {
+            "type": "toolkit",
+            "title": "Your article toolkit",
+            "de": "Dein Artikel-Werkzeugkasten",
+            "lead": {
+              "en": "Use this checklist for your own article – and in the class test.",
+              "de": "Nutze diese Checkliste für deinen eigenen Artikel – und in der Klassenarbeit."
+            },
+            "checklist": [
+              [
+                "a catchy headline",
+                "eine Überschrift, die neugierig macht"
+              ],
+              [
+                "an introduction with a hook and the question",
+                "eine Einleitung mit Hook und der Frage"
+              ],
+              [
+                "3–4 arguments, one paragraph each",
+                "3–4 Argumente, jedes in einem eigenen Absatz"
+              ],
+              [
+                "a reason or an example for every argument",
+                "zu jedem Argument eine Begründung oder ein Beispiel"
+              ],
+              [
+                "linking words",
+                "Verbindungswörter"
+              ],
+              [
+                "the right tenses and time phrases",
+                "die richtigen Zeitformen und Zeitangaben"
+              ],
+              [
+                "a conclusion with my opinion",
+                "einen Schluss mit meiner Meinung"
+              ],
+              [
+                "at least 120 words",
+                "mindestens 120 Wörter"
+              ]
+            ]
+          }
+        ]
+      }
     },
-    "W2": {
+    "ARG": {
       "route": "writing",
       "number": "2",
       "place": "Kata Tjuta",
-      "name": "Write your article",
+      "name": "Find your best arguments",
       "topic": "Is Australia worth visiting?",
       "x": 420,
       "y": 470,
@@ -746,12 +1242,12 @@
       },
       "image": "assets/img/W2.webp"
     },
-    "W3": {
+    "WRITE": {
       "route": "writing",
       "number": "3",
       "place": "Uluru",
-      "name": "Final draft – your goal!",
-      "topic": "Make your article better",
+      "name": "Write your article – your goal!",
+      "topic": "Is Australia worth visiting?",
       "x": 500,
       "y": 520,
       "label": "below",

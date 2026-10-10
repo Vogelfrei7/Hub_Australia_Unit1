@@ -43,12 +43,13 @@ Thema der Stunde: **simple past oder present perfect?** (Station 4 Darwin). Die 
 - **Generalprobe:** Mittwoch macht jeder Lotse einmal selbst eine Runde mit einem Gast-Code (GAST-KO01 … KO06). Danach im Dashboard prüfen: Die Gast-Abgaben erscheinen nicht.
 
 ## Technik-Checkliste (Mittwochabend)
-- [ ] Sidekick: Present Perfect Coach und Past or Perfect Coach angelegt, Prompts `agents/dist/PP.md` und `agents/dist/SPPP.md`,
+- [x] Sidekick: Present Perfect Coach und Past or Perfect Coach angelegt, Prompts `agents/dist/PP.md` und `agents/dist/SPPP.md`,
       Wissen: `AUS1-PP-1_loesung.md`, `AUS1-PP-2_loesung.md` bzw. `AUS1-SPPP-1_loesung.md`, `AUS1-SPPP-2_loesung.md`.
       Prompts von SPR und SP neu einfügen (sie leiten jetzt an die neuen Coaches weiter).
-- [ ] Beide Eingabe-Adressen an Claude geschickt → Stationen 3 und 4 freigeschaltet.
-- [ ] `apps-script/Code.gs` ersetzt (Gäste-Filter) → Bereitstellen → Neue Version.
-- [ ] Drucken: AUS1-SPPP-R (30×), AUS1-SPPP-1 (32× weiß), AUS1-SPPP-2 (12× gold), Gast-Karten `tools/gastkarten.html` (1×, ausschneiden).
+- [x] Beide Eingabe-Adressen an Claude geschickt → Stationen 3 und 4 freigeschaltet.
+- [x] `apps-script/Code.gs` ersetzt (Gäste-Filter) → Bereitstellen → Neue Version. Getestet: Gast steht im Sheet, nicht im Dashboard.
+- [x] Drucken: AUS1-SPPP-R (30×), AUS1-SPPP-1 (32× weiß), AUS1-SPPP-2 (12× gold)
+- [ ] Drucken: Gast-Karten `tools/gastkarten.html` (1×, ausschneiden).
 - [ ] **Gast-iPads:** 4–5 eigene iPads für die Gäste (nicht die der Kinder – sonst ist danach der Gast-Code auf dem Kinder-iPad).
       Falls doch Kinder-iPads: danach die eigene Code-Karte des Kindes neu scannen.
 - [ ] KI-Auswertung Mittwochabend erstellt; Dashboard-Adresse als Lesezeichen am Lehrer-Gerät; Präsentationsmodus getestet.
