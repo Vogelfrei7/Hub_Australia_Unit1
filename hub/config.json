@@ -1492,7 +1492,92 @@
         "icon": "uluru"
       },
       "image": "assets/img/W3.webp",
-      "planFrom": "ARG"
+      "planFrom": "ARG",
+      "drafts": true,
+      "coach": {
+        "name": "Writing Coach",
+        "input": ""
+      },
+      "areas": [
+        "HEAD",
+        "INTRO",
+        "ARG",
+        "REASON",
+        "END",
+        "FLOW",
+        "ORDER",
+        "FORM",
+        "OWN",
+        "VOC",
+        "SENT",
+        "SPELL",
+        "GRAM",
+        "TENSE",
+        "WORD",
+        "SHORT"
+      ],
+      "areaLabels": {
+        "HEAD": "A1 Überschrift fehlt oder passt nicht",
+        "INTRO": "A2/A3 Einleitung: Hook oder Frage fehlt",
+        "ARG": "A4 weniger als drei Argumente",
+        "REASON": "A5 Argumente nicht durch Begründung/Beispiel gestützt",
+        "END": "A6 Schluss ohne (bezogene) Meinung",
+        "FLOW": "B1 nicht flüssig lesbar, kaum Verknüpfungen (linking words)",
+        "ORDER": "B2 Gedanken ungeordnet, Absätze fehlen, Wiederholungen",
+        "FORM": "B3 Textsorte Article nicht erkennbar (z. B. Brief), kein Leserbezug",
+        "OWN": "B4 übernimmt Formulierungen aus Musterartikel/Plan statt eigener",
+        "VOC": "B5 Wortschatz/Redemittel der Meinungsäußerung zu einfach",
+        "SENT": "B6 nur einfache Hauptsätze, kein variierter Satzbau",
+        "SPELL": "B7 Rechtschreibung",
+        "GRAM": "B8 Grammatik (allgemein)",
+        "TENSE": "B8 Zeitformen der Unit (simple present/past, present perfect)",
+        "WORD": "B9 Wortgebrauch (falsche Wortwahl)",
+        "SHORT": "Text deutlich unter 120 Wörtern"
+      },
+      "rules": [
+        {
+          "title": "Headline",
+          "de": "Überschrift",
+          "text": "Short and **catchy** – it makes people want to read.",
+          "textDe": "Kurz und neugierig machend.",
+          "ex": "**Down Under – worth the long trip?**"
+        },
+        {
+          "title": "Introduction",
+          "de": "Einleitung",
+          "text": "**Hook** the reader (a question or a surprising fact) and say what the article is about.",
+          "textDe": "Leser neugierig machen und das Thema nennen.",
+          "ex": "**Have you ever** dreamed of swimming with turtles? … But is Australia really worth the long trip?"
+        },
+        {
+          "title": "Main part",
+          "de": "Hauptteil",
+          "text": "**One paragraph for each argument:** the argument + a **reason** or an **example**.",
+          "textDe": "Ein Absatz pro Argument: Argument + Begründung oder Beispiel.",
+          "ex": "Firstly, Australia has amazing wildlife. **For example**, you can see koalas in the wild."
+        },
+        {
+          "title": "Linking words",
+          "de": "Verbindungswörter",
+          "text": "Connect your ideas: **firstly · also · in addition · however · on the other hand · for example · because · so · in conclusion**",
+          "textDe": "Verbinde deine Gedanken – so wird der Text flüssig.",
+          "ex": "The flight is long. **However**, it is worth it."
+        },
+        {
+          "title": "Time phrases",
+          "de": "Zeitangaben",
+          "text": "Time phrases show the **tense**: every year (simple present) · last summer, ago (simple past) · since, for, ever (present perfect)",
+          "textDe": "Zeitangaben zeigen dir die Zeitform.",
+          "ex": "**Every year**, millions of tourists **visit** Australia."
+        },
+        {
+          "title": "Conclusion",
+          "de": "Schluss",
+          "text": "Sum up and give **your opinion**. End with a strong last sentence.",
+          "textDe": "Zusammenfassen, deine Meinung, ein starker letzter Satz.",
+          "ex": "**In conclusion**, … **In my opinion**, … Go and see it for yourself!"
+        }
+      ]
     }
   },
   "bonus": {

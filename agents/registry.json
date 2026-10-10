@@ -50,11 +50,11 @@
     },
     {
       "id": "WRITE",
-      "file": null,
-      "name": "Writing Coach",
+      "file": "topics/writing.md",
       "covers": "Schreiben: Artikel planen, schreiben, verbessern",
       "sheets": "AUS1-W…",
-      "active": true
+      "active": true,
+      "core": "core-writing.md"
     }
   ]
 }

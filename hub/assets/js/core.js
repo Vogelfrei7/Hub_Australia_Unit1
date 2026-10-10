@@ -225,6 +225,12 @@ export function progress(cfg, rawEvents, opts = {}) {
       Object.assign(t, { extra: false, stars: t.p ? 1 : 0, complete: !!t.p, stamp: !!t.p, gold: false, single: true });
       continue;
     }
+    if (cfg.topics[t.id].drafts) {   // Schreiben: W1 = erste Fassung, W2 = Endfassung (beide auf Papier, Foto an den Coach)
+      const final = t.attempts.filter((e) => e.si.id === `${t.id}-W2`).reduce((b, e) => (better(e, b) ? e : b), null);
+      Object.assign(t, { draft: t.attempts.find((e) => e.si.id === `${t.id}-W1`) || null, finalDraft: final });
+      Object.assign(t, { extra: false, stars: (t.draft ? 1 : 0) + (final ? 1 : 0), complete: !!final, stamp: !!(t.draft || final), gold: false, single: true });
+      continue;
+    }
     t.extra = (sheets[t.id]?.size || 0) >= 2 || (practices[t.id] || 0) >= 2;   // zweites Blatt oder zweite Übung
     t.stars = (t.w1 ? 1 : 0) + (t.p ? 1 : 0) + (t.extra ? 1 : 0);
     t.complete = !!(t.w1 && t.p);

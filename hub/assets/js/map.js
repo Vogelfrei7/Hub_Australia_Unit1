@@ -1,9 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
   loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo, isGuest, planLine, planKey,
-} from './core.js?v=3.3';
-import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=3.3';
-import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=3.3';
+} from './core.js?v=3.4';
+import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=3.4';
+import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=3.4';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -293,7 +293,24 @@ function pageBox(id, t, color) {
 
 function actionBox(def, t, color) {
   let todo; let mode = '';
-  if (isGuest(cfg, trav.code)) {   // Gäste: kein Arbeitsblatt, direkt eine Übungsrunde
+  if (def.drafts) {   // Schreiben: Artikel auf Papier, Foto an den Coach – erst Fassung 1, dann Endfassung
+    if (!t.draft) {
+      todo = [
+        ['Write your article <b>on paper</b> – at least 120 words. Use your plan and your toolkit (Rules).', 'Schreib deinen Artikel auf Papier – mindestens 120 Wörter. Nutze deinen Plan und die Checkliste (Rules).'],
+        ['Copy your start code, tap into the coach field, paste and send.', 'Startcode kopieren, ins Coach-Feld tippen, einfügen, senden.'],
+        ['Then send a <b>photo</b> of your article.', 'Dann ein Foto von deinem Artikel schicken.'],
+      ];
+    } else if (!t.finalDraft) {
+      mode = ' FINAL-DRAFT';
+      todo = [
+        ['Make your article better: write your <b>final draft</b> on paper. Use the tips from the coach.', 'Mach deinen Artikel besser: Schreib die Endfassung auf Papier. Nutze die Tipps vom Coach.'],
+        ['Copy your start code, paste and send – then send a <b>photo</b> of your final draft.', 'Startcode kopieren, einfügen, senden – dann ein Foto von deiner Endfassung schicken.'],
+      ];
+    } else {
+      mode = ' FINAL-DRAFT';
+      todo = [['<b>Goal reached!</b> Your final draft is done. You can send a better version any time.', 'Ziel erreicht! Deine Endfassung ist fertig. Du kannst jederzeit eine bessere Fassung schicken.']];
+    }
+  } else if (isGuest(cfg, trav.code)) {   // Gäste: kein Arbeitsblatt, direkt eine Übungsrunde
     mode = ' PRACTICE';
     todo = [
       ['Welcome on board! <b>Practise</b> with the coach – just like the class.', 'Willkommen! Üben Sie mit dem Coach – genau wie die Klasse.'],

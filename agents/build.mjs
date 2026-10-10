@@ -40,7 +40,8 @@ for (const a of agents.filter((x) => x.meta)) {
     FINAL_CHECK_MENU: registry.finalCheckOpen ? '' : ` – 🔒 opens ${registry.finalCheckDate}`,
     TOPIC: a.body,
   };
-  let out = core.replace(/\{\{(\w+)\}\}/g, (all, k) => {
+  // eigener Kern, z. B. core-writing.md für den Writing Coach
+  let out = (a.core ? read(a.core) : core).replace(/\{\{(\w+)\}\}/g, (all, k) => {
     if (!(k in fill)) throw new Error(`Unbekannter Platzhalter ${all}`);
     return fill[k];
   });
@@ -50,7 +51,7 @@ for (const a of agents.filter((x) => x.meta)) {
   writeFileSync(new URL(`dist/${a.id}.setup.md`, dir),
     `# ${a.name} – Einrichtung in Sidekick\n\n` +
     `- **Name:** ${a.name}\n- **System-Prompt:** Inhalt von \`dist/${a.id}.md\` komplett einfügen (${out.length} Zeichen)\n` +
-    `- **Modell:** Sonnet 5.5 (Alternative: GPT 6 Sol)\n- **Wissen:** nur die Blätter und Lösungen dieses Themas (${a.meta.sheets}) – keine anderen Themen\n` +
+    `- **Modell:** Sonnet 5.5 (Alternative: GPT 6 Sol)\n- **Wissen:** ${a.meta.type === 'writing' ? 'keins – Raster und Musterartikel stehen im Prompt' : `nur die Blätter und Lösungen dieses Themas (${a.meta.sheets}) – keine anderen Themen`}\n` +
     `- **Nutzergedächtnis:** aus\n- **Starter-Buttons:**\n${starters.map((s) => `  - ${s}`).join('\n')}\n` +
     `- **Weiterleitung (cascading):** alle anderen Coaches aus der Liste erlauben\n`);
   console.log(`${a.id}: ${out.length} Zeichen → agents/dist/${a.id}.md`);

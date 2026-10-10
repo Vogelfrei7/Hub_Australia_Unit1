@@ -2,8 +2,8 @@
 import {
   loadConfig, loadEvents, progress, diff, getTraveller, setTraveller, isDemo, link, esc, stampHTML, badgeHTML,
   UI, store, signature, addPending, parseFromURL, parseBlock, validate, submitToForm, normaliseEvent, isGuest, stepInfo, fmtDate,
-} from './core.js?v=3.3';
-import { openDialog } from './ui.js?v=3.3';
+} from './core.js?v=3.4';
+import { openDialog } from './ui.js?v=3.4';
 
 const app = document.getElementById('app');
 let cfg;
@@ -95,10 +95,16 @@ function renderMoment(r, ev, before, after, warnings, already) {
   const newStar = ta.stars > tb.stars;
   const firstStamp = !tb.stamp && ta.stamp;
   const { newAch } = diff(before, after);
-  const head = firstStamp ? 'Stamp collected!' : newStar ? '+1 star!' : si.kind === 'final' ? 'Final check done!' : 'Well done!';
-  const headDe = firstStamp ? 'Stempel bekommen!' : newStar ? 'Ein Stern mehr!' : si.kind === 'final' ? 'Final check geschafft!' : 'Gut gemacht!';
+  const finalDraft = def.drafts && si.kind !== 'sheet';   // Schreiben: W1 = erste Fassung, W2 = Endfassung
+  const head = firstStamp ? 'Stamp collected!' : finalDraft ? 'Final draft done!' : newStar ? '+1 star!' : si.kind === 'final' ? 'Final check done!' : 'Well done!';
+  const headDe = firstStamp ? 'Stempel bekommen!' : finalDraft ? 'Endfassung geschafft!' : newStar ? 'Ein Stern mehr!' : si.kind === 'final' ? 'Final check geschafft!' : 'Gut gemacht!';
+  const label = def.drafts ? (finalDraft ? 'Final draft' : 'First draft') : si.label;
   let next;
-  if (isGuest(cfg, r.code)) next = ['Thank you for travelling with us! This is exactly what the class does.', 'Danke fürs Mitreisen! Genau so arbeitet die Klasse.'];
+  if (def.drafts) {
+    next = ta.complete
+      ? ['Goal reached – you have finished the Writing Track!', 'Ziel erreicht – du hast den Writing Track geschafft!']
+      : ['Next: write your final draft on paper – with the tips from the coach.', 'Als Nächstes: Schreib die Endfassung auf Papier – mit den Tipps vom Coach.'];
+  } else if (isGuest(cfg, r.code)) next = ['Thank you for travelling with us! This is exactly what the class does.', 'Danke fürs Mitreisen! Genau so arbeitet die Klasse.'];
   else if (!ta.w1) next = ['Do worksheet 1 next.', 'Als Nächstes: Arbeitsblatt 1.'];
   else if (!ta.p) next = ['Next: practise with the coach.', 'Als Nächstes: Üben mit dem Coach.'];
   else if (!ta.extra) next = ['Get your third star: worksheet 2 or one more practice round.', 'Dritter Stern: Arbeitsblatt 2 oder noch eine Übungsrunde.'];
@@ -106,10 +112,10 @@ function renderMoment(r, ev, before, after, warnings, already) {
 
   app.innerHTML = `
     <div class="moment">
-      <div class="stamp-land">${stampHTML(cfg, def, { size: 190, stars: ta.stars, date: fmtDate(ev.ts) })}</div>
+      <div class="stamp-land">${stampHTML(cfg, def, { size: 190, stars: ta.single ? null : ta.stars, date: fmtDate(ev.ts) })}</div>
       <div style="text-align:center">
         <h1>${esc(head)}</h1>${UI.brush(240)}
-        <div class="sub" style="font-size:16px">(${esc(headDe)}) · ${esc(def.name)} · ${esc(si.label)}</div>
+        <div class="sub" style="font-size:16px">(${esc(headDe)}) · ${esc(def.name)} · ${esc(label)}</div>
       </div>
       ${r.s || r.fb ? `<div class="two">
         ${r.s ? `<div class="good"><b>Well done (Gut gemacht)</b>${esc(r.s)}</div>` : ''}

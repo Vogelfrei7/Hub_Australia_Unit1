@@ -135,4 +135,17 @@ assert.ok(!/[\r\n]/.test(line), 'Plan-Zeile ohne Zeilenumbruch');
 assert.equal(line, 'MY PLAN (Is Australia worth visiting?) | opinion: yes | 1 for: Great Barrier Reef – For example, turtles fish | 2 against: expensive – It costs a lot.');
 assert.equal(planLine(cfg, 'ARG', null), '');
 
+// 11. Uluru (WRITE): erste Fassung = Stempel, Endfassung = Station geschafft; Coach-Ergebnis mit Schreib-Kürzeln gültig
+p = progress(cfg, [ev('ART-P', 4), ev('ARG-P', 3), ev('WRITE-W1', 2, ['REASON'])]);
+assert.equal(p.topics.WRITE.stamp, true);
+assert.equal(p.topics.WRITE.complete, false);
+assert.equal(p.status.WRITE, 'now');
+p = progress(cfg, [ev('ART-P', 4), ev('ARG-P', 3), ev('WRITE-W1', 2), ev('WRITE-W2', 3)]);
+assert.equal(p.topics.WRITE.complete, true);
+assert.equal(p.topics.WRITE.stars, 2);
+v = validate(cfg, parseFromURL('?code=FUCHS-K7Q2&st=WRITE-W1&n=3&self=3&h=0&f=REASON%2CFLOW%2CTENSE&s=Your%20introduction%20makes%20people%20curious.&fb=Give%20every%20argument%20an%20example.'));
+assert.ok(v.ok, v.errors.join());
+assert.deepEqual(v.result.f, ['REASON', 'FLOW', 'TENSE']);
+assert.equal(v.warnings.length, 0);
+
 console.log('Alle Logik- und Validierungstests bestanden.');

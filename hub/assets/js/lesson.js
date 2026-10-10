@@ -4,8 +4,8 @@
 // Freie Texte der Kinder bleiben auf dem Gerät (store); ans Formular gehen nur gewählte Argumente und Meinung.
 import {
   loadConfig, loadEvents, progress, getTraveller, isDemo, link, esc, bold, stampHTML, UI, addPending, submitToForm, normaliseEvent, store, planKey,
-} from './core.js?v=3.3';
-import { openCodeDialog, headerHTML, wireCodePill } from './ui.js?v=3.3';
+} from './core.js?v=3.4';
+import { openCodeDialog, headerHTML, wireCodePill } from './ui.js?v=3.4';
 
 const app = document.getElementById('app');
 let cfg; let trav; let id; let def; let secs; let sec = 0;

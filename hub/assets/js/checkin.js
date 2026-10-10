@@ -1,8 +1,8 @@
 // Check-in (checkin.html): fester Pre-Test, Auswertung ohne KI → je Zeitform ein Startwert (Schritt <THEMA>-B).
 import {
   loadConfig, loadEvents, progress, getTraveller, isDemo, link, esc, stampHTML, UI, store, addPending, submitToForm, normaliseEvent,
-} from './core.js?v=3.3';
-import { openCodeDialog, headerHTML, wireCodePill } from './ui.js?v=3.3';
+} from './core.js?v=3.4';
+import { openCodeDialog, headerHTML, wireCodePill } from './ui.js?v=3.4';
 
 const app = document.getElementById('app');
 const PER_PAGE = 5;

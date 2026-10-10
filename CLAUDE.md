@@ -22,7 +22,8 @@ Kernbotschaft: KI macht Diagnostik zu einem mächtigen Werkzeug (Lehrkraft erfä
 Grammar Road: Start Sydney → 1 SPR Gold Coast → 2 SP Great Barrier Reef → 3 PP Outback → 4 SPPP Darwin (Kontrast, `contrast: true`) →
 5 PROG Perth → 6 GOING Melbourne → Test.
 Writing Track (Thema „Is Australia worth visiting?“, Klassenarbeit später: Artikel „High school year in Australia“ – Aufgabe nur in `private/`):
-ART Alice Springs (Info-Station, `lesson.html?st=ART`, ohne KI) → ARG Kata Tjuta (Argumente sortieren, 3–4 wählen, Plan; `lesson.html?st=ARG`, Plan bleibt auf dem iPad) → WRITE Uluru (Writing Coach).
+ART Alice Springs (Info-Station, `lesson.html?st=ART`, ohne KI) → ARG Kata Tjuta (Argumente sortieren, 3–4 wählen, Plan; `lesson.html?st=ARG`, Plan bleibt auf dem iPad) → WRITE Uluru (Writing Coach: Artikel auf Papier, Foto; `-W1` erste Fassung, `-W2` Endfassung; Startcode trägt den Plan aus ARG).
+Writing Coach = `agents/core-writing.md` + `agents/topics/writing.md` (Raster wie Klassenarbeit, `private/lehrkraft/bewertungsraster-article.md`).
 Stationen mit `page: true` + `lesson` in config: ein Durchgang = Stempel (Schritt `<ID>-P`). Stations-IDs nur Buchstaben (Schritt-Regex). Gast-Codes `GAST-KO01…06` (Koala, vorbereitete Reise bis Darwin, im Apps Script herausgefiltert).
 Unterrichtsbesuch 15.10.: `docs/besuch-15-10.md`.
 
