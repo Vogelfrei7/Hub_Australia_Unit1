@@ -11,13 +11,14 @@ for (const [id, t] of Object.entries(cfg.topics)) t.id = id;
 let t = 0;
 const ev = (station, n, f = [], h = 0) => normaliseEvent({ station, n, h, f, ts: ++t * 1000 });
 
-// 1. Ganz am Anfang: Check-in ist "now", simple present wartet, Schreibroute noch nicht offen
+// 1. Ganz am Anfang: Check-in ist "now", simple present wartet; Schreibroute ist offen (beginnt in Alice Springs)
 let p = progress(cfg, []);
 assert.equal(p.status.START, 'now');
 assert.equal(p.status.SPR, 'later');
 assert.equal(p.status.SP, 'later');
-assert.equal(p.now.writing, undefined);
-assert.equal(Object.values(p.status).filter((s) => s === 'now').length, 1);
+assert.equal(p.now.writing, 'ART');
+assert.equal(p.status.ARG, 'later');
+assert.equal(Object.values(p.status).filter((s) => s === 'now').length, 2, 'je Route genau ein "now"');
 
 // 1b. Nach dem Check-in (5 Startwerte): Start erledigt, simple present offen; Gold-Tipp erst bei 4 von 4
 const base = [ev('SPR-B', 4), ev('SP-B', 1, ['IRREG', 'DID']), ev('PROG-B', 3, ['FORM']), ev('PP-B', 2, ['SINCE']), ev('GOING-B', 4)];
@@ -57,7 +58,7 @@ assert.deepEqual(cfg.routes[0].stops.slice(2, 6), ['SP', 'PP', 'SPPP', 'PROG']);
 p = progress(cfg, [...base, w1, p1], { open: ['PP'] });
 assert.equal(p.status.SP, 'now', 'Van bleibt beim simple past');
 assert.equal(p.status.PP, cfg.topics.PP.status === 'soon' ? 'soon' : 'open');
-assert.equal(Object.values(p.status).filter((s) => s === 'now').length, 1);
+assert.equal(cfg.routes[0].stops.filter((id) => p.status[id] === 'now').length, 1, 'Grammar Road: genau ein "now"');
 // 3c. Kontrast-Station zählt nicht als eigene Zeitform (Achievement „All 5 tenses“)
 assert.equal(cfg.topics.SPPP.contrast, true);
 assert.equal(cfg.routes[0].stops.filter((id) => /^\d+$/.test(cfg.topics[id].number) && !cfg.topics[id].contrast).length, 5);

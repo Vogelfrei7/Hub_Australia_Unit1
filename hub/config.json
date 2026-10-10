@@ -721,7 +721,7 @@
       "x": 560,
       "y": 400,
       "label": "right",
-      "status": "soon",
+      "status": "active",
       "stamp": {
         "shape": "circle",
         "ink": "#C2410C",
@@ -1238,7 +1238,7 @@
       "x": 420,
       "y": 470,
       "label": "left",
-      "status": "soon",
+      "status": "active",
       "stamp": {
         "shape": "circle",
         "ink": "#C2410C",
@@ -1484,7 +1484,7 @@
       "x": 500,
       "y": 520,
       "label": "below",
-      "status": "soon",
+      "status": "active",
       "goal": true,
       "stamp": {
         "shape": "oval",
