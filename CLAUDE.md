@@ -39,7 +39,10 @@ Kind: Code (z. B. `LOEWE-K7Q2`, per QR) → Check-in (Startwert `<THEMA>-B`) →
 - Vor jedem Push: `node docs/tests/routing.test.mjs`. Commit-Identität: Vogelfrei7 noreply.
 - Zwei Geräte (Windows-PC, MacBook mit eigenem Klon): Abgleich nur über GitHub. Beim Sitzungsstart holt ein Hook
   (`.claude/settings.json`) automatisch `git pull --ff-only`; meldet er einen Fehler, zuerst klären, nicht weiterarbeiten.
-  Am Ende einer Arbeitssitzung anbieten, zu committen und zu pushen. `private/` und `Bilder_roh/` sind nicht auf GitHub.
+  Am Ende einer Arbeitssitzung anbieten, zu committen und zu pushen. `private/` und `Bilder_roh/` sind nicht auf GitHub:
+  Der Windows-Ordner liegt im Synology-/NAS-Ordner; auf dem Mac gleicht `python3 tools/sync_private.py` sie mit dem NAS ab
+  (neuere Datei gewinnt, Backup in `../.sync-backup/`, Löschungen werden nicht übertragen). Läuft per Hook automatisch,
+  aber nur wo `.claude/sync-nas.json` (NAS-Pfad, ignoriert) existiert.
 - `hub/intro.html` ist ein Entwurf (noch nicht verlinkt).
 - Änderungen an `agents/core.md` oder `topics/` → `node agents/build.mjs` → Prompt in Sidekick neu einfügen.
 - Änderungen an `apps-script/` → Lehrkraft muss die Datei im Apps-Script-Editor ersetzen.

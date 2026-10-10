@@ -9,6 +9,13 @@
             "command": "out=$(git pull --ff-only 2>&1); echo \"Automatischer git pull beim Sitzungsstart: $out\"",
             "timeout": 30,
             "statusMessage": "Hole den neuesten Stand von GitHub …"
+          },
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "if [ -f .claude/sync-nas.json ]; then python3 tools/sync_private.py --summary 2>&1; fi; true",
+            "timeout": 120,
+            "statusMessage": "Gleiche private/ und Bilder_roh/ mit dem NAS ab …"
           }
         ]
       }
@@ -21,6 +28,12 @@
             "shell": "bash",
             "command": "n=$(git rev-list --count @{u}..HEAD 2>/dev/null || echo 0); if [ \"$n\" -gt 0 ]; then printf '{\"systemMessage\":\"%s Commit(s) noch nicht auf GitHub - vor dem Geraetewechsel pushen.\"}\\n' \"$n\"; fi",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "shell": "bash",
+            "timeout": 120,
+            "command": "if [ -f .claude/sync-nas.json ]; then s=$(python3 tools/sync_private.py --summary 2>&1 | tr -d '\"\\\\' | tr '\\n' ' '); [ -n \"$s\" ] && printf '{\"systemMessage\":\"%s\"}\\n' \"$s\"; fi; true"
           }
         ]
       }
