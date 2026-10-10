@@ -316,3 +316,24 @@ button.cell:hover { background: rgba(141, 185, 226, .15); }
   .ls-part.shake { animation: shake .35s ease; border-color: #C9715B; }
 }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.ls-arg.is-for { border-color: #A9C49F; }
+.ls-arg.is-against { border-color: #E2A796; }
+.ls-count { margin: 0; font-size: 16px; }
+.ls-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 640px) { .ls-groups { grid-template-columns: 1fr; } }
+.ls-group { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.ls-side { margin: 0; align-self: flex-start; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
+.ls-side.for { background: #E7EFE3; color: #2F4A2A; }
+.ls-side.against { background: #FBE4DE; color: #7A3424; }
+.ls-pick { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; }
+.ls-pick.on { border-style: solid; border-color: var(--navy); background: var(--sky-light); font-weight: 700; }
+.ls-tick { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; }
+.ls-tick svg { width: 16px; height: 16px; }
+.ls-plan { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.ls-plan-h { display: flex; align-items: center; gap: 10px; }
+.ls-move { margin-left: auto; display: flex; gap: 6px; }
+.ls-move .btn { min-height: 40px; min-width: 44px; padding: 0 12px; font-size: 18px; }
+textarea.ls-reason { font: 400 16px/1.45 var(--font-body); min-height: 76px; }
+.ls-starters { display: flex; flex-wrap: wrap; gap: 6px; }
+.ls-starter { font: inherit; font-size: 14px; padding: 6px 12px; border-radius: 999px; border: 1.5px dashed var(--line); background: var(--paper); color: var(--navy); cursor: pointer; }
+.ls-myplan { margin: 0; padding: 14px 16px; border-radius: 14px; background: #fff; border: 1.5px solid var(--line); font: 400 15px/1.5 var(--font-body); white-space: pre-wrap; color: var(--navy); }

@@ -121,4 +121,12 @@ for (const s of cfg.topics.ART.lesson.sections) {
   }
 }
 
+// 10. Argument-Station (ARG): Karten eindeutig, beide Seiten vertreten, Stempel nach einem Durchgang
+const args = cfg.topics.ARG.lesson.args;
+assert.equal(new Set(args.map((a) => a.id)).size, args.length, 'ARG: doppelte Argument-IDs');
+assert.ok(args.every((a) => ['for', 'against'].includes(a.side) && a.short && a.text));
+assert.ok(args.filter((a) => a.side === 'against').length >= 3);
+p = progress(cfg, [ev('ART-P', 4), ev('ARG-P', 3)]);
+assert.equal(p.status.ARG, 'done');
+
 console.log('Alle Logik- und Validierungstests bestanden.');

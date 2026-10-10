@@ -1222,7 +1222,11 @@
               ]
             ]
           }
-        ]
+        ],
+        "done": {
+          "en": "And now you know how a good article works!",
+          "de": "Jetzt weißt du, wie ein guter Artikel funktioniert!"
+        }
       }
     },
     "ARG": {
@@ -1240,7 +1244,236 @@
         "ink": "#C2410C",
         "icon": "domes"
       },
-      "image": "assets/img/W2.webp"
+      "image": "assets/img/W2.webp",
+      "page": true,
+      "areas": [
+        "SORT"
+      ],
+      "areaLabels": {
+        "SORT": "Argumente für/gegen richtig zuordnen"
+      },
+      "rules": [
+        {
+          "title": "For and against",
+          "de": "Dafür und dagegen",
+          "text": "First collect arguments for **both** sides.",
+          "textDe": "Sammle zuerst Argumente für beide Seiten.",
+          "ex": "for: amazing wildlife · against: the long flight"
+        },
+        {
+          "title": "Weigh them",
+          "de": "Gewichten",
+          "text": "Which arguments are **most important** for your readers? Choose **3–4**.",
+          "textDe": "Welche Argumente sind für deine Leser am wichtigsten? Wähle 3–4 aus.",
+          "ex": "A koala in the wild is more exciting than six states."
+        },
+        {
+          "title": "Argument + reason",
+          "de": "Argument + Begründung",
+          "text": "Every argument needs a **reason** or an **example**.",
+          "textDe": "Jedes Argument braucht eine Begründung oder ein Beispiel.",
+          "ex": "The flight is very expensive. **For example**, it costs about 1,500 euros."
+        },
+        {
+          "title": "Strongest last",
+          "de": "Das stärkste zuletzt",
+          "text": "Put your **strongest** argument at the end of the main part – right before your conclusion.",
+          "textDe": "Dein stärkstes Argument kommt ans Ende des Hauptteils – direkt vor den Schluss.",
+          "ex": "against → for → for → **your best one**"
+        }
+      ],
+      "lesson": {
+        "intro": {
+          "en": "Collect arguments, choose your best ones and make a plan for your article. You need your plan at Uluru.",
+          "de": "Sammle Argumente, wähle deine besten aus und mach einen Plan für deinen Artikel. Deinen Plan brauchst du am Uluru."
+        },
+        "facts": [
+          [
+            "5 short parts",
+            "kurze Teile"
+          ],
+          [
+            "about 15 minutes",
+            "etwa 15 Minuten"
+          ],
+          [
+            "your own ideas count",
+            "deine eigenen Ideen zählen"
+          ],
+          [
+            "you can do it at home, too",
+            "geht auch zu Hause"
+          ]
+        ],
+        "question": "Is Australia worth visiting?",
+        "args": [
+          {
+            "id": "wildlife",
+            "side": "for",
+            "short": "wildlife",
+            "text": "You can see koalas, kangaroos and wombats in the wild."
+          },
+          {
+            "id": "flight",
+            "side": "against",
+            "short": "long flight",
+            "text": "The flight from Germany takes more than 20 hours."
+          },
+          {
+            "id": "reef",
+            "side": "for",
+            "short": "Great Barrier Reef",
+            "text": "You can go snorkelling at the Great Barrier Reef, the biggest coral reef in the world."
+          },
+          {
+            "id": "money",
+            "side": "against",
+            "short": "expensive",
+            "text": "Flights and hotels are very expensive."
+          },
+          {
+            "id": "beaches",
+            "side": "for",
+            "short": "beaches",
+            "text": "There are more than 10,000 beaches – great for swimming and surfing."
+          },
+          {
+            "id": "danger",
+            "side": "against",
+            "short": "dangerous animals",
+            "text": "Some animals are dangerous, for example snakes, spiders and box jellyfish."
+          },
+          {
+            "id": "summer",
+            "side": "for",
+            "short": "summer in our winter",
+            "text": "When it is winter in Germany, it is summer in Australia."
+          },
+          {
+            "id": "sun",
+            "side": "against",
+            "short": "sun and bush fires",
+            "text": "The sun is very strong, and in summer there can be bush fires."
+          },
+          {
+            "id": "people",
+            "side": "for",
+            "short": "friendly people",
+            "text": "Australians are known as friendly and relaxed people."
+          },
+          {
+            "id": "distance",
+            "side": "against",
+            "short": "huge distances",
+            "text": "The distances are huge: from Sydney to Perth it is about 4,000 km."
+          },
+          {
+            "id": "culture",
+            "side": "for",
+            "short": "Aboriginal culture",
+            "text": "You can learn about Aboriginal culture, one of the oldest cultures in the world."
+          },
+          {
+            "id": "jetlag",
+            "side": "against",
+            "short": "jet lag",
+            "text": "Because of the time difference, you feel tired for the first days (jet lag)."
+          },
+          {
+            "id": "english",
+            "side": "for",
+            "short": "practise English",
+            "text": "You can practise your English every day."
+          },
+          {
+            "id": "climate",
+            "side": "against",
+            "short": "bad for the climate",
+            "text": "Long flights are bad for the climate."
+          },
+          {
+            "id": "outback",
+            "side": "for",
+            "short": "Outback adventure",
+            "text": "The Outback and Uluru are an adventure you cannot have in Europe."
+          }
+        ],
+        "sections": [
+          {
+            "type": "learn",
+            "title": "Good arguments",
+            "de": "Gute Argumente",
+            "lead": {
+              "en": "The question of your article: **Is Australia worth visiting?** Before you write, you need a plan.",
+              "de": "Die Frage deines Artikels: Lohnt sich eine Reise nach Australien? Bevor du schreibst, brauchst du einen Plan."
+            }
+          },
+          {
+            "type": "sort",
+            "area": "SORT",
+            "title": "For or against?",
+            "de": "Dafür oder dagegen?",
+            "task": {
+              "en": "Is this an argument **for** or **against** a trip to Australia?",
+              "de": "Spricht das für oder gegen eine Reise nach Australien?"
+            }
+          },
+          {
+            "type": "pick",
+            "title": "Choose your best arguments",
+            "de": "Wähle deine besten Argumente",
+            "task": {
+              "en": "Choose **3 or 4** arguments that are most important for you. Tip: one argument against makes your article stronger.",
+              "de": "Wähle 3 oder 4 Argumente, die dir am wichtigsten sind. Tipp: Ein Gegenargument macht deinen Artikel stärker."
+            }
+          },
+          {
+            "type": "plan",
+            "title": "Your opinion and your reasons",
+            "de": "Deine Meinung und deine Begründungen",
+            "task": {
+              "en": "What do you think? Then write a reason or an example for every argument.",
+              "de": "Was meinst du? Dann schreib zu jedem Argument eine Begründung oder ein Beispiel."
+            },
+            "opinions": [
+              {
+                "id": "yes",
+                "en": "Yes, it is worth it!",
+                "de": "Ja, es lohnt sich!"
+              },
+              {
+                "id": "depends",
+                "en": "It depends …",
+                "de": "Kommt drauf an …"
+              },
+              {
+                "id": "no",
+                "en": "No, not really.",
+                "de": "Eher nicht."
+              }
+            ],
+            "starters": [
+              "For example, …",
+              "This is important because …",
+              "That is why …",
+              "I think this is a problem because …"
+            ]
+          },
+          {
+            "type": "myplan",
+            "title": "My plan",
+            "de": "Mein Plan",
+            "lead": {
+              "en": "This is your plan. Copy it – at **Uluru** you paste it into the Writing coach. It is also saved on this iPad.",
+              "de": "Das ist dein Plan. Kopiere ihn – am Uluru fügst du ihn beim Writing Coach ein. Er ist auch auf diesem iPad gespeichert."
+            }
+          }
+        ],
+        "done": {
+          "en": "Your plan is ready – take it to Uluru!",
+          "de": "Dein Plan ist fertig – nimm ihn mit zum Uluru!"
+        }
+      }
     },
     "WRITE": {
       "route": "writing",
