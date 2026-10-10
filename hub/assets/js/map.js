@@ -1,9 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
-  loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo, isGuest,
-} from './core.js?v=3.2';
-import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=3.2';
-import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=3.2';
+  loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo, isGuest, planLine, planKey,
+} from './core.js?v=3.3';
+import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=3.3';
+import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=3.3';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -267,7 +267,8 @@ function renderPanel() {
   panel.querySelector('#rules')?.addEventListener('click', () => openRules(cfg, def));
   panel.querySelector('#missed')?.addEventListener('click', () => openMissed(cfg, def));
   panel.querySelector('#copy')?.addEventListener('click', () => {
-    copyText(panel.querySelector('#startcode').textContent);
+    const sc = panel.querySelector('#startcode');
+    copyText(sc.dataset.copy || sc.textContent);
     view.copied = true;
     panel.querySelector('#copied').hidden = false;
   });
@@ -326,11 +327,18 @@ function actionBox(def, t, color) {
     todo = [['<b>All three stars!</b> You can practise again any time.', 'Alle drei Sterne! Du kannst jederzeit weiter üben.']];
   }
   const start = `START ${def.id} ${trav.code}${mode}`;
+  // Station mit Plan (planFrom): Plan aus Kata Tjuta hängt am Startcode – ein Mal kopieren reicht
+  const plan = def.planFrom ? planLine(cfg, def.planFrom, store.get(cfg, planKey(def.planFrom, trav.code))) : '';
+  const from = def.planFrom && cfg.topics[def.planFrom];
+  const planNote = !def.planFrom ? ''
+    : plan ? `<div class="ok-box">✓ Your plan from ${esc(from.place)} is copied together with your start code. <span class="de">(Dein Plan aus ${esc(from.place)} wird mit dem Startcode kopiert.)</span></div>`
+      : `<div class="info-box">${UI.lock}<span><b>No plan from ${esc(from.place)} on this iPad.</b> Do ${esc(from.place)} first – or send the coach a photo of your plan. <span class="de">(Kein Plan auf diesem iPad. Mach zuerst ${esc(from.place)} – oder schick dem Coach ein Foto von deinem Plan.)</span></span></div>`;
   return `<div class="action" style="--rc:${color}">
     <div class="action-h">WHAT TO DO NOW <span class="de-inline">(Was du jetzt machst)</span></div>
     <ol class="todo">${todo.map(([en, de]) => `<li><span>${en}</span><span class="de">(${esc(de)})</span></li>`).join('')}</ol>
-    <div class="startcode"><span class="code-mono" id="startcode">${esc(start)}</span>
+    <div class="startcode"><span class="code-mono" id="startcode" data-copy="${esc(plan ? `${start} | ${plan}` : start)}">${esc(start)}</span>
       <button type="button" class="btn" id="copy">${UI.copy}<span>Copy start code <span class="de-inline">(kopieren)</span></span></button></div>
+    ${planNote}
     <div class="ok-box" id="copied" ${view.copied ? '' : 'hidden'}>✓ Copied! Now tap into the field below and paste. <span class="de">(Kopiert! Jetzt unten ins Feld tippen und einfügen.)</span></div>
     ${def.coach?.input ? `<div class="coach">
       <div class="coach-h">${UI.tablet}<b>${esc(def.coach.name)}</b> <span class="de">– tap, paste, send (tippen, einfügen, senden). A new tab opens.</span></div>

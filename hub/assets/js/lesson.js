@@ -1,11 +1,11 @@
 // Übungsseite ohne Coach (lesson.html?st=ART): Inhalte aus topics.<ID>.lesson, Auswertung ohne KI → Schritt <ID>-P.
 // Abschnitt-Typen: learn (Regeln der Station), order (Teile antippen), choice (Fragen mit Auswahl), toolkit (Checkliste),
-// sort (Argumente for/against), pick (3–4 auswählen), plan (Meinung + Begründungen), myplan (Plan zum Kopieren).
+// sort (Argumente for/against), pick (3–4 auswählen), plan (Meinung + Begründungen), myplan (Plan ansehen; die Karte hängt ihn am Uluru an den Startcode).
 // Freie Texte der Kinder bleiben auf dem Gerät (store); ans Formular gehen nur gewählte Argumente und Meinung.
 import {
-  loadConfig, loadEvents, progress, getTraveller, isDemo, link, esc, bold, stampHTML, UI, addPending, submitToForm, normaliseEvent, store,
-} from './core.js?v=3.2';
-import { openCodeDialog, headerHTML, wireCodePill, copyText } from './ui.js?v=3.2';
+  loadConfig, loadEvents, progress, getTraveller, isDemo, link, esc, bold, stampHTML, UI, addPending, submitToForm, normaliseEvent, store, planKey,
+} from './core.js?v=3.3';
+import { openCodeDialog, headerHTML, wireCodePill } from './ui.js?v=3.3';
 
 const app = document.getElementById('app');
 let cfg; let trav; let id; let def; let secs; let sec = 0;
@@ -23,7 +23,7 @@ async function main() {
   secs = def.lesson.sections;
   trav = getTraveller(cfg);
   if (!trav.code) { openCodeDialog(cfg, { closable: false, onSave: () => location.reload() }); return; }
-  plan = store.get(cfg, `plan.${id}.${trav.code}`, null) || { picks: [], reasons: {}, opinion: null };
+  plan = store.get(cfg, planKey(id, trav.code), null) || { picks: [], reasons: {}, opinion: null };
   const { events } = await loadEvents(cfg, trav.code);
   intro(progress(cfg, events).topics[id].complete);
 }
@@ -63,7 +63,7 @@ function renderSection() {
       ${sec > 0 ? '<button class="btn ghost" type="button" id="prev">Back (Zurück)</button>' : '<span></span>'}
       <button class="btn" type="button" id="next" ${isSolved(s) ? '' : 'disabled'}>${last ? 'Finish – get your stamp (Fertig)' : 'Next (Weiter)'}</button>
     </div>`);
-  ({ order: wireOrder, choice: wireChoice, sort: wireSort, pick: wirePick, plan: wirePlan, myplan: wireMyplan }[s.type] || (() => {}))(s);
+  ({ order: wireOrder, choice: wireChoice, sort: wireSort, pick: wirePick, plan: wirePlan }[s.type] || (() => {}))(s);
   document.getElementById('prev')?.addEventListener('click', () => { sec--; renderSection(); });
   document.getElementById('next').onclick = () => { if (last) finish(); else { sec++; renderSection(); } };
 }
@@ -176,7 +176,7 @@ function toolkitHTML(s) {
 const words = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
 const argById = (a) => def.lesson.args.find((x) => x.id === a);
 const SIDE = { for: 'for 👍', against: 'against 👎' };
-const savePlan = () => store.set(cfg, `plan.${id}.${trav.code}`, plan);
+const savePlan = () => store.set(cfg, planKey(id, trav.code), plan);
 
 function sortHTML() {
   return `<div class="ci-list">${def.lesson.args.map((a, i) => {
@@ -285,12 +285,7 @@ function planText() {
 function myplanHTML(s) {
   return `<p class="note" style="margin:0">${bold(s.lead.en)}<br><span class="de">(${esc(s.lead.de)})</span></p>
     <pre class="ls-myplan" id="myplan">${esc(planText())}</pre>
-    <button type="button" class="btn ghost" id="copyplan">${UI.copy}<span>Copy my plan <span class="de-inline">(Plan kopieren)</span></span></button>
-    <div class="ok-box" id="copied" hidden>✓ Copied! <span class="de">(Kopiert!)</span></div>
     <p class="hint-de" style="margin:0">Tip: take a photo of your plan, too. (Tipp: Mach auch ein Foto von deinem Plan.)</p>`;
-}
-function wireMyplan() {
-  document.getElementById('copyplan').onclick = () => { copyText(planText()); document.getElementById('copied').hidden = false; };
 }
 
 /* ---------- Abgabe ---------- */

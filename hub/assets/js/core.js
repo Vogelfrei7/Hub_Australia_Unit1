@@ -172,6 +172,20 @@ export function addPending(cfg, code, ev) {
   store.set(cfg, `pending.${code}`, list);
 }
 
+/* ---------- Argument-Plan (lesson.html?st=ARG) ---------- */
+
+export const planKey = (from, code) => `plan.${from}.${code}`;
+
+// Plan als eine Zeile: Das Coach-Feld ist einzeilig, Zeilenumbrüche gingen beim Einfügen verloren
+export function planLine(cfg, from, plan) {
+  const ls = cfg.topics[from]?.lesson;
+  if (!ls || !plan?.picks?.length) return '';
+  const clean = (t) => String(t || '').replace(/[|\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const arg = (a) => ls.args.find((x) => x.id === a) || { side: '?', short: a };
+  return [`MY PLAN (${ls.question})`, `opinion: ${plan.opinion || '?'}`,
+    ...plan.picks.map((a, i) => `${i + 1} ${arg(a).side}: ${arg(a).short} – ${clean(plan.reasons?.[a])}`)].join(' | ');
+}
+
 /* ---------- Schritt-IDs: <THEMA>-B (Check-in/Startwert), -W1 (Blatt), -W2 … (Zusatzblatt), -P (Üben), -F (Final check) ---------- */
 
 export function stepInfo(cfg, id) {

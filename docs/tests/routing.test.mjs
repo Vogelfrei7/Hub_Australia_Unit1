@@ -1,7 +1,7 @@
 // Logik-Test ohne Browser:  node docs/tests/routing.test.mjs
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { progress, diff, normaliseEvent, validate, parseBlock, parseFromURL, stepInfo, normaliseCode, animalOf, avatarSrc } from '../../hub/assets/js/core.js';
+import { progress, diff, normaliseEvent, validate, parseBlock, parseFromURL, stepInfo, normaliseCode, animalOf, avatarSrc, planLine } from '../../hub/assets/js/core.js';
 
 const cfg = JSON.parse(readFileSync(new URL('../../hub/config.json', import.meta.url)));
 cfg.codeRe = new RegExp(cfg.codePattern);
@@ -128,5 +128,11 @@ assert.ok(args.every((a) => ['for', 'against'].includes(a.side) && a.short && a.
 assert.ok(args.filter((a) => a.side === 'against').length >= 3);
 p = progress(cfg, [ev('ART-P', 4), ev('ARG-P', 3)]);
 assert.equal(p.status.ARG, 'done');
+// Plan als eine Zeile für das einzeilige Coach-Feld (Uluru hängt ihn an den Startcode)
+assert.equal(cfg.topics.WRITE.planFrom, 'ARG');
+const line = planLine(cfg, 'ARG', { picks: ['reef', 'money'], reasons: { reef: 'For example,\nturtles | fish', money: 'It costs a lot.' }, opinion: 'yes' });
+assert.ok(!/[\r\n]/.test(line), 'Plan-Zeile ohne Zeilenumbruch');
+assert.equal(line, 'MY PLAN (Is Australia worth visiting?) | opinion: yes | 1 for: Great Barrier Reef – For example, turtles fish | 2 against: expensive – It costs a lot.');
+assert.equal(planLine(cfg, 'ARG', null), '');
 
 console.log('Alle Logik- und Validierungstests bestanden.');

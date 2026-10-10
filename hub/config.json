@@ -1464,8 +1464,8 @@
             "title": "My plan",
             "de": "Mein Plan",
             "lead": {
-              "en": "This is your plan. Copy it – at **Uluru** you paste it into the Writing coach. It is also saved on this iPad.",
-              "de": "Das ist dein Plan. Kopiere ihn – am Uluru fügst du ihn beim Writing Coach ein. Er ist auch auf diesem iPad gespeichert."
+              "en": "This is your plan. It is saved on this iPad. At **Uluru**, it is copied together with your start code – you do not have to do anything.",
+              "de": "Das ist dein Plan. Er ist auf diesem iPad gespeichert. Am Uluru wird er automatisch mit deinem Startcode kopiert."
             }
           }
         ],
@@ -1491,7 +1491,8 @@
         "ink": "#C2410C",
         "icon": "uluru"
       },
-      "image": "assets/img/W3.webp"
+      "image": "assets/img/W3.webp",
+      "planFrom": "ARG"
     }
   },
   "bonus": {

@@ -4,8 +4,8 @@
 // Jedes Bild ist eine reine Funktion der Zeit t (render(t)): Skip, "Nochmal" und ?t=… (Standbild zum Prüfen) setzen nur t.
 // Karte, Route, Orte und Stempel kommen aus config.json; Landschaft und Tiermotive aus scenery.js.
 
-import { loadConfig } from './core.js?v=3.2';
-import { terrainSVG, motifsSVG } from './scenery.js?v=3.2';
+import { loadConfig } from './core.js?v=3.3';
+import { terrainSVG, motifsSVG } from './scenery.js?v=3.3';
 
 const $ = (s) => document.querySelector(s);
 const NS = 'http://www.w3.org/2000/svg';
