@@ -1,46 +1,61 @@
 # Unterrichtsbesuch Do 15.10.2026 – Ablaufplan
 
 Gäste: Regierungspräsident, Dezernentin (Bez. Düsseldorf), Schuldezernentin (Wuppertal), Fachberater KI der Bez.-Reg., ggf. eine weitere Person.
-Thema der Stunde: **simple past oder present perfect?** (Station 4 Darwin). Die Gäste kommen, wenn die Kinder ihr Blatt hochladen.
+Rahmen (Gesamtablauf der Schule, `RP_Schürmann_Ablauf.docx`): **30 Min. Agentic AI im Unterricht + 10 Min. Austausch**, danach Berufsorientierung.
+Klasse: ganze 09c (32 Kinder inkl. Seiteneinsteiger) + 4–5 Lotsinnen und Lotsen. Die Stunde läuft schon **ca. 30 Minuten**, wenn die Gäste kommen.
+
+**Leitidee:** Die Kinder arbeiten, ich rede wenig. Erst erleben lassen, dann einordnen. Die Präsentation `hub/konzept.html` zeigt auf der
+digitalen Tafel jederzeit, in welcher Phase wir sind (Phasenleiste unten links).
+
+## Offene Punkte (Stand 11.10.2026)
+- [ ] **Termin present-perfect-Lagerfeuer** klären (Mo 12.10. ist der Writing Track). Danach in `konzept.html` die Rückblick-Zeile „12.10. Lagerfeuer Outback“ anpassen.
+- [ ] **Grammatik am Donnerstag** festlegen: Outback (present perfect) oder Darwin (Kontrast).
+- [ ] **Klassenzahlen** in `hub/konzept.html` (Block `DATA`) am Mi 14.10. abends aktualisieren – nur das Beispiel simple past.
+- [ ] **KI-Bericht** (Auswertungs-Prompt in `apps-script/Code.gs`) überarbeiten – Wünsche noch sammeln. Mi-Abend-Bericht lokal speichern, Do live erzeugen.
+- [ ] Optional: Auf der Konzept-Folie „Unsere Antworten …“ die Zeile „Eine immersive Lernlandkarte …“ ersetzen (Doppelung mit der Startfolie).
+- [ ] Nach dem Besuch: **Lehrerkarte** bauen (Vorführ-Karte), mit Einstieg zu `konzept.html`.
+- [ ] Nach dem Besuch, falls gewünscht: Weitergabe-Fassung der Präsentation (PDF mit Standbildern oder PowerPoint mit eingebetteten Videos).
 
 ## Die Woche davor
 
-| Tag | Stunde | Lagerfeuer im Dashboard | Ergebnis für Donnerstag |
-|---|---|---|---|
-| Fr 09.10. | simple past abschließen: Üben, goldenes Blatt | – | simple past vollständig |
-| Mo 12.10. | present perfect: Lagerfeuer mit Rubys E-Mail (AUS1-PP-R: lesen, markieren, Regel-Detektiv), dann AUS1-PP-1 + Coach | **Outback anzünden** (öffnet Station 3 für alle) | erste Present-Perfect-Werte |
-| Mi 14.10. | present perfect üben (adaptiv), goldenes Blatt AUS1-PP-2. Lotsen testen nebenbei den Kontrast-Coach. **Abends: KI-Auswertung erstellen.** | – | Lernzuwachs simple past + present perfect seit dem Check-in |
-| Do 15.10. | Kontrast (mit Gästen) | **Darwin anzünden** zu Stundenbeginn | live: Kontrast-Fehler |
+| Tag | Stunde | Ergebnis für Donnerstag |
+|---|---|---|
+| Fr 09.10. | simple past abschließen: Üben, goldenes Blatt | simple past vollständig – das Vorzeigebeispiel für den Lernzuwachs |
+| Mo 12.10. | **Writing Track:** Alice Springs (`lesson.html?st=ART`) + Kata Tjuta (`lesson.html?st=ARG`, Plan bleibt auf dem iPad). **Hausaufgabe:** Artikel „Is Australia worth visiting?“ – 1. Fassung auf Papier | jedes Kind hat eine 1. Fassung |
+| Mo/Mi | present perfect: Lagerfeuer Outback (AUS1-PP-R), AUS1-PP-1 + Coach, Üben, goldenes Blatt AUS1-PP-2 – **Termin klären** | erste Present-Perfect-Werte |
+| Mi 14.10. | Lotsen-Briefing + Generalprobe. **Abends:** KI-Bericht erstellen und lokal speichern, Klassenzahlen in `konzept.html` (Block `DATA`) prüfen | Präsentation und Zahlen aktuell |
+
+**Offen:** Welche Grammatik am Donnerstag dran ist – **Outback (present perfect)** oder **Darwin (Kontrast)**. Die Präsentation hält das bewusst offen.
 
 ## Donnerstag: die Stunde
 
-| Zeit | Was passiert | Du | Material |
+| Zeit | Phase in `konzept.html` | Was passiert | Ich |
 |---|---|---|---|
-| vor den Gästen | **Lagerfeuer:** Lenas Interview (AUS1-SPPP-R) lesen, markieren, Regel-Detektiv, Tafelbild. Danach AUS1-SPPP-1 bearbeiten. Im Dashboard: Darwin anzünden, „Today in class“ auf 🤖 Coach time. | normale Stunde | AUS1-SPPP-R, Tafel |
-| 0–3 | **Gäste kommen**, die Kinder fotografieren gerade ihr Blatt. Kurze Einordnung an der Tür oder am Beamer (Karte im Demo-Modus oder eigener Code). | Kernsatz 1 | Beamer: Karte |
-| 3–10 | **Hochladen und Rückmeldung:** Jeder Gast steht bei seinem Lotsen. Der Lotse zeigt seinen **eigenen** Weg: Foto → Rückmeldung → „Get your stamp“ → Stern auf der Karte → adaptives Üben (Runde 1 nach Blatt-Ergebnis, Runde 2 angepasst). | Kernsatz 2, du gehst mit | iPads der Kinder |
-| 10–20 | **Gäste reisen mit:** Gast-Karte scannen, Lotse daneben, eine Übungsrunde mit dem Coach. Die Kinder üben weiter. | Kernsatz 3 | Gast-Karten, Gast-iPads |
-| 20–27 | **Dashboard am Beamer** (Präsentationsmodus): Lernzuwachs seit dem Check-in (simple past, present perfect), Fehlermuster von heute live, ein Satz aus der KI-Kurzfassung, deine Entscheidung daraus. | Kernsatz 4 | Dashboard-Adresse |
-| 27–30 | **Ausblick:** „Was ihr heute oft verwechselt habt, üben wir morgen.“ Ein Kind sagt einen Satz, du sagst deinen Schlusssatz. | Kernsatz 5 | – |
+| –30 bis 0 | – (normale Stunde) | **Lagerfeuer** zur Grammatik des Tages: Strukturen induktiv entdecken, Regel gemeinsam sichern, Tafelbild – ohne KI. Danach bearbeitet jedes Kind das Arbeitsblatt auf Papier. Im Dashboard: Lagerfeuer anzünden, „Today in class“ auf 🤖 Coach time. | normale Stunde |
+| kurz vor 0 | **1 Ankommen** | Standbild an der Tafel: „Eine Klasse. 32 Lernwege.“, die Karte läuft in einer Schleife. | Präsentation öffnen, Vollbild (F) |
+| 0–2 | **2 Rückblick** | Gäste kommen. „Erst messen. Dann losfahren.“ (Check-in = Pre-Test, Lernzuwachs simple past) → „Die ersten 30 Minuten“ → Weggabelung: zwei Wege, ein Prinzip. | Kernsatz 1 |
+| 2–24 | **3 Live** | Standbild „Jetzt arbeiten die Kinder.“ mit Beobachtungsauftrag. Jedes Kind beginnt mit **Grammatik** (Foto → Feedback → Practice) **oder Writing/Uluru** (Foto der 1. Fassung → Feedback → Überarbeitung) und wechselt danach. Die Lotsen zeigen ihren Gästen den eigenen Weg, die Gäste probieren mit Gast-Code selbst. Nebenbei: Folie „Was steckt im Coach?“ erklären. Gegen Ende: **KI-Bericht live erzeugen** und im Dashboard zeigen. | Kernsatz 2 + 3, wenig reden, mitgehen |
+| 24–29 | **4 Konzept** | „Unsere Antworten auf 6 Probleme von (KI-)Unterricht.“ – die sechs Stationen zügig durchklicken (Adaptive Lernwege, Diagnostik & Dashboard, Feedback, Gamifikation, Gemeinsam ohne KI, Datenschutz). Die Gäste haben alles gerade gesehen. | Kernsatz 4 |
+| 29–30 | **5 Ausblick** | Andere Fächer → Vertretungs-Lernlandkarte → Vision Klasse 7–10 → „Vom Lernweg zur Zukunft“ (Brücke zur Berufsorientierung). | Kernsatz 5 |
+| 30–40 | **6 Austausch** | Lagerfeuer mit den Fragen an die Kinder, dann die Kachel „Ihre Fragen“. Die Gäste fragen die Kinder direkt. | moderieren |
 
 ### Kernsätze (Vorschläge – in eigenen Worten)
-1. „Sie sind mitten in unserer Reise gelandet. Die Klasse ist heute in Darwin – das Lagerfeuer zeigt: Den Unterschied haben wir eben gemeinsam erarbeitet, ganz ohne KI.“
-2. „Jedes Kind bekommt jetzt in 30 Sekunden eine Rückmeldung zu seinem eigenen Blatt – und übt danach genau auf seiner Stufe weiter.“
-3. „Probieren Sie es selbst – Ihr Lotse zeigt Ihnen, wie es geht.“
-4. „Das hier ist mein Werkzeug: Ich sehe seit dem Check-in am 05.10., wo jedes Kind steht und woran die Klasse gerade scheitert. Daraus plane ich die nächste Stunde.“
-5. „Die KI liefert Hinweise – ich entscheide.“
+1. „Sie sind mitten in unserer Reise gelandet. Am Anfang stand ein Pre-Test – so sehen wir, wie viel jedes Kind dazulernt.“
+2. „Jedes Kind bekommt jetzt sofort eine Rückmeldung zu seinem eigenen Blatt oder Text – und arbeitet auf seinem Niveau weiter.“
+3. „Probieren Sie es selbst – Ihre Lotsin, Ihr Lotse zeigt Ihnen, wie es geht.“
+4. „Was Sie gerade gesehen haben, sind unsere Antworten auf sechs Probleme von Unterricht.“
+5. „Maßgeschneidert auf das aktuelle Thema – übertragbar auf alle Themen und Fächer.“
 
 ## Lotsen-Briefing (Mi 14.10., 5 Minuten)
 - **Wer:** 4–5 Kinder, die sicher mit dem iPad sind und gern erklären. Jedes Kind betreut einen Gast.
-- **Teil 1 – der eigene Weg (Minute 3–10):** Gast begrüßen („Hello, I'm your guide!“ – gern auf Deutsch weiter). Dann zeigen sie, wie **sie selbst**
-  mit ihrem Arbeitsblatt weitermachen: Foto ans Coach-Feld → Rückmeldung lesen und kurz erklären („Hier sagt er mir, was ich falsch hatte – und warum.“)
-  → „Get your stamp“ → Stern auf der Karte → **Practice** starten. Hier sieht der Gast das **Adaptive**: Runde 1 richtet sich nach dem Blatt-Ergebnis,
-  Runde 2 wird je nach Ergebnis schwerer („Round 2 is a bit harder“) oder leichter (mit Hilfebox).
-- **Teil 2 – der Gast probiert selbst (Minute 10–20):** Gast-Karte scannen lassen, auf Darwin tippen, Startcode kopieren und einfügen (der Gast-Startcode
-  startet direkt das Üben), beim Antworten helfen („1 saw, 2 have been …“), am Ende „Get your stamp“. Gäste machen **eine** Runde auf Stufe B –
-  ohne Arbeitsblatt gibt es nichts, woran sich der Coach anpassen könnte. Die Anpassung haben sie in Teil 1 beim Lotsen gesehen.
-- **Was sie erzählen dürfen:** ihren eigenen Pass zeigen, was der Coach ihnen gesagt hat, was sie schwer fanden. Nichts auswendig lernen.
-- **Generalprobe:** Mittwoch macht jeder Lotse einmal selbst eine Runde mit einem Gast-Code (GAST-KO01 … KO06). Danach im Dashboard prüfen: Die Gast-Abgaben erscheinen nicht.
+- **Teil 1 – der eigene Weg:** Gast begrüßen („Hello, I'm your guide!“ – gern auf Deutsch weiter). Dann zeigen sie, wie **sie selbst** weitermachen:
+  - **Grammatik:** Foto vom Arbeitsblatt ans Coach-Feld → Rückmeldung lesen und kurz erklären („Hier sagt er mir, was ich falsch hatte – und warum.“)
+    → „Get your stamp“ → Stern auf der Karte → **Practice**. Hier sieht der Gast das **Adaptive**: Runde 2 wird schwerer („Round 2 is a bit harder“) oder leichter (mit Hilfebox).
+  - **Writing (Uluru):** Foto der 1. Fassung (Hausaufgabe) an den Writing Coach → Rückmeldung nach dem Raster → zeigen, was sie überarbeiten und wie viele Punkte das bringen würde.
+- **Teil 2 – der Gast probiert selbst:** Gast-Karte scannen lassen, Station tippen, Startcode kopieren und einfügen (der Gast-Startcode startet direkt das Üben),
+  beim Antworten helfen, am Ende „Get your stamp“. Gäste machen **eine** Runde auf Stufe B – ohne Arbeitsblatt gibt es nichts, woran sich der Coach anpassen könnte.
+- **Austausch:** Die Kinder können zu den Fragen auf der Folie etwas sagen (stolz sein, sofortige Rückmeldung, Coach vs. Lehrkraft). Nichts auswendig lernen.
+- **Generalprobe:** Jeder Lotse macht einmal selbst eine Runde mit einem Gast-Code (GAST-KO01 … KO06). Danach im Dashboard prüfen: Die Gast-Abgaben erscheinen nicht.
 
 ## Technik-Checkliste (Mittwochabend)
 - [x] Sidekick: Present Perfect Coach und Past or Perfect Coach angelegt, Prompts `agents/dist/PP.md` und `agents/dist/SPPP.md`,
@@ -52,17 +67,23 @@ Thema der Stunde: **simple past oder present perfect?** (Station 4 Darwin). Die 
 - [ ] Drucken: Gast-Karten `tools/gastkarten.html` (1×, ausschneiden).
 - [ ] **Gast-iPads:** 4–5 eigene iPads für die Gäste (nicht die der Kinder – sonst ist danach der Gast-Code auf dem Kinder-iPad).
       Falls doch Kinder-iPads: danach die eigene Code-Karte des Kindes neu scannen.
-- [ ] KI-Auswertung Mittwochabend erstellt; Dashboard-Adresse als Lesezeichen am Lehrer-Gerät; Präsentationsmodus getestet.
+- [ ] Writing Coach (Uluru) mit einer echten 1. Fassung getestet.
+- [ ] KI-Bericht Mittwochabend erstellt und lokal gespeichert; Ablauf für den Live-Bericht am Donnerstag einmal durchgespielt.
+- [ ] Klassenzahlen in `hub/konzept.html` (Block `DATA`) aktualisiert.
+- [ ] `konzept.html` auf dem Tafel-Gerät **lokal** geöffnet (Datei aus dem Klon, funktioniert ohne WLAN), Vollbild mit **F**, Clicker getestet.
+      Phasen: Shift + 1–6 oder Klick auf die Leiste unten links.
+- [ ] Dashboard-Adresse als Lesezeichen am Lehrer-Gerät; Präsentationsmodus getestet.
 - [ ] Generalprobe ganz durch: Kinder-Code und Gast-Code, Foto hochladen, Stempel, Dashboard aktualisieren.
 
 ## Notfallkarte
 | Problem | Lösung |
 |---|---|
-| WLAN weg | Handy-Hotspot; sonst Demo-Karte zeigen (`…/hub/?demo=1`) und das Bildschirmvideo |
+| WLAN weg | Handy-Hotspot; `konzept.html` läuft lokal weiter; sonst Demo-Karte zeigen (`…/hub/?demo=1`) und das Bildschirmvideo |
 | Coach antwortet langsam | Ruhig bleiben: „Auch das ist echter Unterricht.“ Gäste in der Zwischenzeit die Karte und den Pass zeigen lassen |
 | Stempel-Link geht nicht | Ergebniszeile notieren lassen, später über `…/hub/abgabe.html` eintragen |
-| Dashboard lädt nicht | Mittwochs-Stand als Bildschirmfoto bereithalten (KI-Bericht + Lernzuwachs) |
+| Dashboard / Live-Bericht lädt nicht | Mittwochs-Bericht (lokal gespeichert) zeigen |
 | Gast-Code geht nicht | Gast schaut mit dem Lotsen auf dessen Gerät mit |
+| Zeit wird knapp | Konzept-Phase schneller durchklicken (Animationen tragen sich selbst); Ausblick auf die Vision kürzen |
 
 **Bildschirmvideo (Absicherung):** Dienstag oder Mittwoch einmal einen kompletten Ablauf aufnehmen (iPad-Bildschirmaufnahme):
 Karte → Startcode → Foto → Rückmeldung → Get your stamp → Stern auf der Karte.
