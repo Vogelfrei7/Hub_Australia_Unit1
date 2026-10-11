@@ -13,7 +13,7 @@ digitalen Tafel jederzeit, in welcher Phase wir sind (Phasenleiste unten links).
 - [ ] **Stationen freischalten** (`hub/config.json`, `"status": "soon"` → `"active"`, dann pushen – wirkt ca. 1 Min. später auf allen iPads):
       Outback (`PP`) am Tag des present-perfect-Lagerfeuers · Darwin (`SPPP`) bei Bedarf · **Uluru (`WRITE`) Do 15.10. vor der Stunde**.
       Seit 11.10. gesperrt, damit niemand vorarbeitet.
-- [ ] **Plan aus Kata Tjuta** liegt nur auf dem iPad: Am Mo 12.10. Foto vom Plan zur Pflicht machen (für die Hausaufgabe).
+- [ ] **Plan aus Kata Tjuta:** Seit 11.10. auch im Sheet gesichert – Uluru findet ihn auf jedem iPad. Für die Hausaufgabe (iPads bleiben in der Schule?) trotzdem Foto oder Abschrift vom Plan.
 - [ ] **Klassenzahlen** in `hub/konzept.html` (Block `DATA`) am Mi 14.10. abends aktualisieren – nur das Beispiel simple past.
 - [ ] **KI-Bericht** (Auswertungs-Prompt in `apps-script/Code.gs`) überarbeiten – Wünsche noch sammeln. Mi-Abend-Bericht lokal speichern, Do live erzeugen.
 - [ ] Optional: Auf der Konzept-Folie „Unsere Antworten …“ die Zeile „Eine immersive Lernlandkarte …“ ersetzen (Doppelung mit der Startfolie).

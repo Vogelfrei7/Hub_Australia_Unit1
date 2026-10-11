@@ -2,8 +2,8 @@
 import {
   loadConfig, loadEvents, progress, diff, getTraveller, setTraveller, isDemo, link, esc, stampHTML, badgeHTML,
   UI, store, signature, addPending, parseFromURL, parseBlock, validate, submitToForm, normaliseEvent, isGuest, stepInfo, fmtDate,
-} from './core.js?v=3.4';
-import { openDialog } from './ui.js?v=3.4';
+} from './core.js?v=3.5';
+import { openDialog } from './ui.js?v=3.5';
 
 const app = document.getElementById('app');
 let cfg;

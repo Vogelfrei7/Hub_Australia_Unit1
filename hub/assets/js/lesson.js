@@ -1,11 +1,12 @@
 // Übungsseite ohne Coach (lesson.html?st=ART): Inhalte aus topics.<ID>.lesson, Auswertung ohne KI → Schritt <ID>-P.
 // Abschnitt-Typen: learn (Regeln der Station), order (Teile antippen), choice (Fragen mit Auswahl), toolkit (Checkliste),
 // sort (Argumente for/against), pick (3–4 auswählen), plan (Meinung + Begründungen), myplan (Plan ansehen; die Karte hängt ihn am Uluru an den Startcode).
-// Freie Texte der Kinder bleiben auf dem Gerät (store); ans Formular gehen nur gewählte Argumente und Meinung.
+// Der Plan (Meinung, Argumente, Begründungen) bleibt auf dem Gerät (store) und geht zusätzlich als Zeile ans Formular,
+// damit Uluru ihn auch auf einem anderen iPad findet (Sicherung über das Sheet).
 import {
-  loadConfig, loadEvents, progress, getTraveller, isDemo, link, esc, bold, stampHTML, UI, addPending, submitToForm, normaliseEvent, store, planKey,
-} from './core.js?v=3.4';
-import { openCodeDialog, headerHTML, wireCodePill } from './ui.js?v=3.4';
+  loadConfig, loadEvents, progress, getTraveller, isDemo, link, esc, bold, stampHTML, UI, addPending, submitToForm, normaliseEvent, store, planKey, planLine, PLAN_SEP,
+} from './core.js?v=3.5';
+import { openCodeDialog, headerHTML, wireCodePill } from './ui.js?v=3.5';
 
 const app = document.getElementById('app');
 let cfg; let trav; let id; let def; let secs; let sec = 0;
@@ -296,7 +297,8 @@ async function finish() {
   const f = [...new Set(all.filter((r) => r.wrong).map((r) => r.area))];
   const pct = all.length ? right / all.length : 0;
   const n = pct >= 0.9 ? 4 : pct >= 0.75 ? 3 : pct >= 0.5 ? 2 : 1;
-  const picked = plan.picks.length ? ` · plan: ${plan.picks.map((a) => argById(a).short).join(', ')} · opinion: ${plan.opinion}` : '';
+  const line = plan.picks.length ? planLine(cfg, id, plan) : '';
+  const picked = line ? `${PLAN_SEP}${line}` : '';
   const r = { code: trav.code, kurs: trav.course || cfg.courses[0], station: `${id}-P`, n, self: null, h: 0, f, s: `${right} of ${all.length} right first time${picked}`, fb: '' };
   shell('<p class="sub">Saving … (Wird gespeichert …)</p>');
   addPending(cfg, trav.code, normaliseEvent({ station: r.station, n, h: 0, f, s: r.s, ts: Date.now() }));

@@ -1,6 +1,6 @@
 // Pass v2 (passport.html): Steckbrief, Stempel nach Routen, Bonus, Achievements.
-import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, avatarSrc, UI } from './core.js?v=3.4';
-import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=3.4';
+import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, avatarSrc, UI, shownText } from './core.js?v=3.5';
+import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=3.5';
 
 const app = document.getElementById('app');
 let cfg; let trav; let pr;
@@ -70,6 +70,6 @@ function details(id) {
     <ul class="steps">
       ${row(!!t.w1, 'Worksheet', 'Arbeitsblatt')}${row(!!t.p, 'Practice', 'Üben mit dem Coach')}${row(t.extra, 'Extra', 'Zusatz')}
     </ul>
-    ${last?.s ? `<div class="two"><div class="good"><b>Well done (Gut gemacht)</b>${esc(last.s)}</div>${last.fb ? `<div class="tip"><b>Tip (Tipp)</b>${esc(last.fb)}</div>` : ''}</div>` : ''}
+    ${last?.s ? `<div class="two"><div class="good"><b>Well done (Gut gemacht)</b>${esc(shownText(last.s))}</div>${last.fb ? `<div class="tip"><b>Tip (Tipp)</b>${esc(last.fb)}</div>` : ''}</div>` : ''}
     <a class="btn ghost" href="${link('index.html', { st: id })}">Show on the map (Auf der Karte zeigen)</a>`, { label: def.place });
 }

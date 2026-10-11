@@ -1,9 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
-  loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo, isGuest, planLine, planKey,
-} from './core.js?v=3.4';
-import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=3.4';
-import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=3.4';
+  loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo, isGuest, planLine, planKey, planFromEvents,
+} from './core.js?v=3.5';
+import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=3.5';
+import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=3.5';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -345,7 +345,7 @@ function actionBox(def, t, color) {
   }
   const start = `START ${def.id} ${trav.code}${mode}`;
   // Station mit Plan (planFrom): Plan aus Kata Tjuta hängt am Startcode – ein Mal kopieren reicht
-  const plan = def.planFrom ? planLine(cfg, def.planFrom, store.get(cfg, planKey(def.planFrom, trav.code))) : '';
+  const plan = def.planFrom ? (planLine(cfg, def.planFrom, store.get(cfg, planKey(def.planFrom, trav.code))) || planFromEvents(pr.topics[def.planFrom])) : '';
   const from = def.planFrom && cfg.topics[def.planFrom];
   const planNote = !def.planFrom ? ''
     : plan ? `<div class="ok-box">✓ Your plan from ${esc(from.place)} is copied together with your start code. <span class="de">(Dein Plan aus ${esc(from.place)} wird mit dem Startcode kopiert.)</span></div>`

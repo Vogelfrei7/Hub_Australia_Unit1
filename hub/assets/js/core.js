@@ -186,6 +186,16 @@ export function planLine(cfg, from, plan) {
     ...plan.picks.map((a, i) => `${i + 1} ${arg(a).side}: ${arg(a).short} – ${clean(plan.reasons?.[a])}`)].join(' | ');
 }
 
+// Der Plan reist zusätzlich im Feld „Stärke“ der Abgabe mit (nach " ### "), damit er auf jedem iPad ankommt.
+export const PLAN_SEP = ' ### ';
+export const shownText = (s) => String(s || '').split(PLAN_SEP)[0];
+export function planFromEvents(t) {
+  const withPlan = (t?.attempts || []).filter((e) => String(e.s || '').includes('MY PLAN'));
+  if (!withPlan.length) return '';
+  const last = withPlan.reduce((a, b) => (b.ts > a.ts ? b : a));
+  return last.s.slice(last.s.indexOf('MY PLAN'));
+}
+
 /* ---------- Schritt-IDs: <THEMA>-B (Check-in/Startwert), -W1 (Blatt), -W2 … (Zusatzblatt), -P (Üben), -F (Final check) ---------- */
 
 export function stepInfo(cfg, id) {
