@@ -44,5 +44,8 @@ Kind: Code (z. B. `LOEWE-K7Q2`, per QR) → Check-in (Startwert `<THEMA>-B`) →
   (neuere Datei gewinnt, Backup in `../.sync-backup/`, Löschungen werden nicht übertragen). Läuft per Hook automatisch,
   aber nur wo `.claude/sync-nas.json` (NAS-Pfad, ignoriert) existiert.
 - `hub/intro.html` ist ein Entwurf (noch nicht verlinkt).
+- `hub/konzept.html` = animierte Präsentation für die Gäste am 15.10. (6 Stationen: Adaptive Lernwege, Diagnostik & Dashboard,
+  Feedback, Gamifikation, Gemeinsam ohne KI, Datenschutz; Pfeiltasten/Clicker, 0–7 springen, O = Übersicht,
+  `#2.3` springt zu Folie 2, Schritt 3). Eigenständig (CSS/JS inline), nicht verlinkt; soll später von der geplanten Lehrerkarte aus aufrufbar sein.
 - Änderungen an `agents/core.md` oder `topics/` → `node agents/build.mjs` → Prompt in Sidekick neu einfügen.
 - Änderungen an `apps-script/` → Lehrkraft muss die Datei im Apps-Script-Editor ersetzen.
