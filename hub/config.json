@@ -393,7 +393,7 @@
       "x": 690,
       "y": 330,
       "label": "above",
-      "status": "active",
+      "status": "soon",
       "coach": {
         "name": "Present Perfect Coach",
         "input": "https://agent.sidekick.ki/input/99792-08935/CIA-9A124?colorMode=0"
@@ -502,7 +502,7 @@
       "x": 480,
       "y": 215,
       "label": "below",
-      "status": "active",
+      "status": "soon",
       "contrast": true,
       "coach": {
         "name": "Past or Perfect Coach",
@@ -1484,7 +1484,7 @@
       "x": 500,
       "y": 520,
       "label": "below",
-      "status": "active",
+      "status": "soon",
       "goal": true,
       "stamp": {
         "shape": "oval",

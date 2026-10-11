@@ -10,6 +10,10 @@ digitalen Tafel jederzeit, in welcher Phase wir sind (Phasenleiste unten links).
 ## Offene Punkte (Stand 11.10.2026)
 - [ ] **Termin present-perfect-Lagerfeuer** klären (Mo 12.10. ist der Writing Track). Danach in `konzept.html` die Rückblick-Zeile „12.10. Lagerfeuer Outback“ anpassen.
 - [ ] **Grammatik am Donnerstag** festlegen: Outback (present perfect) oder Darwin (Kontrast).
+- [ ] **Stationen freischalten** (`hub/config.json`, `"status": "soon"` → `"active"`, dann pushen – wirkt ca. 1 Min. später auf allen iPads):
+      Outback (`PP`) am Tag des present-perfect-Lagerfeuers · Darwin (`SPPP`) bei Bedarf · **Uluru (`WRITE`) Do 15.10. vor der Stunde**.
+      Seit 11.10. gesperrt, damit niemand vorarbeitet.
+- [ ] **Plan aus Kata Tjuta** liegt nur auf dem iPad: Am Mo 12.10. Foto vom Plan zur Pflicht machen (für die Hausaufgabe).
 - [ ] **Klassenzahlen** in `hub/konzept.html` (Block `DATA`) am Mi 14.10. abends aktualisieren – nur das Beispiel simple past.
 - [ ] **KI-Bericht** (Auswertungs-Prompt in `apps-script/Code.gs`) überarbeiten – Wünsche noch sammeln. Mi-Abend-Bericht lokal speichern, Do live erzeugen.
 - [ ] Optional: Auf der Konzept-Folie „Unsere Antworten …“ die Zeile „Eine immersive Lernlandkarte …“ ersetzen (Doppelung mit der Startfolie).
