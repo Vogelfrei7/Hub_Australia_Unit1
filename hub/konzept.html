@@ -137,6 +137,11 @@ body.idle .ctrl { opacity: 0; }
 .ov-grid button small { display: block; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--terra-ink); margin-bottom: 6px; }
 .ov-grid button.now { outline: 3px solid var(--terracotta); }
 .ov-hint { margin-top: 16px; font-size: 15px; color: var(--text-muted); }
+.ov-box { max-height: 92vh; overflow: auto; }
+#ovGrid { display: grid; gap: 14px; }
+.ov-ph h4 { margin: 0 0 8px; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+.ov-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.ov-row button { padding: 12px 14px; font-size: 16px; }
 
 /* ---------- Karte (geteilt: Start, Gamifikation, Ziel) ---------- */
 .map { position: absolute; }
@@ -146,8 +151,8 @@ body.idle .ctrl { opacity: 0; }
 .slide.st-0 .map .pl { opacity: 1; transform: none; }
 .map .draw { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2.6s cubic-bezier(.5, 0, .3, 1) .2s; }
 .map .stn, .map .lbl { transform-box: fill-box; transform-origin: center; opacity: 0; transform: scale(.2); transition: transform .6s cubic-bezier(.3, 1.6, .5, 1) var(--d), opacity .3s var(--d); }
-#s0.st-1 .draw, #s4.st-2 .draw, #s7.st-0 .draw { stroke-dashoffset: 0; }
-#s0.st-1 .stn, #s0.st-1 .lbl, #s4.st-2 .stn, #s7.st-0 .stn, #s7.st-0 .lbl { opacity: 1; transform: none; }
+#s0.st-1 .draw, #s4.st-2 .draw, #a1.st-0 .draw { stroke-dashoffset: 0; }
+#s0.st-1 .stn, #s0.st-1 .lbl, #s4.st-2 .stn, #a1.st-0 .stn, #a1.st-0 .lbl { opacity: 1; transform: none; }
 .map .wst { transform-box: fill-box; transform-origin: center; opacity: 0; transform: scale(.2) rotate(-20deg); transition: transform .55s cubic-bezier(.3, 1.7, .5, 1), opacity .25s; }
 .map .wst.on { opacity: 1; transform: none; }
 .map .pencil { opacity: 0; transition: opacity .4s; }
@@ -372,12 +377,198 @@ body.idle .ctrl { opacity: 0; }
 .paperonly { position: absolute; left: 110px; top: 390px; width: 540px; padding: 22px 28px; display: grid; grid-template-columns: 64px 1fr; gap: 18px; align-items: center; font-size: 22px; line-height: 1.35; transform: rotate(-1.5deg); }
 .paperonly i { font-style: normal; font-size: 40px; }
 
-/* ---------- 7 Ziel ---------- */
-#s7 .left { top: 250px; }
-#s7 .map { left: 720px; top: 120px; width: 840px; height: 672px; }
+/* ---------- Ankommen ---------- */
+#a1 .left { top: 196px; width: 660px; }
+#a1 .lead.quiet { margin-top: 26px; font-size: 26px; }
+#a1 .lead.quiet b { color: var(--navy); }
+#a1 .tracks { margin-top: 22px; }
+#a1 .map { left: 760px; top: 118px; width: 810px; height: 648px; }
+.map .van, .map .prog, .map .wline, .map .kids { transition: opacity .7s; }
+.map.rest .van, .map.rest .prog, .map.rest .wline, .map.rest .kids, .map.rest .stamp, .map.rest .fire { opacity: 0 !important; transition: opacity .9s !important; }
+.map .kidtok .kin { transform-box: fill-box; transform-origin: center; opacity: 0; transform: scale(0); transition: transform .55s cubic-bezier(.3, 1.7, .5, 1), opacity .2s; }
+.map .kidtok.on .kin { opacity: 1; transform: none; }
+.map .kidtok.on .kbob { animation: kbob 2.6s ease-in-out infinite; animation-delay: var(--kd); }
+@keyframes kbob { 50% { transform: translateY(-5px); } }
 .tracks { display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
 .tracks span { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; font-size: 21px; font-weight: 700; }
 .tracks i { width: 34px; height: 6px; border-radius: 3px; background: repeating-linear-gradient(90deg, var(--c) 0 6px, transparent 6px 12px); }
+
+/* =================== Phasen des Besuchs (Rückblick, Live, Ausblick, Austausch) =================== */
+.phases { position: fixed; left: 22px; bottom: 20px; display: flex; gap: 4px; padding: 7px; border-radius: 999px; z-index: 20; transition: opacity .5s; }
+body.idle .phases { opacity: .8; }
+.phases button { display: flex; align-items: center; gap: 8px; padding: 9px 15px 9px 9px; border: 0; border-radius: 999px; background: transparent; cursor: pointer;
+  font: 700 14px/1 var(--font-body); letter-spacing: .8px; color: var(--text-muted); transition: background .4s, color .4s; }
+.phases button i { font-style: normal; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; background: rgba(27, 42, 85, .12); color: var(--navy); transition: all .4s; }
+.phases button.done i { background: var(--navy); color: #fff; }
+.phases button.now { background: var(--navy); color: #fff; }
+.phases button.now i { background: var(--terracotta); color: #fff; }
+.road { transition: opacity .4s; }
+.road.swap { opacity: 0; }
+.card p { margin: 0; font-size: 24px; line-height: 1.4; }
+.card p + p { margin-top: 14px; }
+.card p b { color: var(--terra-ink); }
+.card .small { font-size: 20px; color: var(--text-muted); }
+
+/* ---------- R1 Was bisher geschah ---------- */
+#r1 .map { left: 0; top: -14px; width: 760px; height: 608px; }
+#r1.st-0 .draw, #r1.st-0 .stn, #r1.st-0 .lbl { stroke-dashoffset: 0; opacity: 1; transform: none; }
+.map .wst.next rect:first-child { animation: pend 1.4s ease-in-out infinite; }
+@keyframes pend { 50% { stroke-width: 9; fill: #FFFBF3; } }
+.tl { margin-top: 26px; padding: 18px 24px; border-radius: 24px; display: grid; gap: 8px; }
+.tl div { display: grid; grid-template-columns: 132px 1fr; gap: 12px; font-size: 18px; line-height: 1.3; align-items: baseline; }
+.tl div b { font-size: 15px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--terra-ink); }
+.tl div.w b { color: #C2410C; }
+.growth { position: absolute; left: 0; top: 0; width: 760px; padding: 26px 32px 24px; }
+.g-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.g-head .ex { padding: 8px 16px; border-radius: 999px; background: var(--navy); color: #fff; font-size: 17px; font-weight: 700; letter-spacing: 1px; }
+.g-head .fl { font-size: 18px; font-weight: 700; color: var(--terra-ink); }
+.g-row { display: grid; grid-template-columns: 118px 1fr 104px; gap: 14px; align-items: end; padding: 10px 0 12px; border-bottom: 1.5px dashed rgba(27, 42, 85, .15); }
+.g-row .lab { font-size: 18px; font-weight: 700; line-height: 1.25; padding-bottom: 6px; }
+.g-row .lab small { display: block; font-weight: 400; color: var(--text-muted); font-size: 15px; }
+.g-toks { position: relative; height: 92px; display: flex; align-items: flex-end; gap: 3px; }
+.g-toks .tk { position: relative; width: 28px; height: 28px; flex: none; transition: transform .7s cubic-bezier(.3, 1.6, .5, 1) var(--d), filter .5s var(--d); }
+.g-toks .tk img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--paper); box-shadow: 0 3px 6px rgba(106, 44, 18, .2); display: block; }
+.g-toks .tk::after { content: "⬆"; position: absolute; left: 50%; top: -24px; transform: translateX(-50%) scale(0); font-size: 16px; color: var(--sage); font-weight: 700; transition: transform .4s cubic-bezier(.3, 1.8, .5, 1) calc(var(--d) + .4s); }
+#r1.st-1 .g-toks .tk.up { transform: translateY(-36px); }
+#r1.st-1 .g-toks .tk.up::after { transform: translateX(-50%) scale(1); }
+#r1.st-1 .g-toks .tk.up img { border-color: #E0A526; }
+.g-num { text-align: right; }
+.g-num b { display: block; font: 400 64px/1 var(--font-hand); color: var(--terracotta); }
+.g-num small { font-size: 14px; color: var(--text-muted); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.g-bar { display: flex; height: 46px; border-radius: 14px; overflow: hidden; margin: 18px 0 6px; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .6); }
+.g-bar span { display: grid; place-items: center; width: 0; font-size: 19px; font-weight: 700; color: var(--navy); background: var(--c); transition: width 1.2s cubic-bezier(.2, .8, .2, 1) var(--d); overflow: hidden; }
+#r1.st-1 .g-bar span { width: var(--w); }
+.g-leg { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--text-muted); }
+.g-leg span { display: inline-flex; align-items: center; gap: 6px; }
+.g-leg b { width: 12px; height: 12px; border-radius: 3px; }
+.g-cap { margin-top: 10px; font-size: 21px; }
+.g-cap b { color: var(--terra-ink); }
+.g-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.g-tiles div { padding: 12px 18px; }
+.g-tiles small { display: block; font-size: 14px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); }
+.g-tiles b { font: 400 40px/1.1 var(--font-hand); }
+.g-note { margin-top: 12px; font-size: 15px; line-height: 1.4; color: var(--text-muted); }
+.g-note b { color: var(--navy); }
+.g-write { margin-top: 10px; padding: 10px 14px; border-radius: 12px; background: #FDE6D8; color: #8A2E09; font-size: 17px; line-height: 1.35; }
+
+/* ---------- R2 Heute ---------- */
+.steps3 { position: absolute; left: 30px; top: 10px; width: 700px; display: grid; gap: 22px; }
+.st3 { position: relative; display: grid; grid-template-columns: 104px 1fr; gap: 22px; align-items: center; padding: 20px 26px; }
+.st3 .ico { width: 104px; height: 104px; border-radius: 26px; display: grid; place-items: center; font-size: 54px; background: var(--bg); box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .06); }
+.st3 .ico svg { width: 84px; height: 84px; }
+.st3 small { display: block; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--terra-ink); }
+.st3 b { display: block; font: 400 40px/1.05 var(--font-hand); margin: 2px 0 4px; }
+.st3 span { font-size: 20px; line-height: 1.35; color: var(--text-muted); }
+.st3:not(:last-child)::after { content: ""; position: absolute; left: 77px; bottom: -22px; width: 4px; height: 22px; background: repeating-linear-gradient(180deg, var(--terracotta) 0 5px, transparent 5px 10px); }
+.st3 .now { position: absolute; right: 18px; top: 16px; padding: 6px 12px; border-radius: 8px; background: var(--terracotta); color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 2px; animation: nowp 1.6s ease-in-out infinite; }
+@keyframes nowp { 50% { box-shadow: 0 0 0 8px rgba(201, 100, 59, .2); } }
+.fork { position: absolute; inset: 0; }
+.fork svg { position: absolute; inset: 0; width: 760px; height: 620px; overflow: visible; }
+.fork .flowtok { position: absolute; left: 0; top: 0; width: 46px; height: 46px; margin: -23px 0 0 -23px; opacity: 0; }
+.fork .flowtok img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--paper); box-shadow: 0 4px 8px rgba(106, 44, 18, .25); display: block; }
+.sign { position: absolute; padding: 14px 20px; transform: rotate(var(--r, -2deg)); }
+.sign b { display: block; font: 400 36px/1 var(--font-hand); }
+.sign small { display: block; margin-top: 4px; font-size: 17px; font-weight: 700; color: var(--text-muted); }
+.sign.g b { color: var(--navy); } .sign.w b { color: #C2410C; }
+.sign .pin { position: absolute; left: 50%; top: -9px; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: var(--terracotta); box-shadow: 0 2px 3px rgba(0, 0, 0, .25); }
+.same-p { margin-top: 14px; padding: 12px 18px; border-radius: 16px; background: rgba(255, 255, 255, .8); font-size: 19px; line-height: 1.35; box-shadow: 0 2px 0 rgba(185, 118, 63, .25); }
+
+/* ---------- L1 Coach-Zeit ---------- */
+.zone { position: absolute; top: 0; width: 368px; height: 600px; padding: 20px; }
+.zone.a { left: 0; } .zone.b { left: 392px; }
+.zone h4 { margin: 0; font: 400 36px/1 var(--font-hand); }
+.zone.a h4 { color: var(--navy); } .zone.b h4 { color: #C2410C; }
+.zone .zs { font-size: 16px; font-weight: 700; color: var(--text-muted); margin-top: 4px; }
+.ztok { position: absolute; width: 64px; height: 64px; }
+.ztok img { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--paper); box-shadow: 0 6px 12px rgba(106, 44, 18, .2); display: block; }
+.ztok .bub { position: absolute; left: 34px; top: -30px; min-width: 40px; height: 40px; padding: 0 8px; border-radius: 20px 20px 20px 4px; display: grid; place-items: center; font-size: 21px;
+  background: var(--paper); box-shadow: 0 6px 14px rgba(106, 44, 18, .22); opacity: 0; transform: scale(.3) translateY(10px); transform-origin: 0 100%; pointer-events: none; }
+.ztok.go .bub { animation: bub 2s cubic-bezier(.3, 1.5, .5, 1) forwards; }
+@keyframes bub { 0% { opacity: 0; transform: scale(.3) translateY(10px); } 15%, 75% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-14px); } }
+.ztok.go img { animation: hop .6s ease-out; }
+@keyframes hop { 40% { transform: translateY(-8px); } }
+
+/* ---------- L2 Was steckt im Coach? ---------- */
+.core { position: absolute; left: 270px; top: 200px; width: 220px; height: 220px; border-radius: 50%; display: grid; place-items: center; text-align: center; z-index: 2; }
+.core .bot { font-size: 74px; line-height: 1; animation: float 3s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-6px); } }
+.core b { display: block; font: 400 40px/1 var(--font-hand); margin-top: 4px; }
+.core svg { position: absolute; inset: -18px; width: calc(100% + 36px); height: calc(100% + 36px); animation: spin 26s linear infinite; }
+.spokes { position: absolute; inset: 0; width: 760px; height: 620px; overflow: visible; }
+.spokes path { stroke: var(--terracotta); stroke-width: 3; stroke-dasharray: 4 8; fill: none; opacity: 0; transition: opacity .6s var(--d); }
+.spokes path.on { opacity: .7; }
+.blk { position: absolute; width: 212px; padding: 12px 16px; display: grid; grid-template-columns: 38px 1fr; gap: 10px; align-items: start; }
+.blk i { font-style: normal; font-size: 28px; line-height: 1.1; }
+.blk b { display: block; font-size: 18px; }
+.blk span { display: block; font-size: 15px; line-height: 1.3; color: var(--text-muted); margin-top: 2px; }
+
+/* ---------- O1 Andere Fächer ---------- */
+.ocean { position: absolute; inset: 0 0 20px 0; border-radius: 40px; overflow: hidden; background: radial-gradient(120% 90% at 50% 45%, #BBD7EF 0%, #A9CDEB 55%, #93BEE2 100%);
+  box-shadow: 0 24px 60px rgba(27, 42, 85, .2), inset 0 0 0 1.5px rgba(255, 255, 255, .6); }
+.ocean svg { width: 100%; height: 100%; }
+.au { transition: transform 1.6s cubic-bezier(.6, 0, .2, 1); transform: translate(380px, 300px) scale(.62) translate(-500px, -420px); }
+#o1.st-1 .au { transform: translate(380px, 300px) scale(.24) translate(-500px, -420px); }
+.isl { transform-box: fill-box; transform-origin: center; opacity: 0; transform: translateY(40px) scale(.3); transition: transform 1s cubic-bezier(.3, 1.4, .5, 1) var(--d), opacity .5s var(--d); }
+#o1.st-1 .isl { opacity: 1; transform: none; }
+.ring { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2.4s cubic-bezier(.5, 0, .3, 1) .2s; }
+#o1.st-2 .ring { stroke-dashoffset: 0; }
+.aulab { transition: opacity .6s; }
+#o1.st-1 .aulab.big { opacity: 0; }
+.aulab.small { opacity: 0; transition: opacity .6s 1.2s; }
+#o1.st-1 .aulab.small { opacity: 1; }
+.principle { opacity: 0; transition: opacity .6s 1.6s; }
+#o1.st-2 .principle { opacity: 1; }
+
+/* ---------- O2 Vertretung ---------- */
+.note { position: absolute; left: 150px; top: 50px; width: 400px; height: 380px; padding: 40px 36px; background: #FBE7A1; border-radius: 6px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, .05), 0 22px 40px rgba(106, 44, 18, .22); transform: rotate(-4deg); font: 400 46px/1.15 var(--font-hand); }
+.note::before { content: ""; position: absolute; left: 50%; top: -16px; width: 120px; height: 34px; margin-left: -60px; background: rgba(255, 255, 255, .55); transform: rotate(3deg); }
+.note s { color: #B0392E; text-decoration-thickness: 4px; }
+.note .q { position: absolute; right: -40px; bottom: -40px; width: 110px; height: 110px; border-radius: 50%; display: grid; place-items: center; background: #B0392E; color: #fff; font: 700 64px/1 var(--font-body); box-shadow: 0 10px 20px rgba(176, 57, 46, .3); }
+.qr-card { position: absolute; left: 10px; top: 230px; width: 170px; padding: 16px; text-align: center; }
+.qr-card .qr2 { display: grid; grid-template-columns: repeat(9, 1fr); gap: 2px; padding: 8px; background: #fff; border-radius: 10px; }
+.qr-card .qr2 b { aspect-ratio: 1; background: var(--navy); border-radius: 1px; }
+.qr-card .qr2 b.o { background: transparent; }
+.qr-card small { display: block; margin-top: 8px; font-size: 15px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--terra-ink); }
+.ci { position: absolute; left: 262px; top: 268px; width: 96px; height: 96px; border-radius: 50%; display: grid; place-items: center; text-align: center; font-size: 15px; font-weight: 700; line-height: 1.2; z-index: 2; }
+.ci i { display: block; font-style: normal; font-size: 30px; }
+.subj { position: absolute; left: 540px; width: 224px; padding: 14px 18px; display: grid; grid-template-columns: 46px 1fr; gap: 10px; align-items: center; }
+.subj i { font-style: normal; font-size: 32px; }
+.subj b { display: block; font: 400 32px/1 var(--font-hand); }
+.subj span { font-size: 14px; font-weight: 700; color: var(--text-muted); letter-spacing: .5px; }
+
+/* ---------- O3 Begleiter ---------- */
+.journey { position: absolute; inset: 0; }
+.journey svg { position: absolute; inset: 0; width: 760px; height: 620px; overflow: visible; }
+.flag { position: absolute; padding: 8px 14px; font: 400 30px/1 var(--font-hand); transform: translate(-50%, -100%) rotate(-3deg); white-space: nowrap; }
+.flag::after { content: ""; position: absolute; left: 50%; bottom: -20px; width: 3px; height: 20px; background: #7A4E2A; }
+.trait { position: absolute; padding: 8px 14px; border-radius: 999px; font-size: 17px; font-weight: 700; white-space: nowrap; opacity: 0; transform: scale(.4); transition: transform .5s cubic-bezier(.3, 1.7, .5, 1), opacity .3s; }
+.trait.on { opacity: 1; transform: none; }
+.walker { position: absolute; left: 0; top: 0; width: 64px; height: 64px; margin: -56px 0 0 -32px; z-index: 3; }
+.walker img { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--paper); box-shadow: 0 6px 12px rgba(106, 44, 18, .25); display: block; }
+.walker .orb2 { position: absolute; left: -34px; top: -26px; width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #FFF6D6, #F7C548 55%, rgba(240, 161, 58, .2));
+  box-shadow: 0 0 22px 8px rgba(247, 197, 72, .55); animation: orbit 2.4s ease-in-out infinite; }
+@keyframes orbit { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(6px, -8px); } }
+.horizon { position: absolute; left: 470px; top: -40px; width: 300px; height: 300px; border-radius: 50%; opacity: 0; transform: scale(.4);
+  background: radial-gradient(closest-side, rgba(255, 246, 214, .95), rgba(247, 197, 72, .55) 55%, rgba(247, 197, 72, 0)); transition: transform 1.6s cubic-bezier(.2, .8, .2, 1), opacity 1s; }
+#o3.st-1 .horizon { opacity: 1; transform: none; animation: breathe 3s ease-in-out 1.6s infinite; }
+.hz-lab { position: absolute; left: 520px; top: 18px; width: 200px; text-align: center; font: 400 54px/1 var(--font-hand); color: var(--terra-dark); opacity: 0; transition: opacity .8s .8s; }
+#o3.st-1 .hz-lab { opacity: 1; }
+.post { position: absolute; padding: 8px 14px; font-size: 17px; font-weight: 700; white-space: nowrap; opacity: 0; transform: translateY(16px); transition: all .6s cubic-bezier(.3, 1.5, .5, 1) var(--d); }
+#o3.st-1 .post { opacity: 1; transform: none; }
+.bridge { display: inline-flex; align-items: center; gap: 10px; margin-top: 18px; padding: 12px 20px; border-radius: 999px; background: var(--navy); color: #fff; font-size: 20px; font-weight: 700; }
+
+/* ---------- X1 Austausch ---------- */
+.camp.lit .glow { opacity: 1; transform: none; animation: breathe 2.6s ease-in-out infinite; }
+.camp.lit .fireplace .flames { transform: none; }
+.camp.lit .sit { filter: none; opacity: 1; }
+.camp .sit.go .bub, .camp .sit .bub { position: absolute; left: 40px; top: -26px; min-width: 38px; height: 38px; border-radius: 19px 19px 19px 4px; display: grid; place-items: center; font-size: 19px;
+  background: var(--paper); box-shadow: 0 6px 14px rgba(106, 44, 18, .22); opacity: 0; transform-origin: 0 100%; }
+.camp .sit.go .bub { animation: bub 2s cubic-bezier(.3, 1.5, .5, 1) forwards; }
+.yourq { position: absolute; left: 90px; right: 90px; bottom: 0; padding: 26px 30px; text-align: center; z-index: 3; }
+.yourq b { display: block; font: 400 58px/1 var(--font-hand); }
+.yourq span { display: block; margin-top: 8px; font-size: 22px; line-height: 1.35; }
+.qs li .ic { background: #FFF6D6; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01s !important; animation-iteration-count: 1 !important; transition-duration: .01s !important; transition-delay: 0s !important; }
@@ -409,11 +600,152 @@ body.idle .ctrl { opacity: 0; }
 <div class="stage" id="stage">
   <nav class="road" id="road" aria-label="Stationen"></nav>
 
-  <!-- 0 · Start -->
-  <section class="slide" id="s0" data-steps="2" data-sol="0" data-title="Eine Klasse. 32 Lernwege.">
+  <!-- ================= Phase 1 · Ankommen (Standbild beim Betreten, Karte in Schleife) ================= -->
+  <section class="slide" id="a1" data-phase="1" data-stop="Willkommen" data-steps="1" data-sol="0" data-title="Eine Klasse. 32 Lernwege.">
     <div class="left">
       <div class="kicker"><span class="st">Unterrichtsbesuch · Englisch · Klasse 9</span></div>
       <h1>Eine Klasse.<br><span class="hl-w">32 Lernwege.</span></h1>
+      <p class="lead" data-at="0" style="--d:.6s">Eine immersive Lernlandkarte mit KI-Coach: <b>Jedes Kind übt, was es wirklich braucht.</b></p>
+      <p class="lead quiet" data-at="0" style="--d:1.2s"><b>Adaptive Grammatikübungen &amp; individuelles Schreibfeedback</b> – sofort, für jedes Kind.</p>
+      <div class="tracks" data-at="0" style="--d:1.6s"><span class="paper"><i style="--c:#1B2A55"></i>Grammar Road</span><span class="paper"><i style="--c:#C2410C"></i>Writing Track</span></div>
+    </div>
+    <div class="map" id="ma"></div>
+  </section>
+
+  <!-- ================= Phase 2 · Rückblick ================= -->
+  <section class="slide" id="r1" data-phase="2" data-stop="Die Reise bis heute" data-steps="2" data-sol="0" data-title="Erst messen. Dann losfahren.">
+    <div class="left">
+      <div class="kicker"><span class="st">Rückblick</span><strong>Was bisher geschah</strong></div>
+      <h2>Erst messen.<br><span class="hl-w">Dann losfahren.</span></h2>
+      <p class="lead" data-at="0" style="--d:.4s">Am 05.10. startete die Reise mit einem <b>Check-in – einem Pre-Test</b>. So wird sichtbar, wie viel jedes Kind dazugelernt hat.</p>
+      <div class="glass tl" data-at="0" style="--d:.8s">
+        <div><b>05.10.</b><span>Check-in · Pre-Test</span></div>
+        <div><b>Station 1</b><span>Gold Coast · simple present</span></div>
+        <div><b>Station 2</b><span>Great Barrier Reef · simple past</span></div>
+        <div><b>12.10.</b><span>🔥 Lagerfeuer Outback · present perfect</span></div>
+        <div class="w"><b>12.10.</b><span>✍️ Alice Springs &amp; Kata Tjuta: Artikel planen</span></div>
+        <div class="w"><b>Hausaufgabe</b><span>Artikel „Is Australia worth visiting?“ – 1. Fassung</span></div>
+      </div>
+    </div>
+    <div class="scene">
+      <div data-at="0" data-until="0" style="transform:none"><div class="map" id="mr1"></div></div>
+      <div class="glass growth" data-at="1" style="--d:.2s">
+        <div class="g-head"><span class="ex">Beispiel: simple past</span><span class="fl">🔥 Lagerfeuer → 🤖 Coach → 📈 Üben</span></div>
+        <div class="g-row">
+          <div class="lab">Kinder auf Niveau 1<small>Einstieg</small></div>
+          <div class="g-toks" id="gToks"></div>
+          <div class="g-num"><b id="gN1">14</b><small>Check-in → heute</small></div>
+        </div>
+        <div class="g-bar" id="gBar"></div>
+        <div class="g-leg"><span><b style="background:#E8C3A8"></b>Niveau 1 · Einstieg</span><span><b style="background:#F2E1C4"></b>2 · Grundlagen</span><span><b style="background:#CFE3E0"></b>3 · sicher</span><span><b style="background:#93BFC4"></b>4 · Experte</span></div>
+        <div class="g-cap" id="gCap"></div>
+        <div class="g-tiles"><div class="paper"><small>Ø Niveau</small><b id="gAvg"></b></div><div class="paper"><small>verbessert seit dem Check-in</small><b id="gImp"></b></div></div>
+        <div class="g-note"><b>Niveau = Kompetenzstufe im Thema, keine Note.</b> 1 = unter 50 % sicher gelöst · 2 = 50–74 % · 3 = 75–89 % · 4 = ab 90 %</div>
+        <div class="g-write">✍️ <b>Beim Schreiben genauso:</b> Die 1. Fassung ist der Ausgangspunkt. Feedback nach dem ZP10-Raster – die Endfassung zeigt den Zuwachs.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="r2" data-phase="2" data-stop="Heute" data-steps="2" data-sol="0" data-title="Die ersten 30 Minuten · Zwei Wege, ein Prinzip">
+    <div class="left">
+      <div class="kicker"><span class="st">Rückblick</span><strong>Heute im Unterricht</strong></div>
+      <div class="stack">
+        <div data-at="0" data-until="0">
+          <h2>Die ersten<br><span class="hl-w">30 Minuten.</span></h2>
+          <p class="lead">Was die Klasse heute schon geschafft hat – <b>bevor Sie kamen</b>.</p>
+        </div>
+        <div data-at="1">
+          <h2 class="sol-h md">Zwei Wege.<br><span class="hl-w">Ein Prinzip.</span></h2>
+          <div class="glass card" data-at="1" style="--d:.3s">
+            <span class="seal">Individuell</span>
+            <ul>
+              <li><span class="ic">✍️</span><span><b>Erst selbst machen</b> – Arbeitsblatt oder Artikel (Hausaufgabe).</span></li>
+              <li><span class="ic">💬</span><span><b>Dann Feedback</b> vom Coach – sofort und persönlich.</span></li>
+              <li><span class="ic">📈</span><span><b>Dann besser werden</b> – üben oder überarbeiten.</span></li>
+            </ul>
+            <div class="same-p">Jedes Kind entscheidet, womit es beginnt – und macht danach die andere Station.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scene">
+      <div class="steps3" data-at="0" data-until="0" style="transform:none">
+        <div class="glass st3" data-at="0" style="--d:.3s;--bg:#FDE6D8">
+          <div class="ico"><svg viewBox="0 0 40 40"><g><path class="flame" d="M20,6 C26,13 30,18 28,25 C27,30 23,32 20,32 C16,32 12,30 12,25 C11,20 15,17 16,12 C18,15 19,16 20,6 Z" fill="#E8692C"/><path class="flame in" d="M20,15 C23,19 25,22 24,26 C23,29 21,30 20,30 C18,30 16,29 16,26 C16,23 18,21 20,15 Z" fill="#F7C548"/></g><path d="M7,33 L33,27" stroke="#7A4E2A" stroke-width="5" stroke-linecap="round"/><path d="M7,27 L33,33" stroke="#946039" stroke-width="5" stroke-linecap="round"/></svg></div>
+          <div><small>1 · Lagerfeuer</small><b>Gemeinsam entdecken</b><span>Strukturen induktiv erarbeiten, die Regel gemeinsam sichern – ohne KI.</span></div>
+        </div>
+        <div class="glass st3" data-at="0" style="--d:.8s;--bg:#F2EADA">
+          <div class="ico">📝</div>
+          <div><small>2 · Arbeitsblatt</small><b>Jedes Kind allein</b><span>Auf Papier, im eigenen Tempo.</span></div>
+        </div>
+        <div class="glass st3" data-at="0" style="--d:1.3s;--bg:#DCEAF5">
+          <div class="ico">📸</div>
+          <div><small>3 · Gleich</small><b>Foto an den Coach</b><span>Die Kinder fotografieren ihr Blatt – das Feedback kommt sofort.</span></div>
+          <span class="now">JETZT</span>
+        </div>
+      </div>
+      <div class="fork" id="fork" data-at="1" style="transform:none">
+        <svg viewBox="0 0 760 620" aria-hidden="true">
+          <defs><filter id="fds" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#6A2C12" flood-opacity=".22"/></filter></defs>
+          <path d="M20 560 C60 420 200 300 340 250 C480 200 620 120 740 150 L740 600 L20 600 Z" fill="#EBD9BC" filter="url(#fds)"/>
+          <path d="M120 600 C200 480 320 420 430 400 C560 380 650 420 740 470 L740 600 Z" fill="#E9C79A" filter="url(#fds)"/>
+          <g fill="none" stroke-linecap="round">
+            <path d="M30 600 C120 560 200 470 300 400" stroke="#FFFBF3" stroke-width="46" opacity=".9"/>
+            <path d="M300 400 C380 340 470 230 640 150" stroke="#FFFBF3" stroke-width="40" opacity=".9"/>
+            <path d="M300 400 C400 430 500 500 640 520" stroke="#FFFBF3" stroke-width="40" opacity=".9"/>
+            <path d="M30 600 C120 560 200 470 300 400" stroke="#1B2A55" stroke-width="5" stroke-dasharray="2 12" opacity=".6"/>
+            <path d="M300 400 C380 340 470 230 640 150" stroke="#1B2A55" stroke-width="5" stroke-dasharray="2 12"/>
+            <path d="M300 400 C400 430 500 500 640 520" stroke="#C2410C" stroke-width="6" stroke-dasharray="12 9"/>
+          </g>
+          <path class="fp" d="M30 600 C120 560 200 470 300 400 C380 340 470 230 640 150" fill="none"/>
+          <path class="fp" d="M30 600 C120 560 200 470 300 400 C400 430 500 500 640 520" fill="none"/>
+        </svg>
+        <div class="paper sign g" style="left:470px;top:30px;--r:-3deg"><span class="pin"></span><b>📘 Grammar Road</b><small>Feedback → Practice</small></div>
+        <div class="paper sign w" style="left:500px;top:540px;--r:2deg"><span class="pin"></span><b>✍️ Uluru</b><small>Artikel → Feedback → Endfassung</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Phase 3 · Live ================= -->
+  <section class="slide" id="l1" data-phase="3" data-stop="Coach-Zeit" data-steps="1" data-sol="0" data-title="Jetzt arbeiten die Kinder.">
+    <div class="left">
+      <div class="kicker"><span class="st">Live</span><strong>Coach-Zeit</strong></div>
+      <h2>Jetzt arbeiten<br><span class="hl-w">die Kinder.</span></h2>
+      <p class="lead" data-at="0" style="--d:.4s">Jedes Kind an seiner Station – <b>im eigenen Tempo</b>, auf seinem Niveau.</p>
+      <div class="glass card" data-at="0" style="--d:.8s">
+        <span class="seal" style="--sd:1.4s">Beobachtungsauftrag</span>
+        <p>Achten Sie weniger darauf, <b>dass</b> KI eingesetzt wird. Achten Sie darauf, <b>wie unterschiedlich</b> der Coach reagiert – je nachdem, was ein Kind schon kann.</p>
+        <p class="small">🧭 Ihre Lotsin, Ihr Lotse zeigt Ihnen den eigenen Weg.</p>
+      </div>
+    </div>
+    <div class="scene" id="live">
+      <div class="glass zone a"><h4>📘 Grammar Road</h4><div class="zs">Feedback → Practice</div></div>
+      <div class="glass zone b"><h4>✍️ Writing · Uluru</h4><div class="zs">Feedback → Endfassung</div></div>
+    </div>
+  </section>
+
+  <section class="slide" id="l2" data-phase="3" data-stop="Was steckt im Coach?" data-steps="3" data-sol="0" data-title="Was steckt im Coach?">
+    <div class="left">
+      <div class="kicker"><span class="st">Live</span><strong>Hinter den Kulissen</strong></div>
+      <h2>Was steckt<br>im <span class="hl-w">Coach?</span></h2>
+      <p class="lead" data-at="0" style="--d:.4s">Hinter jedem Coach stehen <b>pädagogische Entscheidungen</b> – keine Zauberei.</p>
+      <div class="glass card" data-at="2" style="--d:.8s">
+        <span class="seal" style="--sd:1.2s">Agentenlogik</span>
+        <p>Wir haben nicht einfach Prompts geschrieben. Wir haben <b>pädagogische Entscheidungen</b> in eine <b>verlässliche Agentenlogik</b> übersetzt.</p>
+      </div>
+    </div>
+    <div class="scene" id="arch">
+      <svg class="spokes" id="spokes" viewBox="0 0 760 620" aria-hidden="true"></svg>
+      <div class="glass core"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="none" stroke="#C9643B" stroke-width="1.2" stroke-dasharray="3 5"/></svg><div><div class="bot">🤖</div><b>Coach</b></div></div>
+    </div>
+  </section>
+
+  <!-- ================= Phase 4 · Konzept ================= -->
+  <!-- 0 · Start -->
+  <section class="slide" id="s0" data-phase="4" data-steps="2" data-sol="0" data-title="Unsere Antworten auf 6 Probleme">
+    <div class="left">
+      <div class="kicker"><span class="st">Unterrichtsbesuch · Englisch · Klasse 9</span></div>
+      <h1 style="font-size:84px">Unsere Antworten<br>auf <span class="hl-w">6 Probleme</span><br>von (KI-)Unterricht.</h1>
       <p class="lead" data-at="0" style="--d:.6s">Eine <b>immersive Lernlandkarte</b> – jedes Kind geht seinen eigenen Weg.</p>
       <div class="chips" id="chips"></div>
     </div>
@@ -421,7 +753,7 @@ body.idle .ctrl { opacity: 0; }
   </section>
 
   <!-- 1 · Adaptive Lernwege -->
-  <section class="slide" id="s1" data-steps="3" data-sol="2" data-title="32 Kinder. 32 × Stärken &amp; Schwächen.">
+  <section class="slide" id="s1" data-phase="4" data-steps="3" data-sol="2" data-title="32 Kinder. 32 × Stärken &amp; Schwächen.">
     <div class="left">
       <div class="kicker"><span class="st">Station 1</span><strong>Adaptive Lernwege</strong><span class="stack"><span class="badge" data-at="0" data-until="1">Das Problem</span><span class="badge sol" data-at="2">Die Lösung</span></span></div>
       <div class="stack">
@@ -453,7 +785,7 @@ body.idle .ctrl { opacity: 0; }
   </section>
 
   <!-- 2 · Diagnostik & Dashboard -->
-  <section class="slide" id="s2" data-steps="4" data-sol="3" data-title="Blinde Flecken sichtbar machen.">
+  <section class="slide" id="s2" data-phase="4" data-steps="4" data-sol="3" data-title="Blinde Flecken sichtbar machen.">
     <div class="left">
       <div class="kicker"><span class="st">Station 2</span><strong>Diagnostik &amp; Dashboard</strong><span class="stack"><span class="badge" data-at="0" data-until="2">Das Problem</span><span class="badge sol" data-at="3">Die Lösung</span></span></div>
       <div class="stack">
@@ -498,7 +830,7 @@ body.idle .ctrl { opacity: 0; }
   </section>
 
   <!-- 3 · Feedback für jedes Kind -->
-  <section class="slide" id="s3" data-steps="3" data-sol="2" data-title="Feedback in 30 Sekunden.">
+  <section class="slide" id="s3" data-phase="4" data-steps="3" data-sol="2" data-title="Feedback in 30 Sekunden.">
     <div class="left">
       <div class="kicker"><span class="st">Station 3</span><strong>Feedback für jedes Kind</strong><span class="stack"><span class="badge" data-at="0" data-until="1">Das Problem</span><span class="badge sol" data-at="2">Die Lösung</span></span></div>
       <div class="stack">
@@ -565,7 +897,7 @@ body.idle .ctrl { opacity: 0; }
   </section>
 
   <!-- 4 · Gamifikation -->
-  <section class="slide" id="s4" data-steps="3" data-sol="2" data-title="Eigenen Fortschritt sichtbar machen.">
+  <section class="slide" id="s4" data-phase="4" data-steps="3" data-sol="2" data-title="Eigenen Fortschritt sichtbar machen.">
     <div class="left">
       <div class="kicker"><span class="st">Station 4</span><strong>Gamifikation</strong><span class="stack"><span class="badge" data-at="0" data-until="1">Das Problem</span><span class="badge sol" data-at="2">Die Lösung</span></span></div>
       <div class="stack">
@@ -625,7 +957,7 @@ body.idle .ctrl { opacity: 0; }
   </section>
 
   <!-- 5 · Gemeinsam, ohne KI -->
-  <section class="slide" id="s5" data-steps="2" data-sol="1" data-title="Am Lagerfeuer.">
+  <section class="slide" id="s5" data-phase="4" data-steps="2" data-sol="1" data-title="Am Lagerfeuer.">
     <div class="left">
       <div class="kicker"><span class="st">Station 5</span><strong>Gemeinsam, ohne KI</strong><span class="stack"><span class="badge" data-at="0" data-until="0">Die Frage</span><span class="badge sol" data-at="1">Die Antwort</span></span></div>
       <div class="stack">
@@ -663,7 +995,7 @@ body.idle .ctrl { opacity: 0; }
   </section>
 
   <!-- 6 · Datenschutz -->
-  <section class="slide" id="s6" data-steps="2" data-sol="1" data-title="Ein Code. Kein Name.">
+  <section class="slide" id="s6" data-phase="4" data-steps="2" data-sol="1" data-title="Ein Code. Kein Name.">
     <div class="left">
       <div class="kicker"><span class="st">Station 6</span><strong>Datenschutz</strong><span class="stack"><span class="badge" data-at="0" data-until="0">Die Frage</span><span class="badge sol" data-at="1">Die Antwort</span></span></div>
       <div class="stack">
@@ -695,17 +1027,145 @@ body.idle .ctrl { opacity: 0; }
     </div>
   </section>
 
-  <!-- 7 · Ziel -->
-  <section class="slide" id="s7" data-steps="1" data-sol="0" data-title="Willkommen in Australien.">
+  <!-- ================= Phase 5 · Ausblick ================= -->
+  <section class="slide" id="o1" data-phase="5" data-stop="Andere Fächer" data-steps="3" data-sol="0" data-title="Maßgeschneidert. Übertragbar.">
     <div class="left">
-      <div class="kicker"><span class="st">Australia Road Trip · Unit 1</span></div>
-      <h2 style="font-size:122px">Willkommen<br>in <span class="hl-w">Australien.</span></h2>
-      <p class="lead" data-at="0" style="--d:.8s"><b>Grammatikübungen &amp; Schreibfeedback</b> – auf einer Karte, für jedes Kind.</p>
-      <div class="tracks" data-at="0" style="--d:1.4s"><span class="paper"><i style="--c:#1B2A55"></i>Grammar Road</span><span class="paper"><i style="--c:#C2410C"></i>Writing Track</span></div>
+      <div class="kicker"><span class="st">Ausblick</span><strong>Lernlandkarten für alle Fächer</strong></div>
+      <h2>Maßgeschneidert.<br><span class="hl-w">Übertragbar.</span></h2>
+      <p class="lead" data-at="0" style="--d:.4s">Heute: Englisch, Unit 1, Australien.<br><b>Morgen: jedes Thema, jedes Fach.</b></p>
+      <div class="glass card" data-at="2" style="--d:.6s">
+        <span class="seal" style="--sd:1.1s">Übertragbar</span>
+        <ul>
+          <li><span class="ic">🗺️</span><span>Jedes Fach bekommt <b>seine eigene Welt</b>.</span></li>
+          <li><span class="ic">🔁</span><span>Das Prinzip bleibt: <b>Check-in → Lagerfeuer → Coach → Stempel</b>.</span></li>
+          <li><span class="ic">🌱</span><span>Noch ein Prototyp – entstanden in einer Klasse.</span></li>
+        </ul>
+      </div>
     </div>
-    <div class="map" id="m7"></div>
+    <div class="scene"><div class="ocean" id="o1map"></div></div>
+  </section>
+
+  <section class="slide" id="o2" data-phase="5" data-stop="Vertretung" data-steps="2" data-sol="1" data-title="Vertretung – ohne Material">
+    <div class="left">
+      <div class="kicker"><span class="st">Ausblick</span><strong>Vertretungsstunden</strong><span class="stack"><span class="badge" data-at="0" data-until="0">Das Problem</span><span class="badge sol" data-at="1">Die Lösung</span></span></div>
+      <div class="stack">
+        <div data-at="0" data-until="0">
+          <h2>Lehrkraft krank.<br><span class="hl-w">Und jetzt?</span></h2>
+          <p class="lead">Vertretungsstunden werden oft zu <b>verlorenen Stunden</b> – weil niemand Material vorbereiten kann.</p>
+        </div>
+        <div data-at="1">
+          <h2 class="sol-h">Lernen geht<br><span class="hl-w">einfach weiter.</span></h2>
+          <div class="glass card" data-at="1" style="--d:.3s">
+            <span class="seal">Vertretungs-Lernlandkarte</span>
+            <ul>
+              <li><span class="ic">📱</span><span>QR-Code scannen – <b>keine Vorbereitung</b> nötig.</span></li>
+              <li><span class="ic">🧭</span><span>Ein <b>Check-in</b> zeigt, wo jedes Kind steht.</span></li>
+              <li><span class="ic">🎯</span><span><b>Basiskompetenzen</b> in Deutsch, Mathe und Englisch – adaptiv geübt.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scene">
+      <div data-at="0" data-until="0"><div class="note">Vertretung<br>3. Stunde · 9c<br><br>Material: <s>&nbsp;?&nbsp;</s><span class="q">?</span></div></div>
+      <div class="fork" id="sub" data-at="1" style="transform:none">
+        <svg viewBox="0 0 760 620" aria-hidden="true">
+          <g fill="none" stroke-linecap="round">
+            <path d="M180 316 L300 316" stroke="#FFFBF3" stroke-width="36" opacity=".9"/>
+            <path d="M300 316 C420 316 440 120 560 110" stroke="#FFFBF3" stroke-width="32" opacity=".9"/>
+            <path d="M300 316 L560 316" stroke="#FFFBF3" stroke-width="32" opacity=".9"/>
+            <path d="M300 316 C420 316 440 520 560 520" stroke="#FFFBF3" stroke-width="32" opacity=".9"/>
+            <path d="M180 316 L300 316" stroke="#1B2A55" stroke-width="5" stroke-dasharray="2 12"/>
+            <path d="M300 316 C420 316 440 120 560 110" stroke="#B0392E" stroke-width="5" stroke-dasharray="2 12"/>
+            <path d="M300 316 L560 316" stroke="#2C5E86" stroke-width="5" stroke-dasharray="2 12"/>
+            <path d="M300 316 C420 316 440 520 560 520" stroke="#1B2A55" stroke-width="5" stroke-dasharray="2 12"/>
+          </g>
+          <path class="fp" d="M180 316 L300 316 C420 316 440 120 560 110" fill="none"/>
+          <path class="fp" d="M180 316 L560 316" fill="none"/>
+          <path class="fp" d="M180 316 L300 316 C420 316 440 520 560 520" fill="none"/>
+        </svg>
+        <div class="glass qr-card"><div class="qr2" id="qr2"></div><small>Scannen</small></div>
+        <div class="glass ci"><div><i>🧭</i>Check-in</div></div>
+        <div class="glass subj" style="top:68px"><i>📖</i><div><b>Deutsch</b><span>Lesen · Schreiben · Rechtschreibung</span></div></div>
+        <div class="glass subj" style="top:274px"><i>📐</i><div><b>Mathe</b><span>Rechnen · Größen · Gleichungen</span></div></div>
+        <div class="glass subj" style="top:478px"><i>💬</i><div><b>Englisch</b><span>Grammatik · Wortschatz · Lesen</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="o3" data-phase="5" data-stop="Vision" data-steps="2" data-sol="0" data-title="Ein Begleiter für jedes Kind">
+    <div class="left">
+      <div class="kicker"><span class="st">Ausblick</span><strong>Die Vision</strong></div>
+      <div class="stack">
+        <div data-at="0" data-until="0">
+          <h2>Ein Begleiter<br>für <span class="hl-w">jedes Kind.</span></h2>
+          <p class="lead">Ein persönlicher KI-Agent, der jedes Kind <b>von Klasse 7 bis 10</b> begleitet – und es mit jedem Schritt besser kennt.</p>
+        </div>
+        <div data-at="1">
+          <h2 class="sol-h md">Vom Lernweg<br>zur <span class="hl-w">Zukunft.</span></h2>
+          <p class="sub-lead">Vom individuellen Lernweg zur <b>individuellen Zukunftsperspektive</b>.</p>
+          <div class="glass card" data-at="1" style="--d:.4s">
+            <span class="seal">Zukunftsperspektive</span>
+            <ul>
+              <li><span class="ic">🧭</span><span>Wer seine Stärken kennt, <b>findet seinen Weg</b>.</span></li>
+              <li><span class="ic">🤝</span><span>Der Begleiter geht mit – <b>bis zum Übergang</b> in Ausbildung oder Oberstufe.</span></li>
+            </ul>
+          </div>
+          <span class="bridge" data-at="1" style="--d:1.4s">➜ Weiter: Berufsorientierung</span>
+        </div>
+      </div>
+    </div>
+    <div class="scene">
+      <div class="journey" id="journey">
+        <div class="horizon"></div>
+        <div class="hz-lab">Zukunft</div>
+        <svg viewBox="0 0 760 620" aria-hidden="true">
+          <defs><filter id="jds" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#6A2C12" flood-opacity=".22"/></filter></defs>
+          <path d="M0 620 C80 520 200 560 300 470 C400 380 260 300 380 230 C480 170 560 220 640 120 C690 80 740 100 760 130 L760 620 Z" fill="#EBD9BC" filter="url(#jds)"/>
+          <path d="M330 620 C420 520 520 470 600 430 C670 395 720 380 760 390 L760 620 Z" fill="#E9C79A" filter="url(#jds)"/>
+          <path d="M520 620 C590 560 660 530 760 520 L760 620 Z" fill="#E0A26C" filter="url(#jds)"/>
+          <g fill="#5C7A4E"><circle cx="690" cy="372" r="15"/><circle cx="706" cy="364" r="12"/><rect x="695" y="376" width="4" height="18" fill="#7A4E2A"/><circle cx="470" cy="560" r="13"/><circle cx="484" cy="553" r="10"/><rect x="474" y="564" width="4" height="15" fill="#7A4E2A"/></g>
+          <path d="M40 590 C140 560 250 540 300 470 C360 390 250 320 380 240 C470 185 560 210 630 120" fill="none" stroke="#FFFBF3" stroke-width="40" stroke-linecap="round" opacity=".9"/>
+          <path id="jpath" d="M40 590 C140 560 250 540 300 470 C360 390 250 320 380 240 C470 185 560 210 630 120" fill="none" stroke="#1B2A55" stroke-width="5" stroke-dasharray="2 12" stroke-linecap="round"/>
+        </svg>
+        <div class="paper post" style="left:560px;top:250px;--d:1.2s">🛠️ Ausbildung</div>
+        <div class="paper post" style="left:600px;top:308px;--d:1.4s">🎓 Oberstufe</div>
+        <div class="paper post" style="left:640px;top:440px;--d:1.6s">💼 Beruf</div>
+        <div class="walker" id="walker"><span class="orb2"></span><img src="assets/img/animals/koala.webp" alt=""></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Phase 6 · Austausch ================= -->
+  <section class="slide" id="x1" data-phase="6" data-stop="Ihre Fragen" data-steps="2" data-sol="0" data-title="Jetzt sind Sie dran.">
+    <div class="left">
+      <div class="kicker"><span class="st">Austausch</span><strong>Am Lagerfeuer</strong></div>
+      <h2>Jetzt sind<br><span class="hl-w">Sie dran.</span></h2>
+      <div class="glass card qs" data-at="0" style="--d:.5s">
+        <span class="seal" style="--sd:1s">Fragen an die Kinder</span>
+        <ul>
+          <li><span class="ic">💬</span><span>Worauf bist du auf deiner Reise <b>stolz</b>?</span></li>
+          <li><span class="ic">💬</span><span>Wie fühlt es sich an, <b>sofort</b> eine Rückmeldung zu bekommen?</span></li>
+          <li><span class="ic">💬</span><span>Wobei hilft dir der Coach – und wobei <b>Herr Gleißner</b>?</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="scene">
+      <div class="camp lit" id="camp2">
+        <div class="glow"></div>
+        <svg class="fireplace" viewBox="0 0 40 40">
+          <ellipse cx="20" cy="35" rx="15" ry="3.5" fill="#000" opacity=".15"/>
+          <g class="flames"><path class="flame" d="M20,6 C26,13 30,18 28,25 C27,30 23,32 20,32 C16,32 12,30 12,25 C11,20 15,17 16,12 C18,15 19,16 20,6 Z" fill="#E8692C"/>
+            <path class="flame in" d="M20,15 C23,19 25,22 24,26 C23,29 21,30 20,30 C18,30 16,29 16,26 C16,23 18,21 20,15 Z" fill="#F7C548"/></g>
+          <path d="M7,33 L33,27" stroke="#7A4E2A" stroke-width="5" stroke-linecap="round"/><path d="M7,27 L33,33" stroke="#946039" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="glass yourq" data-at="1" style="--d:.2s"><b>🙋 Ihre Fragen</b><span>Fragen Sie die Kinder – sie sind die Expertinnen und Experten ihrer Reise.</span></div>
+    </div>
   </section>
 </div>
+
+<div class="glass phases" id="phases" aria-label="Phasen des Besuchs"></div>
 
 <div class="glass ctrl" id="ctrl">
   <button type="button" id="prev" aria-label="Zurück">‹</button>
@@ -718,7 +1178,7 @@ body.idle .ctrl { opacity: 0; }
   <div class="glass ov-box">
     <h3>Übersicht</h3>
     <div class="ov-grid" id="ovGrid"></div>
-    <div class="ov-hint">→ / Leertaste / Clicker: weiter · ← zurück · 0–7 springen · O Übersicht · F Vollbild</div>
+    <div class="ov-hint">→ / Leertaste / Clicker: weiter · ← zurück · Shift + 1–6: Phase · 0–9: Folie in der Phase · O Übersicht · F Vollbild</div>
   </div>
 </div>
 
@@ -740,18 +1200,44 @@ body.idle .ctrl { opacity: 0; }
   const fit = () => { const s = Math.min(innerWidth / 1600, innerHeight / 900); stage.style.transform = `translate(-50%, -50%) scale(${s})`; };
   addEventListener('resize', fit); fit();
 
-  /* ---------- Reise-Kopf ---------- */
+  /* ---------- Phasen des Besuchs + Reise-Kopf ---------- */
+  // Reihenfolge am 15.10.: Ankommen → Rückblick → Live (Kinder arbeiten) → Konzept → Ausblick → Austausch
   const slides = $$('.slide');
-  const STOPS = ['Start', 'Adaptive Lernwege', 'Diagnostik & Dashboard', 'Feedback für jedes Kind', 'Gamifikation', 'Gemeinsam, ohne KI', 'Datenschutz', 'Ziel'];
-  const last = STOPS.length - 1;
+  const PHASES = ['Ankommen', 'Rückblick', 'Live', 'Konzept', 'Ausblick', 'Austausch'];
+  const STOPS = ['Start', 'Adaptive Lernwege', 'Diagnostik & Dashboard', 'Feedback für jedes Kind', 'Gamifikation', 'Gemeinsam, ohne KI', 'Datenschutz'];
+  const phaseOf = (i) => +slides[i].dataset.phase;
+  const inPhase = (p) => slides.map((_, i) => i).filter((i) => phaseOf(i) === p);
+  const esc = (t) => t.replace(/&/g, '&amp;');
   const road = $('#road');
-  const pos = (i) => `calc(22px + (100% - 44px) * ${i / last})`;
-  road.innerHTML = `<div class="road-line"></div><div class="road-done" id="roadDone"></div>` +
-    STOPS.map((t, i) => `<button type="button" class="road-stop" data-i="${i}" style="left:${pos(i)}"><i>${i === 0 ? '★' : i === last ? '⚑' : i}</i><span>${t}</span></button>`).join('') +
-    `<svg class="road-van" id="roadVan" viewBox="0 0 64 42"><rect x="2" y="6" width="58" height="27" rx="9" fill="#1B2A55"/><path d="M2 20 V15 a9 9 0 0 1 9 -9 H51 a9 9 0 0 1 9 9 V20 Z" fill="#FFFBF3"/><rect x="42" y="9" width="14" height="9" rx="3" fill="#BFDDF0"/><circle cx="16" cy="34" r="6" fill="#2A2A2E"/><circle cx="16" cy="34" r="2.2" fill="#D6D0C4"/><circle cx="48" cy="34" r="6" fill="#2A2A2E"/><circle cx="48" cy="34" r="2.2" fill="#D6D0C4"/></svg>`;
-  $$('.road-stop', road).forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); go(+b.dataset.i, 0); }));
+  const VAN = `<svg class="road-van" id="roadVan" viewBox="0 0 64 42"><rect x="2" y="6" width="58" height="27" rx="9" fill="#1B2A55"/><path d="M2 20 V15 a9 9 0 0 1 9 -9 H51 a9 9 0 0 1 9 9 V20 Z" fill="#FFFBF3"/><rect x="42" y="9" width="14" height="9" rx="3" fill="#BFDDF0"/><circle cx="16" cy="34" r="6" fill="#2A2A2E"/><circle cx="16" cy="34" r="2.2" fill="#D6D0C4"/><circle cx="48" cy="34" r="6" fill="#2A2A2E"/><circle cx="48" cy="34" r="2.2" fill="#D6D0C4"/></svg>`;
+  let roadPhase = 0, roadLast = 1;
+  const pos = (k) => `calc(22px + (100% - 44px) * ${k / roadLast})`;
+  // Konzept-Phase: die sechs Stationen wie gehabt; andere Phasen: deren Folien im gleichen Stil
+  function buildRoad(p) {
+    const idx = inPhase(p), n = idx.length, concept = p === 4;
+    const labels = concept ? STOPS : idx.map((i) => slides[i].dataset.stop);
+    roadPhase = p; roadLast = Math.max(1, n - 1);
+    road.style.right = concept ? '' : 'auto';
+    road.style.width = concept ? '' : `${(n - 1) * 230 + 44}px`;
+    road.innerHTML = `<div class="road-line"></div><div class="road-done" id="roadDone"></div>` +
+      labels.map((t, k) => `<button type="button" class="road-stop" data-i="${idx[k]}" style="left:${pos(k)}"><i>${concept ? (k === 0 ? '★' : k === n - 1 ? '⚑' : k) : k + 1}</i><span>${esc(t)}</span></button>`).join('') + VAN;
+    $$('.road-stop', road).forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); go(+b.dataset.i, 0); }));
+  }
+  function updateRoad(i) {
+    const k = inPhase(roadPhase).indexOf(i);
+    $$('.road-stop', road).forEach((b, j) => { b.classList.toggle('now', j === k); b.classList.toggle('done', j < k); });
+    $('#roadDone').style.width = `calc((100% - 44px) * ${k / roadLast})`;
+    $('#roadVan').style.left = pos(k);
+  }
+  const phases = $('#phases');
+  phases.innerHTML = PHASES.map((t, k) => `<button type="button" data-p="${k + 1}"><i>${k + 1}</i>${t}</button>`).join('');
+  $$('button', phases).forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); go(inPhase(+b.dataset.p)[0], 0); }));
 
-  $('#chips').innerHTML = STOPS.slice(1, last).map((t, i) => `<span class="paper chip" data-at="1" style="--d:${.15 + i * .12}s"><i>${i + 1}</i>${t.replace('&', '&amp;')}</span>`).join('');
+  $('#chips').innerHTML = STOPS.slice(1).map((t, i) => `<span class="paper chip" data-at="1" style="--d:${.15 + i * .12}s"><i>${i + 1}</i>${esc(t)}</span>`).join('');
+
+  /* ---------- Echte Klassenzahlen (Dashboard + KI-Bericht, Stand 11.10.2026) ----------
+     Nur das idealtypische Beispiel simple past: Lagerfeuer → Coach → Üben. Am Mi 14.10. abends prüfen. */
+  const DATA = { n1Before: 14, n1Now: 3, dist: [3, 9, 14, 6], avg: ['2,0', '3,15'], improved: 14 };
 
   /* ---------- Karte ---------- */
   const LAND = 'M230,260 L300,215 L380,195 L450,140 L480,118 L560,108 L600,130 L625,150 L640,215 L700,128 L740,58 L770,120 L800,200 L830,260 L870,330 L905,420 L912,500 L895,570 L880,610 L850,680 L800,705 L760,700 L700,670 L640,640 L600,625 L575,595 L560,600 L520,570 L450,555 L380,560 L300,590 L200,620 L130,625 L110,560 L95,470 L110,380 L160,320 Z';
@@ -777,6 +1263,7 @@ body.idle .ctrl { opacity: 0; }
       <defs><filter id="ds-${uid}" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#6A2C12" flood-opacity=".28"/></filter>
         <filter id="ps-${uid}" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="2" dy="5" stdDeviation="3" flood-color="#6A2C12" flood-opacity=".35"/></filter>
         <mask id="mk-${uid}"><path class="draw" d="${R.d}" pathLength="1" fill="none" stroke="#fff" stroke-width="30" stroke-linecap="round"/></mask>
+        <clipPath id="kc-${uid}"><circle r="21"/></clipPath>
         <mask id="wm-${uid}"><path class="wdraw" d="${W.d}" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="#fff" stroke-width="30" stroke-linecap="round"/></mask></defs>
       <g class="pl" style="--i:0" filter="url(#ds-${uid})"><rect x="30" y="20" width="940" height="790" rx="60" fill="#A9CDEB"/>
         <g fill="none" stroke="#FFFBF3" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M80 160 q15 -10 30 0 t30 0"/><path d="M880 90 q15 -10 30 0 t30 0"/><path d="M90 740 q15 -10 30 0 t30 0"/><path d="M930 640 q15 -10 30 0 t30 0"/></g></g>
@@ -789,16 +1276,18 @@ body.idle .ctrl { opacity: 0; }
         <path d="${R.d}" fill="none" stroke="#FFFBF3" stroke-width="16" stroke-linecap="round" opacity=".85"/>
         <path d="${R.d}" fill="none" stroke="#1B2A55" stroke-width="5" stroke-dasharray="2 12" stroke-linecap="round"/>
       </g>
-      <g mask="url(#wm-${uid})">
+      <g class="wline" mask="url(#wm-${uid})">
         <path d="${W.d}" fill="none" stroke="#FFFBF3" stroke-width="16" stroke-linecap="round" opacity=".85"/>
         <path d="${W.d}" fill="none" stroke="#C2410C" stroke-width="6" stroke-dasharray="12 9" stroke-linecap="round"/>
       </g>
       ${['SPR', 'SP', 'PP', 'SPPP'].map((id) => { const r = ROUTE.find((x) => x[0] === id); return `<image class="stamp" data-id="${id}" href="assets/img/stamps/${id}.webp" x="${r[1] - 55}" y="${r[2] - 55}" width="110" height="110"/>`; }).join('')}
       <path class="prog" d="${R.d}" fill="none" stroke="#1B2A55" stroke-width="7" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
       ${ROUTE.map((r, i) => `<g class="stn" style="--d:${.3 + i * .22}s"><circle cx="${r[1]}" cy="${r[2]}" r="${i === 0 ? 20 : 17}" fill="#FFFBF3" stroke="#1B2A55" stroke-width="5"/>${i ? `<text x="${r[1]}" y="${r[2] + 7}" text-anchor="middle" font-family="Atkinson Hyperlegible" font-weight="700" font-size="20" fill="#1B2A55">${i === 7 ? '★' : i}</text>` : ''}</g>`).join('')}
-      ${opt.labels ? ROUTE.filter((r) => LBL[r[0]]).map((r, i) => `<g class="lbl" style="--d:${.5 + i * .22}s">${pill(r[1] + LBL[r[0]][0], r[2] + LBL[r[0]][1], r[3], '#FFFBF3', '#1B2A55')}</g>`).join('') : ''}
+      ${opt.labels ? ROUTE.filter((r) => LBL[r[0]]).map((r, i) => { const sl = r[0] === 'START' && opt.startLabel;
+        return `<g class="lbl" style="--d:${.5 + i * .22}s">${pill(r[1] + LBL[r[0]][0], r[2] + LBL[r[0]][1], sl || r[3], sl ? '#C9643B' : '#FFFBF3', sl ? '#FFFFFF' : '#1B2A55')}</g>`; }).join('') : ''}
       ${WRITE.map((w) => `<g class="wst"><rect x="${w[0] - 15}" y="${w[1] - 15}" width="30" height="30" rx="7" fill="#FDE6D8" stroke="#C2410C" stroke-width="5" transform="rotate(45 ${w[0]} ${w[1]})"/>${pill(w[0] + w[3], w[1] + w[4], w[2], '#FDE6D8', '#8A2E09', 18)}</g>`).join('')}
-      <g transform="translate(548 222)">${flames}</g>
+      <g transform="translate(${(opt.fireAt || [548, 222]).join(' ')})">${flames}</g>
+      ${opt.kids ? '<g class="kids"></g>' : ''}
       <g class="pencil" filter="url(#ps-${uid})"><g transform="rotate(-40) scale(1.35)">
         <path d="M0 0 L16 -7 L16 7 Z" fill="#F2D3A7"/><path d="M0 0 L6 -2.6 L6 2.6 Z" fill="#2A2A2E"/>
         <rect x="16" y="-7" width="54" height="14" fill="#F7C548"/><rect x="16" y="-7" width="54" height="4.6" fill="#FBD96B"/>
@@ -826,7 +1315,7 @@ body.idle .ctrl { opacity: 0; }
       m.pencil.setAttribute('transform', `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`);
       m.wdraw.setAttribute('stroke-dashoffset', (1 - t).toFixed(4));
       m.wst.forEach((g, i) => g.classList.toggle('on', l >= m.wLen[i] - 1)); };
-    m.reset = () => { cancelAnimationFrame(m.raf); cancelAnimationFrame(m.wraf); m.place(0); m.wplace(0); m.wst.forEach((g) => g.classList.remove('on')); m.pencil.classList.remove('on'); m.fire.classList.remove('on'); };
+    m.reset = () => { cancelAnimationFrame(m.raf); cancelAnimationFrame(m.wraf); m.place(0); m.wplace(0); m.wst.forEach((g) => g.classList.remove('on', 'next')); m.pencil.classList.remove('on'); m.fire.classList.remove('on'); };
     const anim = (key, dur, delay, step, done) => { let t0 = 0;
       const tick = (now) => { if (!t0) t0 = now + (RM ? 0 : delay); const t = Math.max(0, Math.min(1, (now - t0) / (RM ? 1 : dur))); step(ease(t), t);
         if (t < 1) m[key] = requestAnimationFrame(tick); else if (done) done(); };
@@ -834,13 +1323,22 @@ body.idle .ctrl { opacity: 0; }
     m.drive = (to, delay, done) => { cancelAnimationFrame(m.raf); const from = m.len, target = m.stopLen[to];
       anim('raf', Math.min(6500, 900 + Math.abs(target - from) * 2.4), delay, (e) => m.place(from + (target - from) * e), done); };
     // Writing Track: Ein Stift zeichnet die Route, die drei Stationen ploppen auf
-    m.write = (delay) => { cancelAnimationFrame(m.wraf);
+    // upto = bis zu welcher Station (Standard: ganze Route)
+    m.write = (delay, upto = WRITE.length - 1, done) => { cancelAnimationFrame(m.wraf); const frac = m.wLen[upto] / m.wtotal;
       setTimeout(() => m.pencil.classList.add('on'), RM ? 0 : delay);
-      anim('wraf', 2600, delay, (e) => m.wplace(e), () => setTimeout(() => m.pencil.classList.remove('on'), 500)); };
+      anim('wraf', 2600 * Math.max(frac, .4), delay, (e) => m.wplace(e * frac), () => { setTimeout(() => m.pencil.classList.remove('on'), 500); if (done) done(); }); };
+    m.el = el;
+    if (opt.kids) { // "32 Lernwege": Kinder an verschiedenen Stellen beider Routen
+      const r = rnd(9), pool = ANIMALS.slice().sort(() => r() - .5);
+      const pts = [...[.07, .19, .31, .45, .57, .7, .83, .94].map((f) => route.getPointAtLength(f * m.total)), ...[.28, .66].map((f) => wroute.getPointAtLength(f * m.wtotal))];
+      $('.kids', svg).innerHTML = pts.map((p, i) => `<g class="kidtok" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})" style="--kd:${(i * .23).toFixed(2)}s"><g class="kin"><g class="kbob"><circle r="25" fill="#FFFBF3" filter="url(#ds-${uid})"/><image href="${img(pool[i])}" x="-21" y="-21" width="42" height="42" clip-path="url(#kc-${uid})"/></g></g></g>`).join('');
+      m.kids = $$('.kidtok', svg);
+    }
     m.reset();
     return m;
   }
-  const maps = { m0: buildMap($('#m0'), { labels: true }), m4: buildMap($('#m4'), {}), m7: buildMap($('#m7'), { labels: true, fireOnPass: true }) };
+  const maps = { m0: buildMap($('#m0'), { labels: true }), m4: buildMap($('#m4'), {}), ma: buildMap($('#ma'), { labels: true, fireOnPass: true, kids: true }),
+    mr1: buildMap($('#mr1'), { labels: true, startLabel: 'Check-in = Pre-Test', fireAt: [705, 285] }) };
 
   /* ---------- Szene 1: Kinder ---------- */
   (() => {
@@ -887,6 +1385,144 @@ body.idle .ctrl { opacity: 0; }
       const on = corner ? !(x % 6 === 1 && y % 6 === 1) : r() > .5; return `<b class="${on ? '' : 'o'}"></b>`; }).join('');
   })();
 
+  /* ================= Neue Phasen: Szenen ================= */
+  const qrCells = (seed) => { const r = rnd(seed); return [...Array(81)].map((_, i) => { const x = i % 9, y = Math.floor(i / 9), corner = (x < 3 && y < 3) || (x > 5 && y < 3) || (x < 3 && y > 5);
+    const on = corner ? !(x % 6 === 1 && y % 6 === 1) : r() > .5; return `<b class="${on ? '' : 'o'}"></b>`; }).join(''); };
+  const ring = (n, cx, cy, rx, ry, spread) => [...Array(n)].map((_, i) => { const t = Math.PI * (-spread + i * 2 * spread / (n - 1)) - Math.PI / 2; return [cx + Math.cos(t) * rx, cy + Math.sin(t) * ry]; });
+  const countTo = (el, a, b, delay, dur) => { let t0 = 0; const tick = (now) => { if (!t0) t0 = now + (RM ? 0 : delay); const t = Math.max(0, Math.min(1, (now - t0) / (RM ? 1 : dur)));
+    el.textContent = Math.round(a + (b - a) * ease(t)); if (t < 1) requestAnimationFrame(tick); }; requestAnimationFrame(tick); };
+
+  // Tiere, die eine Weggabelung entlang laufen (Pfade mit class="fp")
+  function makeFlow(box, n, seed, period) {
+    const paths = $$('.fp', box), lens = paths.map((p) => p.getTotalLength()), r = rnd(seed);
+    const pool = ANIMALS.slice().sort(() => r() - .5);
+    const toks = [...Array(n)].map((_, k) => { const el = document.createElement('div'); el.className = 'flowtok'; el.innerHTML = `<img src="${img(pool[k % pool.length])}" alt="">`;
+      box.appendChild(el); return { el, path: k % paths.length, off: k / n }; });
+    let raf = 0, t0 = 0;
+    const tick = (now) => { if (!t0) t0 = now; const T = (now - t0) / period;
+      toks.forEach((o) => { const p = (T + o.off) % 1, pt = paths[o.path].getPointAtLength(p * lens[o.path]);
+        o.el.style.transform = `translate(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px)`; o.el.style.opacity = Math.min(1, p * 10, (1 - p) * 10); });
+      raf = requestAnimationFrame(tick); };
+    return { start() { if (!raf && !RM) { t0 = 0; raf = requestAnimationFrame(tick); } }, stop() { cancelAnimationFrame(raf); raf = 0; } };
+  }
+  // Sprechblasen, die zufällig über den Tieren aufploppen
+  function makePings(toks, pick, every) {
+    const r = rnd(5); let timer = 0;
+    const fire = () => { const t = toks[Math.floor(r() * toks.length)], b = $('.bub', t); b.textContent = pick(t, r);
+      t.classList.remove('go'); void t.offsetWidth; t.classList.add('go'); };
+    return { start() { if (!timer) { fire(); timer = setInterval(fire, every); } }, stop() { clearInterval(timer); timer = 0; } };
+  }
+
+  // R1: Lernzuwachs simple past
+  (() => {
+    const r = rnd(11), pool = ANIMALS.slice().sort(() => r() - .5);
+    $('#gToks').innerHTML = [...Array(DATA.n1Before)].map((_, k) => `<span class="tk ${k >= DATA.n1Now ? 'up' : ''}" style="--d:${(1.2 + (k - DATA.n1Now) * .09).toFixed(2)}s"><img src="${img(pool[k])}" alt=""></span>`).join('');
+    const sum = DATA.dist.reduce((a, b) => a + b, 0), C = ['#E8C3A8', '#F2E1C4', '#CFE3E0', '#93BFC4'];
+    $('#gBar').innerHTML = DATA.dist.map((n, k) => `<span style="--c:${C[k]};--w:${(n / sum * 100).toFixed(1)}%;--d:${(2.4 + k * .15).toFixed(2)}s">${n}</span>`).join('');
+    $('#gCap').innerHTML = `Heute: <b>${DATA.dist[2] + DATA.dist[3]} von ${sum} Kindern</b> sicher auf Niveau 3 oder 4.`;
+    $('#gAvg').textContent = `${DATA.avg[0]} → ${DATA.avg[1]}`;
+    $('#gImp').textContent = `${DATA.improved} Kinder`;
+  })();
+
+  // L1: zwei Zonen mit je 16 Kindern
+  const liveToks = (() => {
+    const r = rnd(17), pool = ANIMALS.slice().sort(() => r() - .5), box = $('#live');
+    box.insertAdjacentHTML('beforeend', pool.map((a, k) => { const z = k < 16 ? 0 : 1, j = k % 16;
+      return `<div class="ztok" data-z="${z}" style="left:${z * 392 + 30 + (j % 4) * 80 + (Math.floor(j / 4) % 2) * 14}px;top:${118 + Math.floor(j / 4) * 112}px"><img src="${img(a)}" alt=""><span class="bub"></span></div>`; }).join(''));
+    return $$('.ztok', box);
+  })();
+
+  // L2: Bausteine der Agentenlogik rund um den Coach
+  (() => {
+    const B = [['🎭', 'Rolle', 'Geduldiger Reisebegleiter', 62, 380], ['🎯', 'Lernziel', 'Was das Kind am Ende selbst kann', 150, 624], ['🔍', 'Diagnose', 'Fehler erkennen und zuordnen', 310, 650],
+      ['📶', 'Stufen', 'A bis D – leichter oder schwerer', 470, 624], ['🧩', 'Hilfen', 'Hilfebox mit Beispielen statt Lösung', 560, 380], ['🗣️', 'Sprache', 'Einfaches Englisch, Deutsch in Klammern', 470, 136],
+      ['🚧', 'Grenzen', 'Sagt nichts vor, bleibt beim Thema', 310, 110], ['🏅', 'Rückmeldung', 'Stempel fürs Kind, Daten für mich', 150, 136]];
+    $('#spokes').innerHTML = B.map((b, k) => `<path d="M380 310 L${b[4]} ${b[3]}" data-at="${k < 4 ? 1 : 2}" style="--d:${((k % 4) * .15).toFixed(2)}s"/>`).join('');
+    $('#arch').insertAdjacentHTML('beforeend', B.map((b, k) => `<div class="glass blk" data-at="${k < 4 ? 1 : 2}" style="left:${b[4] - 106}px;top:${b[3] - 46}px;--d:${((k % 4) * .15 + .1).toFixed(2)}s"><i>${b[0]}</i><div><b>${b[1]}</b><span>${b[2]}</span></div></div>`).join(''));
+  })();
+
+  // O1: Australien wird zur Insel, vier weitere Fächer tauchen auf
+  (() => {
+    const blob = (cx, cy, rad, seed) => { const r = rnd(seed), n = 9;
+      const P = [...Array(n)].map((_, k) => { const a = k / n * Math.PI * 2, q = rad * (.82 + r() * .3); return [cx + Math.cos(a) * q, cy + Math.sin(a) * q * .86]; });
+      let d = `M${P[0][0].toFixed(1)},${P[0][1].toFixed(1)}`;
+      for (let i = 0; i < n; i++) { const p0 = P[(i - 1 + n) % n], p1 = P[i], p2 = P[(i + 1) % n], p3 = P[(i + 2) % n];
+        d += ` C${(p1[0] + (p2[0] - p0[0]) / 6).toFixed(1)},${(p1[1] + (p2[1] - p0[1]) / 6).toFixed(1)} ${(p2[0] - (p3[0] - p1[0]) / 6).toFixed(1)},${(p2[1] - (p3[1] - p1[1]) / 6).toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`; }
+      return d + ' Z'; };
+    const ISL = [['📖', 'Deutsch', 'Insel der Argumente', 120, 120, ['#F6D3C6', '#E89C82', '#B0392E'], 1],
+      ['📐', 'Mathematik', 'Funktionen-Gebirge', 640, 120, ['#D5E5F4', '#8DB9E2', '#2C5E86'], 2],
+      ['⚖️', 'Wirtschaft-Politik', 'Stadt der Entscheidungen', 120, 480, ['#F7E6B0', '#E2C35F', '#A88418'], 3],
+      ['🧬', 'Biologie', 'Reise durch den Körper', 640, 480, ['#DCEACF', '#9CC184', '#4F7449'], 4]];
+    const label = (x, y, a, b) => { const w = Math.max(a.length * 10.5, b.length * 8.6) + 34;
+      return `<rect x="${(x - w / 2).toFixed(0)}" y="${y - 26}" width="${w.toFixed(0)}" height="54" rx="14" fill="#FFFBF3" opacity=".96"/>
+        <text x="${x}" y="${y - 3}" text-anchor="middle" font-family="Atkinson Hyperlegible" font-weight="700" font-size="19" fill="#1B2A55">${a}</text>
+        <text x="${x}" y="${y + 18}" text-anchor="middle" font-family="Atkinson Hyperlegible" font-size="15" fill="#3D4560">${b}</text>`; };
+    const loopPts = ISL.map((s) => [s[3], s[4]]);
+    const ringD = (() => { const P = [loopPts[0], loopPts[1], loopPts[3], loopPts[2]], n = 4; let d = `M${P[0][0]},${P[0][1]}`;
+      for (let i = 0; i < n; i++) { const p0 = P[(i - 1 + n) % n], p1 = P[i], p2 = P[(i + 1) % n], p3 = P[(i + 2) % n];
+        d += ` C${p1[0] + (p2[0] - p0[0]) / 6},${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6},${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]},${p2[1]}`; } return d; })();
+    $('#o1map').innerHTML = `<svg viewBox="0 0 760 620" aria-hidden="true">
+      <defs><filter id="ids" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#2C5E86" flood-opacity=".3"/></filter></defs>
+      <g fill="none" stroke="#FFFBF3" stroke-width="4" stroke-linecap="round" opacity=".6"><path d="M300 40 q15 -10 30 0 t30 0"/><path d="M40 300 q15 -10 30 0 t30 0"/><path d="M660 310 q15 -10 30 0 t30 0"/><path d="M420 590 q15 -10 30 0 t30 0"/></g>
+      <path class="ring" d="${ringD} Z" pathLength="1" fill="none" stroke="#FFFBF3" stroke-width="7" stroke-linecap="round" opacity=".9"/>
+      <g class="au"><g filter="url(#ids)"><path d="${LAND}" fill="#EBD9BC"/><path d="${TAS}" fill="#EBD9BC"/></g>
+        <path d="${LAND}" ${ss(.8)} fill="#EFC99A" filter="url(#ids)"/><path d="${LAND}" ${ss(.6)} fill="#E9A26C" filter="url(#ids)"/><path d="${LAND}" ${ss(.4)} fill="#C9643B" filter="url(#ids)"/></g>
+      <g class="aulab big">${pill(380, 578, 'Englisch · Australia Road Trip', '#FFFBF3', '#1B2A55', 20)}</g>
+      <g class="aulab small">${pill(380, 425, 'Englisch', '#FFFBF3', '#1B2A55', 17)}</g>
+      ${ISL.map((s, k) => `<g class="isl" style="--d:${(.9 + k * .22).toFixed(2)}s"><g filter="url(#ids)"><path d="${blob(s[3], s[4], 88, s[6] * 7)}" fill="${s[5][0]}"/></g>
+        <path d="${blob(s[3], s[4], 66, s[6] * 13)}" fill="${s[5][1]}" filter="url(#ids)"/><path d="${blob(s[3], s[4], 40, s[6] * 19)}" fill="${s[5][2]}" filter="url(#ids)"/>
+        <text x="${s[3]}" y="${s[4] + 14}" text-anchor="middle" font-size="38">${s[0]}</text>
+        ${label(s[3], s[4] + (s[4] < 300 ? 112 : -110), s[1], s[2])}</g>`).join('')}
+      <g class="principle">${pill(380, 565, 'Check-in → Lagerfeuer → Coach → Stempel', '#1B2A55', '#FFFFFF', 17)}</g>
+    </svg>`;
+  })();
+
+  // O2 + R2: Weggabelungen; O3: Weg durch die Jahrgänge; X1: Lagerfeuer
+  $('#qr2').innerHTML = qrCells(77);
+  const flows = { r2: makeFlow($('#fork'), 16, 23, 9000), o2: makeFlow($('#sub'), 15, 31, 7500) };
+  const jpath = $('#jpath'), jlen = jpath.getTotalLength(), walker = $('#walker');
+  const jAt = (f) => jpath.getPointAtLength(f * jlen);
+  (() => {
+    const box = $('#journey'), F = [.1, .37, .63, .9], T = ['💪 Stärken', '🚧 Baustellen', '✨ Interessen', '🎧 Lern-Vorlieben'];
+    box.insertAdjacentHTML('beforeend', F.map((f, k) => { const p = jAt(f); return `<div class="paper flag" style="left:${(p.x + 70).toFixed(0)}px;top:${(p.y + 46).toFixed(0)}px">Klasse ${7 + k}</div>
+      <div class="glass trait" data-k="${k}" style="left:${(k ? p.x - 210 : p.x + 40).toFixed(0)}px;top:${(k ? p.y - 34 : p.y - 64).toFixed(0)}px">${T[k]}</div>`; }).join(''));
+  })();
+  let walkRaf = 0;
+  const walkTo = (to, delay, dur) => { cancelAnimationFrame(walkRaf); let t0 = 0; const traits = $$('#journey .trait'), F = [.1, .37, .63, .9];
+    const tick = (now) => { if (!t0) t0 = now + (RM ? 0 : delay); const t = Math.max(0, Math.min(1, (now - t0) / (RM ? 1 : dur))), f = .02 + (to - .02) * ease(t), p = jAt(f);
+      walker.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px)`;
+      traits.forEach((el, k) => el.classList.toggle('on', f >= F[k] - .01));
+      if (t < 1) walkRaf = requestAnimationFrame(tick); };
+    walkRaf = requestAnimationFrame(tick); };
+  const campToks = (() => {
+    const sit = ['puppy', 'koala', 'fox', 'panda', 'tiger', 'otter', 'penguin', 'lion', 'bunny', 'dolphin', 'hedgehog'];
+    $('#camp2').insertAdjacentHTML('beforeend', ring(sit.length, 342, 236, 290, 172, .85).map((p, i) =>
+      `<div class="sit tok" style="--x:${p[0].toFixed(0)}px;--y:${p[1].toFixed(0)}px;--i:${i}"><img src="${img(sit[i])}" alt=""><span class="bub"></span></div>`).join(''));
+    return $$('#camp2 .sit');
+  })();
+  const pings = {
+    l1: makePings(liveToks, (t, r) => { const E = t.dataset.z === '0' ? ['💬', '⭐', '✅', '🔁', '🏅'] : ['💬', '✍️', '📈', '⭐', '🏅']; return E[Math.floor(r() * E.length)]; }, 650),
+    x1: makePings(campToks, (t, r) => ['💬', '😊', '🙋', '💡', '❤️'][Math.floor(r() * 5)], 900),
+  };
+  // Ankommen: Die Reise läuft in einer ruhigen Schleife (~24 s), damit das Standbild lebendig bleibt
+  const arrive = (() => {
+    const m = maps.ma; let timers = [], on = false;
+    const later = (fn, ms) => timers.push(setTimeout(fn, RM ? 0 : ms));
+    const cycle = (first) => {
+      timers.forEach(clearTimeout); timers = [];
+      m.el.classList.remove('rest');
+      m.drive(7, first ? 1800 : 700);
+      m.write(first ? 3400 : 2300);
+      m.kids.forEach((k, i) => later(() => k.classList.add('on'), (first ? 9000 : 7900) + i * 280));
+      if (RM) return;
+      later(() => m.el.classList.add('rest'), first ? 22000 : 20900);
+      later(() => { m.reset(); m.kids.forEach((k) => k.classList.remove('on')); cycle(false); }, first ? 23200 : 22100);
+    };
+    return { start() { if (on) return; on = true; m.reset(); m.kids.forEach((k) => k.classList.remove('on')); cycle(true); },
+      stop() { on = false; timers.forEach(clearTimeout); timers = []; m.reset(); m.el.classList.remove('rest'); m.kids.forEach((k) => k.classList.remove('on')); } };
+  })();
+  const LOOPS = { a1: arrive, r2: flows.r2, o2: flows.o2, l1: pings.l1, x1: pings.x1 };
+
   /* ---------- Szenen-Effekte je Schritt ---------- */
   let timerRaf = 0;
   const FX = {
@@ -894,7 +1530,15 @@ body.idle .ctrl { opacity: 0; }
     s3: (st) => { cancelAnimationFrame(timerRaf); const t = $('#timer'); t.textContent = '0:00'; if (st !== 2) return;
       const t0 = performance.now() + 600; const tick = (now) => { const s = Math.max(0, Math.min(30, Math.round((now - t0) / 2200 * 30))); t.textContent = `0:${String(s).padStart(2, '0')}`; if (s < 30) timerRaf = requestAnimationFrame(tick); }; timerRaf = requestAnimationFrame(tick); },
     s4: (st) => { maps.m4.reset(); if (st === 2) { maps.m4.drive(3, 1400); maps.m4.write(3200); } },
-    s7: (st, fresh) => { if (fresh) { maps.m7.reset(); maps.m7.drive(7, 1800); maps.m7.write(3400); } },
+    a1: () => arrive.start(),
+    r1: (st) => { const m = maps.mr1, n = $('#gN1');
+      if (st === 0) { n.textContent = DATA.n1Before; m.reset(); m.drive(3, 1500, () => m.fire.classList.add('on')); m.write(3000, 1, () => m.wst[2].classList.add('on', 'next')); }
+      else countTo(n, DATA.n1Before, DATA.n1Now, 1300, 1400); },
+    r2: (st) => (st === 1 ? flows.r2.start() : flows.r2.stop()),
+    l1: () => pings.l1.start(),
+    o2: (st) => (st === 1 ? flows.o2.start() : flows.o2.stop()),
+    o3: (st, fresh) => { if (st === 0) walkTo(.93, 900, 6500); else if (fresh) walkTo(.93, 0, 1); },
+    x1: () => pings.x1.start(),
   };
 
   /* ---------- Navigation ---------- */
@@ -913,10 +1557,15 @@ body.idle .ctrl { opacity: 0; }
     $$('[data-at]', s).forEach((e) => { const at = +e.dataset.at, until = e.dataset.until == null ? 99 : +e.dataset.until;
       e.classList.toggle('on', st >= at && st <= until); e.classList.toggle('gone', st > until); });
     document.body.classList.toggle('sol', st >= +s.dataset.sol);
-    $$('.road-stop').forEach((b, k) => { b.classList.toggle('now', k === i); b.classList.toggle('done', k < i); });
-    $('#roadDone').style.width = `calc((100% - 44px) * ${i / last})`;
-    $('#roadVan').style.left = pos(i);
-    $$('.hl').forEach((g) => { g.style.transform = `translateX(${-i * +g.dataset.k}px)`; });
+    Object.entries(LOOPS).forEach(([id, l]) => { if (id !== s.id) l.stop(); });
+    // Kopfzeile: beim Phasenwechsel kurz ausblenden und neu aufbauen
+    const p = phaseOf(i);
+    if (p !== roadPhase) {
+      if (!roadPhase) { buildRoad(p); updateRoad(i); }
+      else { road.classList.add('swap'); setTimeout(() => { buildRoad(p); updateRoad(cur); requestAnimationFrame(() => road.classList.remove('swap')); }, 400); }
+    } else updateRoad(i);
+    $$('button', phases).forEach((b) => { b.classList.toggle('now', +b.dataset.p === p); b.classList.toggle('done', +b.dataset.p < p); });
+    $$('.hl').forEach((g) => { g.style.transform = `translateX(${(-i * 7 / (slides.length - 1)) * +g.dataset.k}px)`; });
     $('#count').textContent = `${i + 1} / ${slides.length}`;
     $('#dots').innerHTML = [...Array(steps(i))].map((_, k) => `<b class="${k <= st ? 'on' : ''}"></b>`).join('');
     $$('#ovGrid button').forEach((b, k) => b.classList.toggle('now', k === i));
@@ -929,7 +1578,8 @@ body.idle .ctrl { opacity: 0; }
 
   /* Übersicht */
   const ov = $('#ov');
-  $('#ovGrid').innerHTML = slides.map((s, i) => `<button type="button" data-i="${i}"><small>${i ? i + ' · ' : ''}${STOPS[i].replace('&', '&amp;')}</small>${s.dataset.title}</button>`).join('');
+  $('#ovGrid').innerHTML = PHASES.map((t, pk) => `<div class="ov-ph"><h4>${pk + 1} · ${t}</h4><div class="ov-row">${inPhase(pk + 1).map((i, k) =>
+    `<button type="button" data-i="${i}"><small>${pk === 3 ? (k ? k + ' · ' : '') + esc(STOPS[k]) : esc(slides[i].dataset.stop)}</small>${slides[i].dataset.title}</button>`).join('')}</div></div>`).join('');
   $$('#ovGrid button').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); toggleOv(false); go(+b.dataset.i, 0); }));
   const toggleOv = (on = !ov.classList.contains('open')) => { ov.classList.toggle('open', on); ov.setAttribute('aria-hidden', String(!on)); };
   ov.addEventListener('click', (e) => { if (e.target === ov) toggleOv(false); });
@@ -945,7 +1595,8 @@ body.idle .ctrl { opacity: 0; }
     else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(k)) { e.preventDefault(); if (!ov.classList.contains('open')) prev(); }
     else if (k === 'Home') go(0, 0);
     else if (k === 'End') go(slides.length - 1, 0);
-    else if (/^[0-7]$/.test(k)) { toggleOv(false); go(+k, 0); }
+    else if (e.shiftKey && /^Digit[1-6]$/.test(e.code)) { toggleOv(false); go(inPhase(+e.code.slice(5))[0], 0); }
+    else if (/^[0-9]$/.test(k)) { const idx = inPhase(phaseOf(cur)); if (+k < idx.length) { toggleOv(false); go(idx[+k], 0); } }
     else if (k === 'o' || k === 'O') toggleOv();
     else if (k === 'Escape') toggleOv(false);
     else if (k === 'f' || k === 'F') { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.(); }
@@ -956,7 +1607,7 @@ body.idle .ctrl { opacity: 0; }
   const wake = () => { document.body.classList.remove('idle'); clearTimeout(idleT); idleT = setTimeout(() => document.body.classList.add('idle'), 2500); };
   addEventListener('mousemove', wake); wake();
 
-  const m = /^#(\d)(?:\.(\d))?$/.exec(location.hash);
+  const m = /^#(\d+)(?:\.(\d))?$/.exec(location.hash);
   cur = -1;
   requestAnimationFrame(() => go(m ? +m[1] : 0, m && m[2] ? +m[2] : 0));
 })();
