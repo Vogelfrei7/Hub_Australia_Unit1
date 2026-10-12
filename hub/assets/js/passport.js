@@ -1,6 +1,6 @@
 // Pass v2 (passport.html): Steckbrief, Stempel nach Routen, Bonus, Achievements.
-import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, avatarSrc, UI, shownText } from './core.js?v=3.5';
-import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=3.5';
+import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, avatarSrc, UI, shownText } from './core.js?v=3.6';
+import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=3.6';
 
 const app = document.getElementById('app');
 let cfg; let trav; let pr;

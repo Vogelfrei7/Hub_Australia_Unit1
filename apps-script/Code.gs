@@ -165,9 +165,40 @@ function readEvents_() {
   return out;
 }
 
-// Klassen-Abgaben ohne Gäste (Codes GAST-…): für Auswertung, Dashboard und KI
+// Klassen-Abgaben ohne Gäste (Codes GAST-…) und ohne Testcodes der Lehrkraft: für Auswertung, Dashboard und KI.
+// Die Zeilen bleiben im Sheet, sie werden nur nicht mitgezählt.
 function classEvents_() {
-  return readEvents_().filter(function (e) { return e.code.indexOf('GAST-') !== 0; });
+  var skip = {}; excludedCodes_().forEach(function (c) { skip[c] = true; });
+  return readEvents_().filter(function (e) { return e.code.indexOf('GAST-') !== 0 && !skip[e.code]; });
+}
+
+function excludedCodes_() {
+  return String(PropertiesService.getScriptProperties().getProperty('EXCLUDE_CODES') || '').toUpperCase().split(/[\s,;]+/).filter(Boolean);
+}
+function saveExcluded_(list) {
+  var uniq = list.filter(function (c, i) { return c && list.indexOf(c) === i; }).sort();
+  PropertiesService.getScriptProperties().setProperty('EXCLUDE_CODES', uniq.join(','));
+  return uniq;
+}
+
+// Dashboard: einen Code als Testeingabe aus der Auswertung nehmen
+function excludeCode(code) {
+  if (!isOwner_()) throw new Error('Kein Zugriff');
+  code = String(code || '').trim().toUpperCase();
+  if (!code) throw new Error('Kein Code');
+  saveExcluded_(excludedCodes_().concat([code]));
+  return getDashboardData();
+}
+
+// Menü: Liste der Testcodes ansehen und bearbeiten
+function editExcludedCodes() {
+  var ui = SpreadsheetApp.getUi();
+  var now = excludedCodes_();
+  var r = ui.prompt('Testcodes ausschließen', 'Diese Codes zählen nicht in Dashboard und KI-Auswertung (die Zeilen bleiben im Sheet).\n' +
+    'Codes mit Komma trennen. Leer lassen = alle wieder einbeziehen.\n\nAktuell: ' + (now.length ? now.join(', ') : 'keine'), ui.ButtonSet.OK_CANCEL);
+  if (r.getSelectedButton() !== ui.Button.OK) return;
+  var list = saveExcluded_(r.getResponseText().toUpperCase().split(/[\s,;]+/).filter(Boolean));
+  ui.alert('Gespeichert: ' + (list.length ? list.join(', ') : 'keine Testcodes') + '.');
 }
 
 function num_(v) { var n = Number(String(v).trim().replace(',', '.')); return isNaN(n) ? 0 : n; }
@@ -190,6 +221,7 @@ function onOpen() {
   SpreadsheetApp.getUi().createMenu('Road Trip')
     .addItem('Dashboard öffnen', 'openDashboard')
     .addItem('Auswertung aktualisieren', 'refreshAnalysis')
+    .addItem('Testcodes ausschließen …', 'editExcludedCodes')
     .addItem('KI-Schlüssel hinterlegen', 'setApiKey')
     .addItem('Formular-Konfiguration anzeigen (entry-IDs)', 'showFormConfig')
     .addSeparator()
@@ -549,10 +581,34 @@ function openDashboard() {
   SpreadsheetApp.getUi().showModalDialog(html, 'Klassen-Diagnostik');
 }
 
+// Station für die Kinder offen? ("soon" mit "opensAt" öffnet sich ab diesem Zeitpunkt selbst, wie auf der Karte)
+function stationOpen_(def) {
+  if (!def || def.status !== 'soon') return true;
+  return !!def.opensAt && Date.now() >= Date.parse(def.opensAt);
+}
+
+// Art einer Station: Grammatik (Blatt + Üben), Schreiben (1. Fassung + Endfassung, "drafts") oder Übungsseite ohne Coach ("page")
+function topicKind_(def) { return def.drafts ? 'draft' : def.page ? 'page' : 'grammar'; }
+
+// Anzeigename eines Schritts – beim Schreiben heißen W1/W2 anders als bei der Grammatik
+function stepLabel_(kind, step) {
+  if (kind === 'draft') return { sheet: '1. Fassung', extra: 'Endfassung' }[step] || step;
+  if (kind === 'page') return { practice: 'Durchgang' }[step] || step;
+  return { baseline: 'Check-in', sheet: 'Arbeitsblatt', practice: 'Üben', extra: 'Extra', final: 'Final check' }[step] || step;
+}
+
 // Liefert alle Kennzahlen für Dashboard.html. Allgemein: arbeitet mit jedem Thema aus config.topics.
 function getDashboardData() {
   if (!isOwner_()) throw new Error('Kein Zugriff');
-  var cfg = loadConfig_();
+  var out = analysis_(loadConfig_());
+  out.lastReport = lastAiReport_();
+  out.klass = { camps: campList_(), today: classState_().today };
+  out.aiReady = !!PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
+  return JSON.parse(JSON.stringify(out));
+}
+
+// Die eigentliche Auswertung (ohne Zugriffsprüfung): Dashboard und KI-Bericht rechnen mit denselben Zahlen.
+function analysis_(cfg) {
   var events = classEvents_().filter(function (e) { return stepInfo_(cfg, e.station); });
   events.sort(function (a, b) { return String(a.ts) < String(b.ts) ? -1 : 1; });
 
@@ -560,7 +616,8 @@ function getDashboardData() {
   var codes = {};
   events.forEach(function (e) {
     var si = stepInfo_(cfg, e.station);
-    var t = topics[si.topicId] || (topics[si.topicId] = { id: si.topicId, name: si.topic.name, labels: si.topic.areaLabels || {}, areas: si.topic.areas || [], kids: {} });
+    var t = topics[si.topicId] || (topics[si.topicId] = { id: si.topicId, name: si.topic.name, place: si.topic.place, kind: topicKind_(si.topic),
+      labels: si.topic.areaLabels || {}, areas: si.topic.areas || [], kids: {} });
     var k = t.kids[e.code] || (t.kids[e.code] = { code: e.code, kurs: e.kurs, attempts: [] });
     k.attempts.push({ kind: si.kind, step: e.station, n: e.n, h: e.h, f: e.f, ts: e.ts });
     var c = codes[e.code] || (codes[e.code] = { code: e.code, kurs: e.kurs, last: e.ts, count: 0 });
@@ -568,194 +625,277 @@ function getDashboardData() {
   });
 
   var bestOf = function (list) { return list.reduce(function (b, a) { return !b || a.n > b.n ? a : b; }, null); };
+  var lastOf = function (list) { return list.length ? list[list.length - 1] : null; };
   var out = { generated: new Date().toISOString(), classSizes: cfg.classSizes || {}, topics: [], kids: [], recommendations: [] };
-  var allCurrent = [];
+  var kidGrowth = {};   // je Kind über alle Grammatik-Themen: Summe Startwert / Summe jetzt
+  var sum = { pairs: 0, pairsFixed: 0, growthKids: 0, growthUp: 0, growthBase: 0, growthNow: 0, improved: 0, compared: 0, drafts: 0, finals: 0, draftsBetter: 0, draftsCompared: 0 };
+  // Reihenfolge wie auf der Karte (Grammatik, dann Schreiben)
+  var order = []; (cfg.routes || []).forEach(function (r) { order = order.concat(r.stops); });
 
-  Object.keys(topics).forEach(function (tid) {
+  Object.keys(topics).sort(function (a, b) { return order.indexOf(a) - order.indexOf(b); }).forEach(function (tid) {
     var t = topics[tid];
-    var steps = { baseline: 0, sheet: 0, practice: 0, extra: 0, final: 0 };
+    var kind = t.kind;
+    var sheetKinds = kind === 'draft' ? ['sheet'] : kind === 'page' ? [] : ['sheet', 'extra'];    // Papier
+    var followKinds = kind === 'draft' ? ['extra'] : ['practice', 'final'];                      // danach geprüft
+    var steps = kind === 'draft' ? { sheet: 0, extra: 0 } : kind === 'page' ? { practice: 0 } : { baseline: 0, sheet: 0, practice: 0, extra: 0, final: 0 };
     var levels = { 1: 0, 2: 0, 3: 0, 4: 0 };
     var area = {};
-    t.areas.forEach(function (a) { area[a] = { code: a, label: t.labels[a] || a, now: [], ever: [], unchecked: [] }; });
+    t.areas.forEach(function (a) { area[a] = { code: a, label: t.labels[a] || a, now: [], ever: [], unchecked: [], start: [] }; });
+    var lastWork = '';   // letzte Abgabe nach dem Check-in: je jünger, desto aktueller die Station
     var kidRows = [];
     var improved = 0; var compared = 0; var manyHelps = [];
     var gBase = 0; var gNow = 0; var gN = 0; var gUp = 0;   // Lernzuwachs gegenüber dem Check-in
 
     Object.keys(t.kids).forEach(function (code) {
       var k = t.kids[code];
-      var by = function (kind) { return k.attempts.filter(function (a) { return a.kind === kind; }); };
+      var by = function (s) { return k.attempts.filter(function (a) { return a.kind === s; }); };
+      var inKinds = function (list) { return function (a) { return list.indexOf(a.kind) >= 0; }; };
       var base = by('baseline')[0] || null;                                   // erster Check-in = Startwert
-      var sheetsAll = by('sheet').concat(by('extra'));                        // weißes ODER goldenes Blatt
-      var sheet = bestOf(sheetsAll); var practice = bestOf(by('practice')); var final = bestOf(by('final'));
+      var sheetsAll = k.attempts.filter(inKinds(sheetKinds));
+      var sheet = kind === 'draft' ? (sheetsAll[0] || null) : bestOf(sheetsAll);   // Schreiben: die erste Fassung zählt
+      var practice = kind === 'draft' ? null : bestOf(by('practice'));
+      var final = kind === 'draft' ? lastOf(by('extra')) : kind === 'grammar' ? bestOf(by('final')) : null;   // Schreiben: neueste Endfassung
       var distinctSheets = {}; sheetsAll.forEach(function (a) { distinctSheets[a.step] = true; });
-      var extra = Object.keys(distinctSheets).length >= 2 || by('practice').length >= 2;
-      if (base) steps.baseline++; if (sheet) steps.sheet++; if (practice) steps.practice++; if (extra) steps.extra++; if (final) steps.final++;
+      var extra = kind === 'grammar' && (Object.keys(distinctSheets).length >= 2 || by('practice').length >= 2);
+      Object.keys(steps).forEach(function (s) {
+        var has = s === 'baseline' ? base : s === 'sheet' ? sheet : s === 'practice' ? practice : s === 'final' ? final : kind === 'draft' ? final : extra;
+        if (has) steps[s]++;
+      });
       var work = k.attempts.filter(function (a) { return a.kind !== 'baseline'; });
-      var digital = work.filter(function (a) { return a.kind === 'practice' || a.kind === 'final'; });
+      var followed = k.attempts.filter(inKinds(followKinds));
       var latest = k.attempts[k.attempts.length - 1];
-      var current = digital.length ? digital[digital.length - 1].n : (sheet ? sheet.n : latest.n);
+      var current = followed.length ? followed[followed.length - 1].n : (sheet ? sheet.n : latest.n);
       levels[current] = (levels[current] || 0) + 1;
-      allCurrent.push(current);
-      if (sheet && practice) { compared++; if (practice.n > sheet.n) improved++; }
-      if (base && work.length) { gN++; gBase += base.n; gNow += current; if (current > base.n) gUp++; }
-      if (k.attempts.some(function (a) { return a.h >= 3; })) manyHelps.push(code);
-      latest.f.forEach(function (c) { if (area[c]) area[c].now.push(code); });
-      var ever = {};
-      k.attempts.forEach(function (a) { a.f.forEach(function (c) { ever[c] = true; }); });
-      Object.keys(ever).forEach(function (c) { if (area[c]) area[c].ever.push(code); });
-      // Blinde Flecken: Fehler im Arbeitsblatt, danach noch nicht digital geübt
+      var later = kind === 'draft' ? final : practice;
+      if (sheet && later) { compared++; if (later.n > sheet.n) improved++; }
+      if (base && work.length) {
+        gN++; gBase += base.n; gNow += current; if (current > base.n) gUp++;
+        var kg = kidGrowth[code] || (kidGrowth[code] = { base: 0, now: 0 }); kg.base += base.n; kg.now += current;
+      }
+      if (kind === 'grammar' && k.attempts.some(function (a) { return a.h >= 3; })) manyHelps.push(code);
+      // Fehlerbereiche: zählen erst, wenn das Kind an der Station gearbeitet hat. Nur Check-in = Vorwissen ("start").
+      if (work.length) {
+        if (String(work[work.length - 1].ts) > lastWork) lastWork = String(work[work.length - 1].ts);
+        work[work.length - 1].f.forEach(function (c) { if (area[c]) area[c].now.push(code); });
+        var ever = {};
+        k.attempts.forEach(function (a) { a.f.forEach(function (c) { ever[c] = true; }); });
+        Object.keys(ever).forEach(function (c) { if (area[c]) area[c].ever.push(code); });
+      } else latest.f.forEach(function (c) { if (area[c]) area[c].start.push(code); });
+      // Blinde Flecken: Fehler auf Papier, danach noch nicht geübt bzw. noch keine Endfassung
       var lastSheetIdx = -1;
-      k.attempts.forEach(function (a, i) { if (a.kind === 'sheet' || a.kind === 'extra') lastSheetIdx = i; });
-      var practicedAfter = k.attempts.some(function (a, i) { return i > lastSheetIdx && (a.kind === 'practice' || a.kind === 'final'); });
-      if (lastSheetIdx >= 0 && !practicedAfter) k.attempts[lastSheetIdx].f.forEach(function (c) { if (area[c]) area[c].unchecked.push(code); });
-      var next = !sheet ? 'Arbeitsblatt' : !practice ? 'Üben' : current <= 2 ? 'noch eine Übungsrunde' : current === 3 ? 'optional: Extra' : 'fertig';
+      k.attempts.forEach(function (a, i) { if (sheetKinds.indexOf(a.kind) >= 0) lastSheetIdx = i; });
+      var checkedAfter = k.attempts.some(function (a, i) { return i > lastSheetIdx && followKinds.indexOf(a.kind) >= 0; });
+      if (lastSheetIdx >= 0 && !checkedAfter) k.attempts[lastSheetIdx].f.forEach(function (c) { if (area[c]) area[c].unchecked.push(code); });
+      var next = kind === 'draft' ? (!sheet ? '1. Fassung' : !final ? 'Endfassung' : 'fertig')
+        : kind === 'page' ? 'fertig'
+        : !sheet ? 'Arbeitsblatt' : !practice ? 'Üben' : current <= 2 ? 'noch eine Übungsrunde' : current === 3 ? 'optional: Extra' : 'fertig';
       kidRows.push({
         code: code, kurs: k.kurs, base: base ? base.n : null, sheet: sheet ? sheet.n : null, practice: practice ? practice.n : null, final: final ? final.n : null,
-        extra: extra, current: current, stars: (sheet ? 1 : 0) + (practice ? 1 : 0) + (extra ? 1 : 0),
-        open: latest.f.map(function (c) { return t.labels[c] || c; }), next: next,
-        trend: sheet && practice ? practice.n - sheet.n : null,
-        attempts: k.attempts.map(function (a) { return { step: a.step, kind: a.kind, n: a.n, h: a.h, f: a.f.map(function (c) { return t.labels[c] || c; }), ts: a.ts }; })
+        extra: extra, current: current, stars: (sheet ? 1 : 0) + (later ? 1 : 0) + (extra ? 1 : 0),
+        open: (work.length ? work[work.length - 1] : latest).f.map(function (c) { return t.labels[c] || c; }), next: next,
+        trend: sheet && later ? later.n - sheet.n : null,
+        attempts: k.attempts.map(function (a) { return { step: a.step, kind: a.kind, label: stepLabel_(kind, a.kind), n: a.n, h: a.h, fc: a.f, f: a.f.map(function (c) { return t.labels[c] || c; }), ts: a.ts }; })
       });
     });
 
-    var n = kidRows.length;
+    var workKids = kidRows.filter(function (r) { return r.attempts.some(function (a) { return a.kind !== 'baseline'; }); }).length;
+    // Im Unterricht behandelt = Station ist offen und es gibt Abgaben nach dem Check-in. Nur diese Stationen bekommen Empfehlungen.
+    var treated = workKids > 0 && (stationOpen_(cfg.topics[tid]) || workKids >= 3);
+    var n = workKids;
     var areaList = t.areas.map(function (a) { return area[a]; }).map(function (a) {
-      return { code: a.code, label: a.label, now: a.now.length, ever: a.ever.length, resolved: a.ever.length - a.now.length, unchecked: a.unchecked.length, nowCodes: a.now, uncheckedCodes: a.unchecked };
+      return { code: a.code, label: a.label, now: a.now.length, ever: a.ever.length, resolved: a.ever.length - a.now.length, unchecked: a.unchecked.length, start: a.start.length, nowCodes: a.now, uncheckedCodes: a.unchecked };
     });
+    if (treated && kind !== 'page') areaList.forEach(function (a) { sum.pairs += a.ever; sum.pairsFixed += a.resolved; });
     var growth = gN ? { kids: gN, base: round1_(gBase / gN), now: round1_(gNow / gN), up: gUp } : null;
-    out.topics.push({ id: tid, name: t.name, kids: n, steps: steps, levels: levels, areas: areaList, improved: improved, compared: compared, growth: growth, manyHelps: manyHelps, rows: kidRows });
-    if (growth && growth.kids >= 3) out.recommendations.push({ type: 'gut', topic: t.name, text: 'Lernzuwachs (Entwicklung seit dem Check-in): Ø ' + String(growth.base).replace('.', ',') + ' → ' + String(growth.now).replace('.', ',') + ' (' + growth.up + ' von ' + growth.kids + ' Kindern verbessert).', action: 'Hinweis: Check-in und Üben nutzen unterschiedliche Aufgabenformate – der genaue Vorher-Nachher-Vergleich folgt mit dem Post-Test.' });
+    var stepList = Object.keys(steps).map(function (s) { return { label: stepLabel_(kind, s), v: steps[s] }; });
+    out.topics.push({ id: tid, name: t.name, place: t.place, kind: kind, kids: kidRows.length, workKids: workKids, treated: treated, lastWork: lastWork, steps: steps, stepList: stepList, levels: levels, areas: areaList,
+      improved: improved, compared: compared, growth: growth, manyHelps: manyHelps, rows: kidRows });
+    if (growth) { sum.growthKids += growth.kids; sum.growthUp += growth.up; sum.growthBase += gBase; sum.growthNow += gNow; }
+    if (kind === 'grammar') { sum.improved += improved; sum.compared += compared; }
+    if (kind === 'draft') { sum.drafts += steps.sheet; sum.finals += steps.extra; sum.draftsBetter += improved; sum.draftsCompared += compared; }
 
-    // Empfehlungen für die nächsten Stunden
+    // Empfehlungen, je Station gebündelt. n = Zahl der betroffenen Kinder, p = Gewicht innerhalb der Kategorie (danach sortiert das Dashboard)
+    var label = (t.place ? t.place + ' · ' : '') + t.name.replace(/\s+–.*$/, '');
+    var rec = function (type, p, n2, text, action, list) { if (treated) out.recommendations.push({ type: type, topic: label, kind: kind, p: p, n: n2, r: lastWork, text: text, action: action, codes: list && list.length ? list : null }); };
+    if (growth && growth.kids >= 3) rec('gut', 3, growth.up, 'Lernzuwachs seit dem Check-in: Ø Niveau ' + String(growth.base).replace('.', ',') + ' → ' + String(growth.now).replace('.', ',') +
+      ' (' + growth.up + ' von ' + growth.kids + ' Kindern verbessert).', 'Vorsichtig deuten (unterschiedliche Aufgabenformate).');
+    if (compared >= 3) rec('gut', 3, improved, kind === 'draft' ? improved + ' von ' + compared + ' Kindern: Endfassung besser als die 1. Fassung.' : improved + ' von ' + compared + ' Kindern sind beim Üben besser als auf dem Blatt.',
+      kind === 'draft' ? 'Das Feedback zur 1. Fassung wirkt.' : 'Das adaptive Üben wirkt.');
     areaList.forEach(function (a) {
       var pct = n ? a.now / n : 0;
-      if (n >= 3 && pct >= 0.4) out.recommendations.push({ type: 'plenum', topic: t.name, text: a.label + ': ' + a.now + ' von ' + n + ' Kindern haben hier noch Fehler.', action: 'Im Plenum wiederholen (kurze Regel + gemeinsame Übung).' });
-      else if (a.now >= 2) out.recommendations.push({ type: 'gruppe', topic: t.name, text: a.label + ': ' + a.now + ' Kinder.', action: 'Kleingruppe bilden mit:', codes: a.nowCodes });
-      if (a.unchecked >= 2) out.recommendations.push({ type: 'blind', topic: t.name, text: a.label + ': ' + a.unchecked + ' Kinder hatten Fehler auf dem Blatt, haben aber noch nicht geübt.', action: 'Diese Kinder zuerst zum Üben schicken.', codes: a.uncheckedCodes });
-      if (n >= 3 && a.ever >= 2 && a.now === 0) out.recommendations.push({ type: 'gut', topic: t.name, text: a.label + ': Fehler bei ' + a.ever + ' Kindern – inzwischen alle behoben.', action: 'Das Üben wirkt. Kein weiterer Bedarf.' });
-      if (n >= 5 && a.ever === 0) out.recommendations.push({ type: 'gut', topic: t.name, text: a.label + ': bei keinem Kind Fehler.', action: 'Sitzt. Kann im Test vorausgesetzt werden.' });
+      var still = kind === 'page' ? ' hatten hier beim ersten Versuch Fehler.' : ' haben hier noch Fehler.';
+      if (n >= 3 && pct >= 0.4) rec('plenum', 2, a.now, a.label + ': ' + a.now + ' von ' + n + ' Kindern' + still, kind === 'grammar' ? 'Im Plenum wiederholen (kurze Regel + gemeinsame Übung).' : 'Gemeinsam an einem Beispieltext besprechen.');
+      else if (a.now >= 2) rec('gruppe', 2, a.now, a.label + ': ' + a.now + ' Kinder.', 'Kleingruppe bilden mit:', a.nowCodes);
     });
-    var noPractice = kidRows.filter(function (r) { return r.sheet !== null && r.practice === null; }).length;
-    if (noPractice >= 3) out.recommendations.push({ type: 'blind', topic: t.name, text: noPractice + ' Kinder haben das Arbeitsblatt, aber noch keine Übung.', action: 'Zeit für den digitalen Schritt einplanen.' });
-    if (manyHelps.length) out.recommendations.push({ type: 'gruppe', topic: t.name, text: manyHelps.length + ' Kinder brauchten viele Hilfen.', action: 'Kurz persönlich nachfragen bei:', codes: manyHelps });
-    if (compared >= 3) out.recommendations.push({ type: 'gut', topic: t.name, text: improved + ' von ' + compared + ' Kindern sind beim Üben besser als auf dem Arbeitsblatt.', action: 'Lernzuwachs durch das adaptive Üben.' });
+    var resolved = areaList.filter(function (a) { return n >= 3 && a.ever >= 2 && a.now === 0; });
+    if (resolved.length) rec('gut', 2, resolved.reduce(function (m, a) { return Math.max(m, a.ever); }, 0), 'Fehler gemacht, inzwischen alle behoben: ' +
+      resolved.map(function (a) { return a.label + ' (' + a.ever + ' Kinder)'; }).join(' · ') + '.', 'Kein weiterer Bedarf.');
+    var clean = areaList.filter(function (a) { return n >= 5 && a.ever === 0; });
+    if (clean.length) rec('gut', 1, n, 'Bei keinem Kind Fehler: ' + clean.map(function (a) { return a.label; }).join(' · ') + '.', 'Sitzt.');
+    // Blinder Fleck je Station: Papier gemacht, aber noch nicht geprüft – mit den Fehlerbereichen, die dadurch ungeprüft sind
+    var waiting = kidRows.filter(function (r) { return r.sheet !== null && (kind === 'draft' ? r.final === null : r.practice === null); });
+    var open2 = areaList.filter(function (a) { return a.unchecked; }).map(function (a) { return a.label + ': ' + a.unchecked; });
+    if (kind !== 'page' && waiting.length >= 2) rec('blind', 2, waiting.length, waiting.length + ' Kinder haben ' + (kind === 'draft' ? 'eine 1. Fassung, aber noch keine Endfassung.' : 'das Arbeitsblatt, aber noch keine Übung.') +
+      (open2.length ? ' Ungeprüft bleiben: ' + open2.join(' · ') + '.' : ''), kind === 'draft' ? 'Zuerst an die Endfassung setzen:' : 'Zuerst zum Üben schicken:', waiting.map(function (r) { return r.code; }));
+    if (manyHelps.length) rec('gruppe', 1, manyHelps.length, manyHelps.length + ' Kinder brauchten beim Üben viele Hilfen.', 'Kurz persönlich nachfragen bei:', manyHelps);
   });
 
   out.kids = Object.keys(codes).map(function (c) { return codes[c]; });
+  var classSize = Object.keys(out.classSizes).reduce(function (s, k) { return s + out.classSizes[k]; }, 0);
   out.kpi = {
-    kids: out.kids.length,
-    submissions: events.length,
-    avgLevel: allCurrent.length ? round1_(allCurrent.reduce(function (s, x) { return s + x; }, 0) / allCurrent.length) : null,
-    share3: allCurrent.length ? Math.round(100 * allCurrent.filter(function (x) { return x >= 3; }).length / allCurrent.length) : null
+    kids: out.kids.length, classSize: classSize || null, submissions: events.length,
+    fixed: sum.pairs ? { fixed: sum.pairsFixed, total: sum.pairs } : null,
+    // Lernzuwachs je Kind: verbessert = über alle Grammatik-Themen zusammen höher als beim Check-in
+    growth: sum.growthKids ? { kids: Object.keys(kidGrowth).length, up: Object.keys(kidGrowth).filter(function (c) { return kidGrowth[c].now > kidGrowth[c].base; }).length,
+      base: round1_(sum.growthBase / sum.growthKids), now: round1_(sum.growthNow / sum.growthKids) } : null,
+    practice: sum.compared ? { improved: sum.improved, compared: sum.compared } : null,
+    writing: sum.drafts ? { drafts: sum.drafts, finals: sum.finals, better: sum.draftsBetter, compared: sum.draftsCompared } : null
   };
-  var order = { plenum: 0, blind: 1, gruppe: 2, gut: 3 };
-  out.recommendations.sort(function (a, b) { return order[a.type] - order[b.type]; });
-  out.lastReport = lastAiReport_();
-  out.klass = { camps: campList_(), today: classState_().today };
-  out.aiReady = !!PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
-  return JSON.parse(JSON.stringify(out));
+  var rank = { plenum: 0, blind: 1, gruppe: 2, gut: 3 };
+  // Kategorie → Gewicht → aktuellste Station zuerst → Zahl der Kinder
+  out.recommendations.sort(function (a, b) { return rank[a.type] - rank[b.type] || b.p - a.p || (a.r < b.r ? 1 : a.r > b.r ? -1 : 0) || b.n - a.n; });
+  return out;
 }
 
 /* ===================== KI-Auswertung (Claude API) ===================== */
 
 var AI = {
   MODEL: 'claude-opus-5-5',
-  EFFORT: 'low',         // Nachdenken knapp halten: Zeitlimit von Apps Script (6 Min.) und genug Platz für den Bericht
-  MAX_TOKENS: 32000,     // Obergrenze für Nachdenken + Bericht zusammen (12000 reichten bei 125 Abgaben nicht)
-  MIN_REPORT: 1500,      // kürzerer, abgeschnittener Text gilt als gescheitert und überschreibt den alten Bericht nicht
+  EFFORT: 'low',         // Nachdenken knapp halten: schnell genug für Apps Script (6 Min.) und für den Unterricht
+  MAX_TOKENS: 32000,     // Obergrenze für Nachdenken + Bericht zusammen
   SHEET: 'KI-Auswertung'
 };
 
-var AI_SYSTEM = [
+var AI_CONTEXT = [
   'Du bist eine erfahrene Beraterin für Englischdidaktik und Lerndiagnostik an Realschulen in NRW.',
-  'Eine Lehrkraft gibt dir die gesammelten Ergebnisse ihrer Klasse aus KI-Grammatik-Coaches. Du erstellst daraus einen Auswertungsbericht,',
-  'mit dem sie die nächsten Unterrichtsstunden plant und den sie in Teilen beim Besuch des Regierungspräsidenten zeigt.',
+  'Eine Lehrkraft gibt dir die Ergebnisse ihrer Klasse aus einer Lernlandkarte mit KI-Coaches. Du wertest sie aus, damit sie die nächsten Stunden planen kann.',
+  'Der Bericht soll auch für Personen verständlich sein, die das System nicht kennen (z. B. Kolleginnen, Schulleitung).',
   '',
   'So entstehen die Daten (wichtig für deine Interpretation):',
   '- Jedes Kind ist nur über einen Code bekannt (z. B. KOALA-7Q2X). Es gibt keine Namen. Verwende nur diese Codes.',
-  '- Pro Thema gibt es Schritte: B = Check-in (fester Pre-Test auf der Website, für alle gleich, automatisch ohne KI ausgewertet – die Baseline),',
-  '  W1 = Standard-Arbeitsblatt (Papier, vom Coach per Foto korrigiert), W2/W3 = Zusatzblätter (W2 = goldenes, schwereres Blatt),',
-  '  P = adaptives Üben im Chat (2 Runden à 8 Sätze), F = Final check (persönliche Wiederholung).',
-  '- Niveau 1–4: Blatt nach Prozent (≥90 % = 4, 75–89 = 3, 50–74 = 2, <50 = 1); Üben nach Stufe und Trefferzahl der letzten Runde.',
-  '- Hilfen 0–3 = wie viele Hinweise das Kind beim Üben brauchte.',
-  '- Fehlerbereiche wurden von einem KI-Coach vergeben. Sie sind gute Hinweise, aber keine gesicherte Diagnose.',
+  '- Grammatik-Stationen: B = Check-in (Pre-Test auf der Website, für alle gleich, ohne KI ausgewertet – der Startwert),',
+  '  W1 = Arbeitsblatt (Papier, vom Coach per Foto korrigiert), W2 = goldenes, schwereres Zusatzblatt,',
+  '  P = adaptives Üben im Chat, F = Final check. Hilfen 0–3 = wie viele Hinweise das Kind beim Üben brauchte.',
+  '- Schreib-Station (Art "Schreiben", z. B. Uluru): W1 = erste Fassung eines Artikels, W2 = überarbeitete Endfassung (beide auf Papier, vom Writing Coach',
+  '  nach einem Raster bewertet). Die Fehlerbereiche sind Rasterpunkte (A = Inhalt, B = Darstellung/Sprache). Kein Check-in, keine Hilfen.',
+  '- Übungsseiten ohne Coach (Art "Übungsseite", z. B. Alice Springs, Kata Tjuta): P = einmal durchgearbeitet, Niveau = Anteil beim ersten Versuch richtig.',
+  '- Niveau 1–4 (4 = sicher, 1 = braucht Unterstützung). Fehlerbereiche vergibt ein KI-Coach: gute Hinweise, keine gesicherte Diagnose.',
+  '- „Lagerfeuer“ sind gemeinsame Unterrichtsphasen ohne KI (z. B. Regeln aus einem Text herleiten), mit Datum.',
   '',
   'Regeln:',
-  '- Belege jede Aussage mit Zahlen aus den Daten („7 von 22 Kindern …“). Erfinde nichts, rechne nachvollziehbar.',
-  '- Unterscheide klar zwischen Befund (steht in den Daten) und Deutung (deine Vermutung). Kennzeichne Deutungen als solche.',
+  '- Für Zahlen nimm die exakt berechneten Kennzahlen am Anfang der Daten. Zähle nicht selbst neu. Die Einzelverläufe dienen nur dazu, Muster zu finden.',
+  '- Belege jede Aussage mit einer Zahl („7 von 22 Kindern …“). Erfinde nichts.',
+  '- Trenne Befund (steht in den Daten) und Deutung (deine Vermutung).',
   '- Benenne Grenzen: kleine Zahlen, fehlende Schritte, mögliche Fehlkorrekturen des Coaches.',
-  '- Suche aktiv nach Mustern über einzelne Zahlen hinaus: Fehlerbereiche, die gemeinsam auftreten; Entwicklung vom Blatt zum Üben;',
-  '  Kinder, deren Hilfen hoch sind, obwohl das Niveau gut ist; Bereiche, die nie geprüft wurden.',
-  '- Lernzuwachs misst du gegen den Check-in (B) als Ausgangswert: Klassenmittel vorher/nachher und Anteil der Kinder, die sich verbessert haben.',
-  '  Wichtig: Check-in (4 Aufgaben je Zeitform, teils Auswahl) und Arbeitsblatt/Üben sind unterschiedliche Aufgabenformate. Nenne diese Entwicklung "Lernzuwachs (Entwicklung seit dem Check-in)",',
-  '  deute sie vorsichtig und weise darauf hin, dass der genaue Vorher-Nachher-Vergleich erst mit dem Post-Test (Parallelfassung) möglich ist.',
-  '- „Lagerfeuer“ sind gemeinsame Unterrichtsphasen ohne KI (z. B. Regeln aus einem Text herleiten), mit Datum. Prüfe vorsichtig, ob sich',
-  '  Fehlerbereiche vor und nach einer solchen Phase unterscheiden, und benenne, dass das ein Hinweis ist und kein Beweis.',
-  '- Empfehlungen müssen im Unterricht einer heterogenen 9. Klasse in 45 Minuten umsetzbar sein.',
-  '- Schreib auf Deutsch, klar und knapp, für eine Lehrkraft. Keine Fachsprache ohne Erklärung. Der ganze Bericht umfasst höchstens etwa 1200 Wörter.',
+  '- Suche Muster: Fehlerbereiche, die gemeinsam auftreten; Entwicklung vom Blatt zum Üben bzw. von der 1. Fassung zur Endfassung;',
+  '  Kinder mit vielen Hilfen trotz gutem Niveau; Bereiche, die nie geprüft wurden; Unterschiede vor/nach einem Lagerfeuer (nur als Hinweis).',
+  '- Lernzuwachs seit dem Check-in vorsichtig deuten: Check-in und Übungen sind unterschiedliche Formate; den genauen Vergleich bringt erst der Post-Test.',
+  '- Vorschläge nur zu Stationen, die schon im Unterricht behandelt wurden – die zuletzt bearbeitete ist am wichtigsten. Noch nicht behandelte Themen höchstens als Ausblick (Vorwissen laut Check-in).',
+  '- Vorschläge müssen in einer heterogenen 9. Klasse in 45 Minuten umsetzbar sein.',
+  '- Deutsch, klar, knapp, ohne Fachsprache. Lieber wenige starke Aussagen als viele schwache.'
+].join('\n');
+
+// Feste Struktur der Antwort (Structured Outputs). Das Dashboard zeigt sie als Karten.
+var AI_SCHEMA = {
+  type: 'object', additionalProperties: false,
+  required: ['kernaussage', 'befunde', 'naechste_stunden', 'laeuft_gut', 'grenzen'],
+  properties: {
+    kernaussage: { type: 'string' },
+    befunde: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['titel', 'text', 'art'],
+      properties: { titel: { type: 'string' }, text: { type: 'string' }, art: { type: 'string', enum: ['befund', 'deutung'] } } } },
+    naechste_stunden: { type: 'object', additionalProperties: false, required: ['plenum', 'kleingruppen', 'einzeln'], properties: {
+      plenum: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['was', 'warum'], properties: { was: { type: 'string' }, warum: { type: 'string' } } } },
+      kleingruppen: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['fokus', 'codes', 'idee'],
+        properties: { fokus: { type: 'string' }, codes: { type: 'array', items: { type: 'string' } }, idee: { type: 'string' } } } },
+      einzeln: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['code', 'hinweis'], properties: { code: { type: 'string' }, hinweis: { type: 'string' } } } }
+    } },
+    laeuft_gut: { type: 'array', items: { type: 'string' } },
+    grenzen: { type: 'array', items: { type: 'string' } }
+  }
+};
+
+var AI_FORMAT_JSON = [
   '',
-  'Gliederung (Markdown, genau diese Überschriften):',
-  '## 1. Auf einen Blick',
-  '3–5 wichtigste Befunde als Stichpunkte, jeweils mit Zahl.',
-  '## 2. Lernzuwachs und Trends',
-  '## 3. Problemfelder und Zusammenhänge',
-  '## 4. Blinde Flecken und Grenzen der Daten',
-  '## 5. Vorschlag für die nächsten zwei Stunden',
-  'Konkret: was im Plenum, welche Kleingruppen (mit Codes), wer was einzeln übt.',
-  '## 6. Kinder im Blick',
-  'Höchstens 6 Codes mit je einem Satz Begründung und einer Idee.',
-  '## 7. Kurzfassung für den Besuch',
-  'Genau 3 Kernaussagen ohne Codes, verständlich für Außenstehende: Was zeigt die Diagnostik, was folgt daraus für den Unterricht?',
-  'Danach ein Satz zur Rolle der KI: Sie liefert Hinweise, die Lehrkraft entscheidet.'
+  'Antwortformat (JSON nach dem vorgegebenen Schema):',
+  '- kernaussage: 2–3 Sätze ohne Codes. Was zeigt die Auswertung, was folgt daraus für den Unterricht? Verständlich für Außenstehende.',
+  '- befunde: die 3–5 wichtigsten Befunde. titel = kurze Überschrift (max. 8 Wörter), text = 1–2 Sätze mit Zahl, art = "befund" oder "deutung".',
+  '- naechste_stunden: plenum höchstens 2 Punkte, kleingruppen höchstens 3 Gruppen (mit Codes), einzeln höchstens 5 Kinder (je ein Satz).',
+  '- laeuft_gut: 2–5 Punkte mit Zahl.',
+  '- grenzen: 1–3 Punkte, was die Daten (noch) nicht zeigen.',
+  'Insgesamt höchstens etwa 500 Wörter.'
+].join('\n');
+
+var AI_FORMAT_CHAT = [
+  '',
+  'Antwortformat: gut lesbarer Text mit diesen Überschriften:',
+  '## Kernaussage (2–3 Sätze ohne Codes) · ## Wichtigste Befunde (3–5, mit Zahl, Befund oder Deutung kennzeichnen) ·',
+  '## Nächste Stunden (Plenum, Kleingruppen mit Codes, einzelne Kinder) · ## Das läuft gut · ## Grenzen der Daten.',
+  'Insgesamt höchstens etwa 500 Wörter.'
 ].join('\n');
 
 // Kompakte, pseudonyme Zusammenfassung aller Ergebnisse – Grundlage für die KI (und zum Kopieren in einen Claude-Chat).
+// Zuerst die exakt berechneten Kennzahlen (dieselben wie im Dashboard), danach die Einzelverläufe.
 function buildAiInput_() {
   var cfg = loadConfig_();
-  var events = classEvents_().filter(function (e) { return stepInfo_(cfg, e.station); });
-  events.sort(function (a, b) { return String(a.ts) < String(b.ts) ? -1 : 1; });
-  var lines = [];
+  var a = analysis_(cfg);
   var tz = Session.getScriptTimeZone();
-  var topics = {};
-  events.forEach(function (e) {
-    var si = stepInfo_(cfg, e.station);
-    var t = topics[si.topicId] || (topics[si.topicId] = { name: si.topic.name, labels: si.topic.areaLabels || {}, kids: {} });
-    (t.kids[e.code] || (t.kids[e.code] = [])).push(e);
-  });
-  var size = cfg.classSizes ? Object.keys(cfg.classSizes).map(function (k) { return k + ': ' + cfg.classSizes[k] + ' Kinder'; }).join(', ') : 'unbekannt';
-  lines.push('Klassengröße: ' + size + '. Abgaben insgesamt: ' + events.length + '. Stand: ' + Utilities.formatDate(new Date(), tz, 'dd.MM.yyyy HH:mm'));
+  var KIND = { grammar: 'Grammatik', draft: 'Schreiben', page: 'Übungsseite' };
+  var lines = [];
+  var size = Object.keys(a.classSizes).map(function (k) { return k + ': ' + a.classSizes[k] + ' Kinder'; }).join(', ') || 'unbekannt';
+  lines.push('Klassengröße: ' + size + '. Kinder mit Ergebnissen: ' + a.kpi.kids + '. Abgaben insgesamt: ' + a.kpi.submissions + '. Stand: ' + Utilities.formatDate(new Date(), tz, 'dd.MM.yyyy HH:mm'));
   var lessons = campList_().filter(function (c) { return c.lit; }).map(function (c) {
     var d = new Date(c.lit);
     return (isNaN(d) ? String(c.lit) : Utilities.formatDate(d, tz, 'dd.MM.yyyy')) + ' ' + c.name + ' (' + c.id + '): ' + (c.titleDe || c.title);
   });
   lines.push('Gemeinsame Unterrichtsphasen ohne KI (Lagerfeuer): ' + (lessons.length ? lessons.join(' · ') : 'keine eingetragen'));
-  Object.keys(topics).forEach(function (tid) {
-    var t = topics[tid];
+  lines.push('');
+  var later = a.topics.filter(function (t) { return !t.treated; });
+  if (later.length) {
+    lines.push('Noch nicht im Unterricht behandelt (nur Check-in als Vorwissen, KEINE Empfehlungen dazu geben): ' + later.map(function (t) {
+      var top = t.areas.filter(function (x) { return x.start; }).sort(function (x, y) { return y.start - x.start; }).slice(0, 2)
+        .map(function (x) { return x.label + ' ' + x.start; });
+      return t.place + ' – ' + t.name + (top.length ? ' (häufigste Check-in-Fehler: ' + top.join(', ') + ')' : '');
+    }).join(' · '));
+  }
+  lines.push('');
+  lines.push('## Exakt berechnete Kennzahlen der behandelten Stationen (diese Zahlen verwenden; die zuletzt bearbeitete Station steht zuerst)');
+  a.topics.filter(function (t) { return t.treated; }).sort(function (x, y) { return x.lastWork < y.lastWork ? 1 : -1; }).forEach(function (t) {
     lines.push('');
-    lines.push('### Thema: ' + t.name + ' (' + tid + '), ' + Object.keys(t.kids).length + ' Kinder');
-    lines.push('Fehlerbereiche: ' + Object.keys(t.labels).map(function (c) { return c + ' = ' + t.labels[c]; }).join('; '));
-    lines.push('Format je Kind: Schritt:Niveau/Hilfen[Fehlerbereiche]@Datum, chronologisch');
-    Object.keys(t.kids).sort().forEach(function (code) {
-      var parts = t.kids[code].map(function (e) {
-        var step = e.station.split('-')[1];
-        var d = new Date(e.ts);
-        var when = isNaN(d) ? '' : '@' + Utilities.formatDate(d, tz, 'dd.MM HH:mm');
-        return step + ':' + e.n + '/' + e.h + '[' + (e.f.join(',') || '-') + ']' + when;
-      });
-      lines.push(code + ' | ' + parts.join(' | '));
+    lines.push('### ' + t.name + ' (' + t.id + ', ' + t.place + ', Art: ' + KIND[t.kind] + '), ' + t.workKids + ' Kinder haben daran gearbeitet, zuletzt am ' + String(t.lastWork).slice(0, 10));
+    lines.push('Schritte erledigt: ' + t.stepList.map(function (s) { return s.label + ' ' + s.v; }).join(' · '));
+    lines.push('Aktuelles Niveau: 1: ' + t.levels[1] + ' · 2: ' + t.levels[2] + ' · 3: ' + t.levels[3] + ' · 4: ' + t.levels[4]);
+    if (t.growth) lines.push('Lernzuwachs seit Check-in: Ø ' + t.growth.base + ' → ' + t.growth.now + ', ' + t.growth.up + ' von ' + t.growth.kids + ' Kindern verbessert');
+    if (t.compared) lines.push((t.kind === 'draft' ? 'Endfassung besser als 1. Fassung: ' : 'Üben besser als Blatt: ') + t.improved + ' von ' + t.compared);
+    if (t.manyHelps.length) lines.push('Viele Hilfen (3+): ' + t.manyHelps.join(', '));
+    t.areas.forEach(function (x) {
+      lines.push('- ' + x.code + ' (' + x.label + '): noch offen ' + x.now + (x.now ? ' [' + x.nowCodes.join(', ') + ']' : '') + ', behoben ' + x.resolved +
+        (x.unchecked ? ', ungeprüft ' + x.unchecked + ' [' + x.uncheckedCodes.join(', ') + ']' : ''));
     });
   });
-  return { text: lines.join('\n'), events: events.length };
+  lines.push('');
+  lines.push('## Einzelverläufe (behandelte Stationen)');
+  lines.push('Format je Kind: Schritt:Niveau/Hilfen[Fehlerbereiche]@Datum, chronologisch');
+  a.topics.filter(function (t) { return t.treated; }).forEach(function (t) {
+    lines.push('');
+    lines.push('### ' + t.name + ' (' + t.id + ')');
+    t.rows.slice().sort(function (x, y) { return x.code < y.code ? -1 : 1; }).forEach(function (r) {
+      lines.push(r.code + ' | ' + r.attempts.map(function (e) {
+        var d = new Date(e.ts);
+        return e.step.split('-')[1] + ':' + e.n + '/' + e.h + '[' + (e.fc.join(',') || '-') + ']' + (isNaN(d) ? '' : '@' + Utilities.formatDate(d, tz, 'dd.MM HH:mm'));
+      }).join(' | '));
+    });
+  });
+  return { text: lines.join('\n'), events: a.kpi.submissions };
 }
 
 // Für den Weg über den Claude-Chat: Auftrag + Daten in einem Text.
 function getAiPromptForChat() {
   if (!isOwner_()) throw new Error('Kein Zugriff');
   var input = buildAiInput_();
-  return AI_SYSTEM + '\n\n---\n\nHier sind die Daten:\n\n' + input.text;
+  return AI_CONTEXT + '\n' + AI_FORMAT_CHAT + '\n\n---\n\nHier sind die Daten:\n\n' + input.text;
 }
 
-// Erstellt die KI-Auswertung über die Claude API und speichert sie im Blatt "KI-Auswertung".
+// Erstellt die KI-Auswertung über die Claude API und speichert sie (als JSON) im Blatt "KI-Auswertung".
 function runAiAnalysis() {
   if (!isOwner_()) throw new Error('Kein Zugriff');
   var key = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
@@ -767,10 +907,10 @@ function runAiAnalysis() {
     model: AI.MODEL,
     max_tokens: AI.MAX_TOKENS,
     thinking: { type: 'adaptive' },
-    output_config: { effort: AI.EFFORT },
+    output_config: { effort: AI.EFFORT, format: { type: 'json_schema', schema: AI_SCHEMA } },
     fallbacks: 'default',
-    system: AI_SYSTEM,
-    messages: [{ role: 'user', content: 'Hier sind die Daten der Klasse. Erstelle den Bericht.\n\n' + input.text }]
+    system: AI_CONTEXT + '\n' + AI_FORMAT_JSON,
+    messages: [{ role: 'user', content: 'Hier sind die Daten der Klasse. Erstelle die Auswertung.\n\n' + input.text }]
   };
   var res;
   try {
@@ -794,12 +934,12 @@ function runAiAnalysis() {
     throw new Error(msg);
   }
   if (data.stop_reason === 'refusal') throw new Error('Die Anfrage wurde abgelehnt. Bitte den Weg „Für Claude-Chat kopieren“ nutzen.');
-  var report = (data.content || []).filter(function (b) { return b.type === 'text'; }).map(function (b) { return b.text; }).join('\n').trim();
-  if (!report) throw new Error('Die API hat keinen Text geliefert.');
-  if (data.stop_reason === 'max_tokens') {
-    if (report.length < AI.MIN_REPORT) throw new Error('Die KI ist nicht bis zum Bericht gekommen (Platz aufgebraucht). Der letzte Bericht bleibt erhalten. Bitte noch einmal versuchen oder den Weg „Für Claude-Chat kopieren“ nutzen.');
-    report += '\n\n_(Bericht wurde am Ende gekürzt.)_';
-  }
+  if (data.stop_reason === 'max_tokens') throw new Error('Die KI ist nicht fertig geworden (Platz aufgebraucht). Der letzte Bericht bleibt erhalten. Bitte noch einmal versuchen.');
+  var text = (data.content || []).filter(function (b) { return b.type === 'text'; }).map(function (b) { return b.text; }).join('').trim();
+  var parsed;
+  try { parsed = JSON.parse(text); } catch (e) { throw new Error('Die Antwort der KI war unvollständig. Der letzte Bericht bleibt erhalten. Bitte noch einmal versuchen.'); }
+  if (!parsed || !parsed.kernaussage) throw new Error('Die KI hat keinen Bericht geliefert. Bitte noch einmal versuchen.');
+  var report = JSON.stringify(parsed);
 
   var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(AI.SHEET) || SpreadsheetApp.getActiveSpreadsheet().insertSheet(AI.SHEET);
   if (sh.getLastRow() === 0) {
@@ -807,8 +947,7 @@ function runAiAnalysis() {
     sh.getRange(1, 1, 1, 4).setFontWeight('bold').setFontColor('#FFFFFF').setBackground(SETTINGS.HEADER_COLOR);
     sh.setColumnWidth(4, 900);
   }
-  var row = [new Date(), data.model || AI.MODEL, input.events, report];
-  sh.appendRow(row);
+  sh.appendRow([new Date(), data.model || AI.MODEL, input.events, report]);
   sh.getRange(sh.getLastRow(), 4).setWrap(true).setVerticalAlignment('top');
   return { report: report, at: new Date().toISOString(), model: data.model || AI.MODEL, events: input.events };
 }

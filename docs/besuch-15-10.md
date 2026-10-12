@@ -7,12 +7,13 @@ Klasse: ganze 09c (32 Kinder inkl. Seiteneinsteiger) + 4–5 Lotsinnen und Lotse
 **Leitidee:** Die Kinder arbeiten, ich rede wenig. Erst erleben lassen, dann einordnen. Die Präsentation `hub/konzept.html` zeigt auf der
 digitalen Tafel jederzeit, in welcher Phase wir sind (Phasenleiste unten links).
 
-## Offene Punkte (Stand 11.10.2026)
-- [ ] **Termin present-perfect-Lagerfeuer** klären (Mo 12.10. ist der Writing Track). Danach in `konzept.html` die Rückblick-Zeile „12.10. Lagerfeuer Outback“ anpassen.
-- [ ] **Grammatik am Donnerstag** festlegen: Outback (present perfect) oder Darwin (Kontrast).
-- [ ] **Stationen freischalten** (`hub/config.json`, `"status": "soon"` → `"active"`, dann pushen – wirkt ca. 1 Min. später auf allen iPads):
-      Outback (`PP`) am Tag des present-perfect-Lagerfeuers · Darwin (`SPPP`) bei Bedarf · **Uluru (`WRITE`) Do 15.10. vor der Stunde**.
-      Seit 11.10. gesperrt, damit niemand vorarbeitet.
+## Offene Punkte (Stand 12.10.2026)
+- [x] **Present-perfect-Lagerfeuer:** Mi 14.10. (Regeln erarbeiten, ohne Karte und Coach). Rückblick-Zeile in `konzept.html` steht auf 14.10.
+- [x] **Grammatik am Donnerstag:** Outback (present perfect).
+- [x] **Outback und Uluru schalten sich selbst frei:** `"opensAt": "2026-10-14T21:00:00+02:00"` in `hub/config.json` – kein Push am Mittwochabend nötig.
+- [ ] **Mi 14.10. abends: Lagerfeuer Outback im Dashboard anzünden** (bekommt das Datum 14.10. = Tag der Stunde). Wichtig: Ohne Feuer ist Outback
+      nur für Kinder offen, die Gold Coast und Reef fertig haben – alle anderen sehen „Later“.
+- Darwin (`SPPP`) bleibt zu.
 - [ ] **Plan aus Kata Tjuta:** Seit 11.10. auch im Sheet gesichert – Uluru findet ihn auf jedem iPad. Für die Hausaufgabe (iPads bleiben in der Schule?) trotzdem Foto oder Abschrift vom Plan.
 - [ ] **Klassenzahlen** in `hub/konzept.html` (Block `DATA`) am Mi 14.10. abends aktualisieren – nur das Beispiel simple past.
 - [ ] **KI-Bericht** (Auswertungs-Prompt in `apps-script/Code.gs`) überarbeiten – Wünsche noch sammeln. Mi-Abend-Bericht lokal speichern, Do live erzeugen.
@@ -26,10 +27,10 @@ digitalen Tafel jederzeit, in welcher Phase wir sind (Phasenleiste unten links).
 |---|---|---|
 | Fr 09.10. | simple past abschließen: Üben, goldenes Blatt | simple past vollständig – das Vorzeigebeispiel für den Lernzuwachs |
 | Mo 12.10. | **Writing Track:** Alice Springs (`lesson.html?st=ART`) + Kata Tjuta (`lesson.html?st=ARG`, Plan bleibt auf dem iPad). **Hausaufgabe:** Artikel „Is Australia worth visiting?“ – 1. Fassung auf Papier | jedes Kind hat eine 1. Fassung |
-| Mo/Mi | present perfect: Lagerfeuer Outback (AUS1-PP-R), AUS1-PP-1 + Coach, Üben, goldenes Blatt AUS1-PP-2 – **Termin klären** | erste Present-Perfect-Werte |
-| Mi 14.10. | Lotsen-Briefing + Generalprobe. **Abends:** KI-Bericht erstellen und lokal speichern, Klassenzahlen in `konzept.html` (Block `DATA`) prüfen | Präsentation und Zahlen aktuell |
+| Mi 14.10. | **present perfect: Lagerfeuer Outback** (AUS1-PP-R) – Regeln gemeinsam erarbeiten, ohne Karte und Coach. Lotsen-Briefing + Generalprobe. **Abends:** Lagerfeuer im Dashboard anzünden (Outback und Uluru öffnen sich ab 21 Uhr selbst), KI-Bericht erstellen und lokal speichern, Klassenzahlen in `konzept.html` (Block `DATA`) prüfen | Outback ist Do früh offen, Präsentation und Zahlen aktuell |
+| Do 15.10. | AUS1-PP-1 + Present Perfect Coach, Üben, goldenes Blatt AUS1-PP-2 (siehe unten) | erste Present-Perfect-Werte live |
 
-**Offen:** Welche Grammatik am Donnerstag dran ist – **Outback (present perfect)** oder **Darwin (Kontrast)**. Die Präsentation hält das bewusst offen.
+**Grammatik am Donnerstag:** Outback (present perfect). Gäste haben Outback in ihrer vorbereiteten Reise schon erledigt und üben dort direkt.
 
 ## Donnerstag: die Stunde
 

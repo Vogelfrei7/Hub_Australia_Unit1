@@ -9,7 +9,11 @@ export async function loadConfig() {
   const cfg = await res.json();
   cfg.codeRe = new RegExp(cfg.codePattern);
   cfg.routeById = Object.fromEntries(cfg.routes.map((r) => [r.id, r]));
-  for (const [id, t] of Object.entries(cfg.topics)) t.id = id;
+  for (const [id, t] of Object.entries(cfg.topics)) {
+    t.id = id;
+    // "opensAt": Station schaltet sich ab diesem Zeitpunkt selbst frei (kein Push nötig)
+    if (t.status === 'soon' && t.opensAt && Date.now() >= Date.parse(t.opensAt)) t.status = 'active';
+  }
   for (const [id, b] of Object.entries(cfg.bonus || {})) b.id = id;
   applyTheme(cfg.theme);
   return cfg;

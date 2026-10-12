@@ -1,9 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
   loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo, isGuest, planLine, planKey, planFromEvents,
-} from './core.js?v=3.5';
-import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=3.5';
-import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=3.5';
+} from './core.js?v=3.6';
+import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=3.6';
+import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=3.6';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -32,7 +32,8 @@ async function main() {
   }
   info = await loadEvents(cfg, trav.code);
   // Lagerfeuer angezündet = die Klasse ist dort → Station für alle offen
-  const open = Object.keys(cfg.topics).filter((id) => campLit(cfg, info.klass, id));
+  // Gäste dürfen jede freigeschaltete Station anklicken, Kinder nur bis zum Lagerfeuer der Klasse
+  const open = Object.keys(cfg.topics).filter((id) => isGuest(cfg, trav.code) || campLit(cfg, info.klass, id));
   pr = progress(cfg, info.events, { open });
   if (!view.sel) view.sel = pr.now.grammar || pr.now.writing || 'SPR';
   render();
