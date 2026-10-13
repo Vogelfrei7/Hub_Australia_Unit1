@@ -45,7 +45,7 @@ Kind: Code (z. B. `LOEWE-K7Q2`, per QR) → Check-in (Startwert `<THEMA>-B`) →
   aber nur wo `.claude/sync-nas.json` (NAS-Pfad, ignoriert) existiert.
 - `hub/intro.html` ist ein Entwurf (noch nicht verlinkt).
 - `hub/konzept.html` = animierte Präsentation für den Besuch am 15.10., in 6 Phasen (Leiste unten links, Shift + 1–6):
-  Ankommen (Standbild „Eine Klasse. 32 Lernwege.“, Karte in Schleife) → Rückblick (Pre-Test, echte Zahlen simple past im `DATA`-Block – Mi 14.10. prüfen) → Live (Coach-Zeit, Agentenlogik) →
+  Ankommen (Standbild „Eine Klasse. 32 Lernwege.“, Karte in Schleife) → Rückblick (Pre-Test, echte Zahlen simple past im `DATA`-Block – Mi 14.10. prüfen) → Live (Kinderfolie „Choose your road!“ – Ergebnis 0–14/15–20 von 20 entscheidet Road A Practice / Road B Uluru –, Coach-Zeit, Agentenlogik) →
   Konzept (6 Stationen, Design nicht ändern) → Ausblick (andere Fächer, Vertretung, Vision 7–10) → Austausch.
   Pfeiltasten/Clicker, 0–9 = Folie in der Phase, O = Übersicht, `#12.2` = Folie 12, Schritt 2. Eigenständig (CSS/JS inline), nicht verlinkt;
   soll später von der geplanten Lehrerkarte aus aufrufbar sein.

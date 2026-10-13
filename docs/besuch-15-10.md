@@ -36,10 +36,11 @@ digitalen Tafel jederzeit, in welcher Phase wir sind (Phasenleiste unten links).
 
 | Zeit | Phase in `konzept.html` | Was passiert | Ich |
 |---|---|---|---|
-| –30 bis 0 | – (normale Stunde) | **Lagerfeuer** zur Grammatik des Tages: Strukturen induktiv entdecken, Regel gemeinsam sichern, Tafelbild – ohne KI. Danach bearbeitet jedes Kind das Arbeitsblatt auf Papier. Im Dashboard: Lagerfeuer anzünden, „Today in class“ auf 🤖 Coach time. | normale Stunde |
+| Mi 14.10. | – | **Lagerfeuer Outback:** present perfect induktiv entdecken, Regel gemeinsam sichern – ohne KI. Abends im Dashboard anzünden. | |
+| –30 bis 0 | – (normale Stunde) | **Nur das Arbeitsblatt AUS1-PP-1** auf Papier, jedes Kind allein – noch ohne KI. Im Dashboard: „Today in class“ auf 🤖 Coach time. | normale Stunde |
 | kurz vor 0 | **1 Ankommen** | Standbild an der Tafel: „Eine Klasse. 32 Lernwege.“, die Karte läuft in einer Schleife. | Präsentation öffnen, Vollbild (F) |
-| 0–2 | **2 Rückblick** | Gäste kommen. „Erst messen. Dann losfahren.“ (Check-in = Pre-Test, Lernzuwachs simple past) → „Die ersten 30 Minuten“ → Weggabelung: zwei Wege, ein Prinzip. | Kernsatz 1 |
-| 2–24 | **3 Live** | Standbild „Jetzt arbeiten die Kinder.“ mit Beobachtungsauftrag. Jedes Kind beginnt mit **Grammatik** (Foto → Feedback → Practice) **oder Writing/Uluru** (Foto der 1. Fassung → Feedback → Überarbeitung) und wechselt danach. Die Lotsen zeigen ihren Gästen den eigenen Weg, die Gäste probieren mit Gast-Code selbst. Nebenbei: Folie „Was steckt im Coach?“ erklären. Gegen Ende: **KI-Bericht live erzeugen** und im Dashboard zeigen. | Kernsatz 2 + 3, wenig reden, mitgehen |
+| 0–2 | **2 Rückblick** | Gäste kommen. „Erst messen. Dann losfahren.“ (Check-in = Pre-Test, Lernzuwachs simple past) → „Bis hierher: ohne KI.“ (gestern Lagerfeuer, heute Arbeitsblatt) → Weggabelung: zwei Wege, ein Prinzip. | Kernsatz 1 |
+| 2–24 | **3 Live** | Kinderfolie **„Choose your road!“**: Alle schicken zuerst das Foto ihres Arbeitsblatts an den Outback-Coach. **Die Rückmeldung entscheidet:** 0–14 von 20 richtig → Road A (Practice im Outback); 15–20 und 1. Fassung vorhanden → Road B (Uluru, Writing Coach → Endfassung). Alle machen diese Woche beide Wege. Dann Standbild „Jetzt arbeiten die Kinder.“ mit Beobachtungsauftrag. Die Lotsen zeigen ihren Gästen den eigenen Weg, die Gäste probieren mit Gast-Code selbst. Nebenbei: Folie „Was steckt im Coach?“ erklären. Gegen Ende: **KI-Bericht live erzeugen** und im Dashboard zeigen. | Kernsatz 2 + 3, wenig reden, mitgehen |
 | 24–29 | **4 Konzept** | „Unsere Antworten auf 6 Probleme von (KI-)Unterricht.“ – die sechs Stationen zügig durchklicken (Adaptive Lernwege, Diagnostik & Dashboard, Feedback, Gamifikation, Gemeinsam ohne KI, Datenschutz). Die Gäste haben alles gerade gesehen. | Kernsatz 4 |
 | 29–30 | **5 Ausblick** | Andere Fächer → Vertretungs-Lernlandkarte → Vision Klasse 7–10 → „Vom Lernweg zur Zukunft“ (Brücke zur Berufsorientierung). | Kernsatz 5 |
 | 30–40 | **6 Austausch** | Lagerfeuer mit den Fragen an die Kinder, dann die Kachel „Ihre Fragen“. Die Gäste fragen die Kinder direkt. | moderieren |
@@ -52,7 +53,7 @@ digitalen Tafel jederzeit, in welcher Phase wir sind (Phasenleiste unten links).
 5. „Maßgeschneidert auf das aktuelle Thema – übertragbar auf alle Themen und Fächer.“
 
 ## Lotsen-Briefing (Mi 14.10., 5 Minuten)
-- **Wer:** 4–5 Kinder, die sicher mit dem iPad sind und gern erklären. Jedes Kind betreut einen Gast.
+- **Wer:** 4–5 Kinder, die sicher mit dem iPad sind und gern erklären. Jedes Kind betreut einen Gast. Bewusst mischen: etwa 3 auf Road A, 2 auf Road B (mit 1. Fassung); nach ca. 10 Minuten tauschen zwei Lotsen ihre Gäste, damit jeder Gast beide Coaches sieht.
 - **Teil 1 – der eigene Weg:** Gast begrüßen („Hello, I'm your guide!“ – gern auf Deutsch weiter). Dann zeigen sie, wie **sie selbst** weitermachen:
   - **Grammatik:** Foto vom Arbeitsblatt ans Coach-Feld → Rückmeldung lesen und kurz erklären („Hier sagt er mir, was ich falsch hatte – und warum.“)
     → „Get your stamp“ → Stern auf der Karte → **Practice**. Hier sieht der Gast das **Adaptive**: Runde 2 wird schwerer („Round 2 is a bit harder“) oder leichter (mit Hilfebox).

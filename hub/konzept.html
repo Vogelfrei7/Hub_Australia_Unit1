@@ -573,6 +573,50 @@ body.idle .phases { opacity: .8; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01s !important; animation-iteration-count: 1 !important; transition-duration: .01s !important; transition-delay: 0s !important; }
 }
+
+/* Rückblick: Stempel „ohne KI“ auf den ersten beiden Schritten */
+.st3 .nokai { right: 18px; top: -16px; font-size: 28px; padding: 8px 14px 5px; --sd: .9s; }
+
+/* ---------- Live: Auftrag für die Kinder (Englisch, deutsche Hilfen in Klammern) ---------- */
+.ym-l { position: absolute; left: 96px; top: 150px; width: 650px; }
+.ym-l h2 { font-size: 74px; white-space: nowrap; }
+.ym-de { color: var(--text-muted); font-weight: 400; }
+.ym-box { position: relative; margin-top: 18px; padding: 16px 22px 16px; }
+.ym-h { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--terra-ink); }
+.ym-h i { font-style: normal; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 19px; letter-spacing: 0; }
+.ym-big { margin: 8px 0 0; font-size: 24px; line-height: 1.3; }
+.ym-big .ym-de, .ym-h .ym-de { font-size: 17px; }
+.ym-flow { display: flex; align-items: center; flex-wrap: nowrap; gap: 8px; margin-top: 12px; font-size: 16px; white-space: nowrap; }
+.ym-flow .ar { color: var(--terracotta); font-weight: 700; font-size: 22px; }
+.ui-pin { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px 7px 8px; border-radius: 999px; background: var(--paper); font-weight: 700; box-shadow: 0 2px 0 rgba(185, 118, 63, .3); }
+.ui-pin b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--c, var(--navy)); color: #fff; font-size: 14px; }
+.ui-btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 12px; background: var(--navy); color: #fff; font-weight: 700; box-shadow: 0 3px 0 #0F1A38; }
+.ui-field { display: inline-flex; align-items: center; gap: 10px; padding: 8px 10px 8px 14px; border-radius: 12px; background: #fff; border: 2px solid #CBD3E1; color: var(--text-muted); }
+.ui-field b { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--navy); color: #fff; font-size: 15px; }
+.ym-chat { margin-top: 10px; padding: 12px 18px; border-radius: 18px 18px 18px 4px; background: #fff; box-shadow: 0 6px 18px rgba(27, 42, 85, .12); font-size: 23px; font-weight: 700; position: relative; }
+.ym-chat small { display: block; font-size: 15px; font-weight: 400; color: var(--text-muted); margin-top: 4px; }
+.ym-chat mark { background: none; color: inherit; position: relative; padding: 0 4px; margin: 0 12px 0 8px; }
+.ym-chat mark::before { content: ""; position: absolute; inset: -6px -8px; border: 4px solid var(--terracotta); border-radius: 50% 46% 52% 44%; transform: rotate(-3deg); }
+.ym-look { display: block; margin: 8px 0 0 190px; font: 400 30px/1 var(--font-hand); color: var(--terracotta); transform: rotate(-2deg); }
+
+.ym-r { position: absolute; left: 800px; top: 150px; width: 720px; display: grid; gap: 14px; }
+.road-card { position: relative; display: grid; grid-template-columns: 132px 1fr; gap: 20px; padding: 16px 22px 16px 16px; border-left: 10px solid var(--c); }
+.road-card.a { --c: #1B2A55; --soft: #DCEAF5; }
+.road-card.b { --c: #C2410C; --soft: #FDE6D8; }
+.gate { display: grid; align-content: center; justify-items: center; text-align: center; border-radius: 22px; background: var(--soft); padding: 14px 6px; }
+.gate small { font-size: 14px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); }
+.gate b { font: 400 48px/1 var(--font-hand); color: var(--c); margin: 4px 0; }
+.gate span { font-size: 15px; font-weight: 700; line-height: 1.25; }
+.road-card h3 { margin: 0; font: 400 40px/1 var(--font-hand); color: var(--c); }
+.road-card h3 small { font: 700 15px/1 var(--font-body); letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 6px; }
+.road-card ol { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; counter-reset: s; }
+.road-card li { counter-increment: s; display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; font-size: 19px; line-height: 1.3; }
+.road-card li::before { content: counter(s); display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--soft); color: var(--c); font-weight: 700; font-size: 16px; }
+.road-card li .ym-de { font-size: 15px; }
+.ui-stamp { display: inline-block; padding: 1px 9px; border-radius: 8px; background: #FFF3C4; color: #7A5600; font-weight: 700; font-size: 16px; }
+.ui-word { display: inline-block; padding: 1px 10px; border-radius: 8px; background: #fff; border: 2px solid #CBD3E1; font-weight: 700; }
+.ym-both { display: flex; align-items: center; gap: 14px; padding: 10px 22px; font-size: 18px; }
+.ym-both b { font: 400 32px/1 var(--font-hand); color: var(--terra-ink); }
 </style>
 </head>
 <body class="sol">
@@ -646,13 +690,13 @@ body.idle .phases { opacity: .8; }
     </div>
   </section>
 
-  <section class="slide" id="r2" data-phase="2" data-stop="Heute" data-steps="2" data-sol="0" data-title="Die ersten 30 Minuten · Zwei Wege, ein Prinzip">
+  <section class="slide" id="r2" data-phase="2" data-stop="Gestern &amp; heute" data-steps="2" data-sol="0" data-title="Bis hierher: ohne KI · Zwei Wege, ein Prinzip">
     <div class="left">
-      <div class="kicker"><span class="st">Rückblick</span><strong>Heute im Unterricht</strong></div>
+      <div class="kicker"><span class="st">Rückblick</span><strong>Gestern &amp; heute</strong></div>
       <div class="stack">
         <div data-at="0" data-until="0">
-          <h2>Die ersten<br><span class="hl-w">30 Minuten.</span></h2>
-          <p class="lead">Was die Klasse heute schon geschafft hat – <b>bevor Sie kamen</b>.</p>
+          <h2>Bis hierher:<br><span class="hl-w">ohne KI.</span></h2>
+          <p class="lead">Gestern gemeinsam, heute allein auf Papier – <b>bevor Sie kamen</b>. Der KI-Coach kommt erst jetzt dazu.</p>
         </div>
         <div data-at="1">
           <h2 class="sol-h md">Zwei Wege.<br><span class="hl-w">Ein Prinzip.</span></h2>
@@ -663,7 +707,7 @@ body.idle .phases { opacity: .8; }
               <li><span class="ic">💬</span><span><b>Dann Feedback</b> vom Coach – sofort und persönlich.</span></li>
               <li><span class="ic">📈</span><span><b>Dann besser werden</b> – üben oder überarbeiten.</span></li>
             </ul>
-            <div class="same-p">Jedes Kind entscheidet, womit es beginnt – und macht danach die andere Station.</div>
+            <div class="same-p">Die Rückmeldung zum Blatt zeigt, womit jedes Kind beginnt – danach macht es die andere Station.</div>
           </div>
         </div>
       </div>
@@ -672,15 +716,15 @@ body.idle .phases { opacity: .8; }
       <div class="steps3" data-at="0" data-until="0" style="transform:none">
         <div class="glass st3" data-at="0" style="--d:.3s;--bg:#FDE6D8">
           <div class="ico"><svg viewBox="0 0 40 40"><g><path class="flame" d="M20,6 C26,13 30,18 28,25 C27,30 23,32 20,32 C16,32 12,30 12,25 C11,20 15,17 16,12 C18,15 19,16 20,6 Z" fill="#E8692C"/><path class="flame in" d="M20,15 C23,19 25,22 24,26 C23,29 21,30 20,30 C18,30 16,29 16,26 C16,23 18,21 20,15 Z" fill="#F7C548"/></g><path d="M7,33 L33,27" stroke="#7A4E2A" stroke-width="5" stroke-linecap="round"/><path d="M7,27 L33,33" stroke="#946039" stroke-width="5" stroke-linecap="round"/></svg></div>
-          <div><small>1 · Lagerfeuer</small><b>Gemeinsam entdecken</b><span>Strukturen induktiv erarbeiten, die Regel gemeinsam sichern – ohne KI.</span></div>
+          <span class="seal nokai">ohne KI</span><div><small>Gestern · Lagerfeuer</small><b>Gemeinsam entdecken</b><span>Strukturen induktiv erarbeiten, die Regel gemeinsam sichern – ohne KI.</span></div>
         </div>
         <div class="glass st3" data-at="0" style="--d:.8s;--bg:#F2EADA">
           <div class="ico">📝</div>
-          <div><small>2 · Arbeitsblatt</small><b>Jedes Kind allein</b><span>Auf Papier, im eigenen Tempo.</span></div>
+          <span class="seal nokai" style="--sd:1.4s">ohne KI</span><div><small>Heute · 30 Minuten</small><b>Jedes Kind allein</b><span>Arbeitsblatt auf Papier, im eigenen Tempo. Dazu der Artikel als Hausaufgabe.</span></div>
         </div>
         <div class="glass st3" data-at="0" style="--d:1.3s;--bg:#DCEAF5">
           <div class="ico">📸</div>
-          <div><small>3 · Gleich</small><b>Foto an den Coach</b><span>Die Kinder fotografieren ihr Blatt – das Feedback kommt sofort.</span></div>
+          <div><small>Jetzt · KI-Coach</small><b>Foto an den Coach</b><span>Die Kinder fotografieren ihr Blatt – das Feedback kommt sofort.</span></div>
           <span class="now">JETZT</span>
         </div>
       </div>
@@ -707,6 +751,55 @@ body.idle .phases { opacity: .8; }
   </section>
 
   <!-- ================= Phase 3 · Live ================= -->
+  <!-- Auftrag für die Kinder: erst alle das Blatt an den Coach, dann entscheidet das Ergebnis über den Weg -->
+  <section class="slide" id="k1" data-phase="3" data-stop="Your mission" data-steps="2" data-sol="0" data-title="Your mission: choose your road!">
+    <div class="ym-l">
+      <div class="kicker"><span class="st">Live</span><strong>Your mission <span class="ym-de">(Dein Auftrag)</span></strong></div>
+      <h2>Choose <span class="hl-w">your road!</span></h2>
+      <div class="glass ym-box" data-at="0" style="--d:.3s">
+        <div class="ym-h"><i>1</i>Everyone <span class="ym-de">(alle)</span></div>
+        <p class="ym-big"><b>Send a photo of your worksheet</b> to the Outback coach.<br><span class="ym-de">(Schick ein Foto von deinem Arbeitsblatt an den Coach.)</span></p>
+        <div class="ym-flow">
+          <span class="ui-pin"><b>3</b>Outback</span><span class="ar">→</span>
+          <span class="ui-btn">⧉ Copy start code</span><span class="ar">→</span>
+          <span class="ui-field">paste <b>↑</b></span><span class="ar">→</span>
+          <span class="ui-pin" style="padding-left:12px">📸 photo</span>
+        </div>
+      </div>
+      <div class="glass ym-box" data-at="0" style="--d:.9s">
+        <div class="ym-h"><i>2</i>Look at your result <span class="ym-de">(Schau auf dein Ergebnis)</span></div>
+        <div class="ym-chat">📸 Your worksheet: ✅ <mark>17 of 20</mark> correct!<small>The coach writes this at the top. (Das steht oben in der Rückmeldung.)</small></div>
+        <span class="ym-look">↑ Look here! How many are correct?</span>
+      </div>
+    </div>
+    <div class="ym-r">
+      <div class="glass road-card a" data-at="1" style="--d:.2s">
+        <div class="gate"><small>you have</small><b>0–14</b><span>of 20<br>correct</span></div>
+        <div>
+          <h3><small>Road A · Outback</small>Practice <span class="ym-de" style="font:400 20px var(--font-body)">(Üben)</span></h3>
+          <ol>
+            <li><span>Tap <span class="ui-stamp">🏅 GET YOUR STAMP</span> <span class="ym-de">(Stern holen)</span></span></li>
+            <li><span>Back in the chat: write <span class="ui-word">Practice</span> and send.</span></li>
+            <li><span>Practise 2 rounds – made <b>just for you</b>. <span class="ym-de">(nur für dich)</span></span></li>
+          </ol>
+        </div>
+      </div>
+      <div class="glass road-card b" data-at="1" style="--d:.7s">
+        <div class="gate"><small>you have</small><b>15–20</b><span>of 20 correct<br>+ your first draft</span><span class="ym-de" style="font-size:13px;margin-top:6px">no draft? → A</span></div>
+        <div>
+          <h3><small>Road B · Uluru</small>Your article <span class="ym-de" style="font:400 20px var(--font-body)">(Dein Artikel)</span></h3>
+          <ol>
+            <li><span>Tap <span class="ui-stamp">🏅 GET YOUR STAMP</span> first. <span class="ym-de">(zuerst den Stern)</span></span></li>
+            <li><span>Map: <span class="ui-pin" style="--c:#C2410C;font-size:18px;padding:3px 12px 3px 4px"><b>3</b>Uluru</span> → <span class="ui-btn" style="font-size:17px;padding:5px 12px">⧉ Copy start code</span> → paste</span></li>
+            <li><span>📸 Photo of your <b>first draft</b> – read the feedback.</span></li>
+            <li><span>✍️ Write your <b>final draft</b> on paper. <span class="ym-de">(Endfassung)</span></span></li>
+          </ol>
+        </div>
+      </div>
+      <div class="paper ym-both" data-at="1" style="--d:1.3s"><span style="font-size:28px">🔁</span><span><b>Everyone does both roads this week.</b> <span class="ym-de">(Diese Woche machen alle beide Wege.)</span></span></div>
+    </div>
+  </section>
+
   <section class="slide" id="l1" data-phase="3" data-stop="Coach-Zeit" data-steps="1" data-sol="0" data-title="Jetzt arbeiten die Kinder.">
     <div class="left">
       <div class="kicker"><span class="st">Live</span><strong>Coach-Zeit</strong></div>
