@@ -62,11 +62,21 @@ assert.equal(cfg.routes[0].stops.filter((id) => p.status[id] === 'now').length, 
 // 3c. Kontrast-Station zählt nicht als eigene Zeitform (Achievement „All 5 tenses“)
 assert.equal(cfg.topics.SPPP.contrast, true);
 assert.equal(cfg.routes[0].stops.filter((id) => /^\d+$/.test(cfg.topics[id].number) && !cfg.topics[id].contrast).length, 5);
-// 3d. Gast-Codes: Koala, vorbereitete Reise bis Darwin
+// 3d. Gast-Codes: Koala, vorbereitete Reise bis zum Reef; Outback offen und unerledigt – wie bei der Klasse
 assert.equal(avatarSrc(cfg, 'GAST-KO01'), 'assets/img/animals/koala.webp');
-const guestPr = progress(cfg, cfg.guest.events.map(normaliseEvent), { open: ['SPPP'] });
-assert.equal(guestPr.status.PP, 'done');
-assert.ok(['now', 'soon'].includes(guestPr.status.SPPP));
+const cfgOpen = structuredClone(cfg);   // Stand ab Mi 14.10., 21 Uhr (opensAt): Outback und Uluru offen
+cfgOpen.topics.PP.status = 'active'; cfgOpen.topics.WRITE.status = 'active';
+const guestPr = progress(cfgOpen, cfg.guest.events.map(normaliseEvent), { open: Object.keys(cfg.topics) });
+assert.equal(guestPr.status.SP, 'done');
+assert.equal(guestPr.status.PP, 'now', 'Gast: Outback ist die aktuelle Station');
+assert.equal(guestPr.topics.PP.stars, 0, 'Gast: in Outback noch kein Stern');
+assert.equal(guestPr.topics.ARG.stars + guestPr.topics.WRITE.stars + guestPr.topics.ART.stars, 0, 'Gast: Writing Track unberührt');
+assert.ok(cfg.guest.since && !isNaN(Date.parse(cfg.guest.since)), 'Gast: Stichtag für alte Testabgaben');
+// 3e. Kind mit Gold Coast und Reef fertig: Outback ist dran, noch ohne Blatt und Übung
+const kidPr = progress(cfgOpen, [...base, w1, p1, ev('SP-W1', 3), ev('SP-P', 3)], { open: ['PP'] });
+assert.equal(kidPr.status.PP, 'now');
+assert.equal(kidPr.topics.PP.w1, null);
+assert.equal(kidPr.topics.PP.stars, 0);
 
 // 4. Dritter Stern: Zusatzblatt ODER zweite Übung
 assert.equal(progress(cfg, [w1, p1, ev('SPR-W2', 4)]).topics.SPR.stars, 3);

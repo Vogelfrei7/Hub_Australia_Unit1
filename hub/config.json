@@ -2245,7 +2245,7 @@
       "de": "Koala (Gast)",
       "file": "koala"
     },
-    "note": "Gäste starten mit einer vorbereiteten Reise bis Darwin. Ihre Abgaben erscheinen nicht in der Klassenauswertung.",
+    "note": "Gäste starten mit einer vorbereiteten Reise bis zum Great Barrier Reef (Outback offen, wie bei der Klasse). Abgaben vor \"since\" (Testläufe) werden für Gäste ausgeblendet. Ihre Abgaben erscheinen nicht in der Klassenauswertung.",
     "events": [
       {
         "station": "SPR-B",
@@ -2348,29 +2348,8 @@
         "s": "All sentences correct.",
         "fb": "",
         "ts": "2026-10-09T08:45:00Z"
-      },
-      {
-        "station": "PP-W1",
-        "n": 3,
-        "self": 0,
-        "h": 0,
-        "f": [
-          "SINCE"
-        ],
-        "s": "have/has correct.",
-        "fb": "",
-        "ts": "2026-10-12T08:30:00Z"
-      },
-      {
-        "station": "PP-P",
-        "n": 3,
-        "self": 0,
-        "h": 0,
-        "f": [],
-        "s": "Signal words correct.",
-        "fb": "",
-        "ts": "2026-10-14T08:45:00Z"
       }
-    ]
+    ],
+    "since": "2026-10-15T00:00:00+02:00"
   }
 }

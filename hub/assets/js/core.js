@@ -134,9 +134,13 @@ export async function loadEvents(cfg, code) {
   const pending = (store.get(cfg, `pending.${code}`, []) || []).map(normaliseEvent)
     .filter((e) => !(server && known.has(signature(e))) && e.ts > limit);
   store.set(cfg, `pending.${code}`, pending);
-  const pre = isGuest(cfg, code) ? (cfg.guest.events || []).map(normaliseEvent) : [];
+  const guest = isGuest(cfg, code);
+  const pre = guest ? (cfg.guest.events || []).map(normaliseEvent) : [];
+  // Gäste: eigene Abgaben erst ab "since" – Testläufe davor (z. B. Generalprobe) bleiben unsichtbar
+  const since = guest && cfg.guest.since ? Date.parse(cfg.guest.since) || 0 : 0;
+  const own = base.concat(pending.filter((e) => !known.has(signature(e)))).filter((e) => e.ts >= since);
   return {
-    events: pre.concat(base, pending.filter((e) => !known.has(signature(e)))),
+    events: pre.concat(own),
     source: server ? 'live' : cached ? 'cache' : 'none',
     pending: pending.length,
     klass: klass || store.get(cfg, 'klass', null),
