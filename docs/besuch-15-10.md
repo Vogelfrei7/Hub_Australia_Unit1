@@ -7,19 +7,75 @@ Klasse: ganze 09c (31 Kinder inkl. 2 Sprachseiteneinsteiger, 1 Förderschüler) 
 **Leitidee:** Die Kinder arbeiten, ich rede wenig. Erst erleben lassen, dann einordnen. Die Präsentation `hub/konzept.html` zeigt auf der
 digitalen Tafel jederzeit, in welcher Phase wir sind (Phasenleiste unten links).
 
-## Offene Punkte (Stand 12.10.2026)
-- [x] **Present-perfect-Lagerfeuer:** Mi 14.10. (Regeln erarbeiten, ohne Karte und Coach). Rückblick-Zeile in `konzept.html` steht auf 14.10.
-- [x] **Grammatik am Donnerstag:** Outback (present perfect).
-- [x] **Outback und Uluru schalten sich selbst frei:** `"opensAt": "2026-10-14T21:00:00+02:00"` in `hub/config.json` – kein Push am Mittwochabend nötig.
-- [ ] **Mi 14.10. abends: Lagerfeuer Outback im Dashboard anzünden** (bekommt das Datum 14.10. = Tag der Stunde). Wichtig: Ohne Feuer ist Outback
-      nur für Kinder offen, die Gold Coast und Reef fertig haben – alle anderen sehen „Later“.
-- Darwin (`SPPP`) bleibt zu.
-- [ ] **Plan aus Kata Tjuta:** Seit 11.10. auch im Sheet gesichert – Uluru findet ihn auf jedem iPad. Für die Hausaufgabe (iPads bleiben in der Schule?) trotzdem Foto oder Abschrift vom Plan.
-- [ ] **Klassenzahlen** in `hub/konzept.html` (Block `DATA`) am Mi 14.10. abends aktualisieren – nur das Beispiel simple past.
-- [ ] **KI-Bericht** (Auswertungs-Prompt in `apps-script/Code.gs`) überarbeiten – Wünsche noch sammeln. Mi-Abend-Bericht lokal speichern, Do live erzeugen.
-- [ ] Optional: Auf der Konzept-Folie „Unsere Antworten …“ die Zeile „Eine immersive Lernlandkarte …“ ersetzen (Doppelung mit der Startfolie).
-- [ ] Nach dem Besuch: **Lehrerkarte** bauen (Vorführ-Karte), mit Einstieg zu `konzept.html`.
-- [ ] Nach dem Besuch, falls gewünscht: Weitergabe-Fassung der Präsentation (PDF mit Standbildern oder PowerPoint mit eingebetteten Videos).
+## Übergabe für einen neuen Chat (Stand Mi 14.10.2026, ca. 22 Uhr)
+
+**Repo:** alles committet und gepusht (letzter Stand auf `main`, Seiten-Version `?v=3.9`). `node docs/tests/routing.test.mjs` läuft grün.
+**Nur lokal / NAS (`private/`):** Arbeitsblätter, Handouts, Testartikel, Evidenzcheck – siehe „Dateien für morgen“.
+
+### Was seit dem 12.10. umgesetzt ist (live)
+- **Freischaltung per Datum:** `topics.PP` und `topics.WRITE` haben `"opensAt": "2026-10-14T21:00:00+02:00"` → Outback und Uluru sind seit Mi 21 Uhr offen
+  (`loadConfig` in `hub/assets/js/core.js` setzt `status` dann auf `active`). Darwin (`SPPP`) bleibt zu.
+- **Lagerfeuer Outback** ist im Dashboard angezündet (Datum 14.10.) → Outback ist für alle Kinder offen.
+- **Gäste (`GAST-KO01…06`):**
+  - vorbereitete Reise in `config.json` → `guest.events`: Grammatik bis Great Barrier Reef (Outback ist „NOW“, ohne Sterne – wie bei der Klasse),
+    Writing Track: Alice Springs + Kata Tjuta erledigt, **Uluru ist „NOW“**; die Kata-Tjuta-Abgabe trägt einen **Plan passend zum Testartikel**
+    (der Startcode am Uluru kopiert ihn mit).
+  - `guest.since = 2026-10-15T00:00:00+02:00`: Abgaben von Gast-Codes **vor Donnerstag 0 Uhr** (Tests, Generalprobe) werden ausgeblendet.
+    ⚠️ **Do früh nicht mehr mit Gast-Codes testen** – ab 0 Uhr bleibt jede Gast-Abgabe sichtbar.
+  - Gäste dürfen jede offene Station anklicken (`map.js`); ihre Abgaben stehen im Sheet, nicht im Dashboard.
+  - Gast-Karten (`tools/gastkarten.html`): QR öffnet **Outback**; Anleitung mit optionalem Schritt **Uluru + Beispielartikel**.
+  - Hat ein Gerät schon einen Code, fragt die Karte beim Scannen „Use the code … on this iPad?“ → **OK** tippen.
+- **Stempelseite (`abgabe.html`):** Nach dem **Arbeitsblatt** (noch ohne Übung) und nach der **1. Fassung (Uluru)** ist der Hauptknopf
+  **„↩ Back to the chat“** (gleicher Tab → zurück, neuer Tab → Tab schließen; sonst Hinweis „oben auf den Chat-Tab tippen“), Karte als 2. Knopf.
+  Texte: Grammatik „write *Practice*“, Uluru „final draft auf Papier, dann im Chat *My final draft* + Foto“. Gäste: nur „Back to the map“.
+  Auf dem iPad mit Safari **noch nicht getestet** (siehe Restliste).
+- **Dashboard + KI-Bericht** (`apps-script/`): Steuerung oben → Auf einen Blick → Was jetzt ansteht (max. 3 je Kategorie, nur behandelte
+  Stationen) → KI-Auswertung (JSON, Karten) → Stationen im Detail. Testcodes ausschließbar (Menü „Road Trip → Testcodes ausschließen …“).
+  Kennzahl **„Kinder: Fehler beim Üben behoben“** ersetzt „Üben besser als Blatt“ (Niveaus von Blatt und Üben sind nicht vergleichbar:
+  Üben-Niveau 4 gibt es erst auf Stufe D). ⚠️ Diese letzte Änderung muss noch ins Apps Script (siehe Restliste).
+- **Präsentation (`hub/konzept.html`):** Klasse **31** (31 Lernwege/Kinder/Blätter); Rückblick „Bis hierher: ohne KI.“ (gestern Lagerfeuer,
+  heute Arbeitsblatt); neue **Kinderfolie „Choose your road!“** (Folie 4, Live): alle zuerst Foto des Arbeitsblatts → **0–14 von 20 → Road A
+  Practice**, **15–20 + 1. Fassung → Road B Uluru**; Zahlen simple past im `DATA`-Block: Niveau 1 **13 → 4**, Verteilung 4/9/14/6,
+  Ø **2,1 → 3,0**, **14 von 22** verbessert (Stand Mi abends; Verteilung enthält vermutlich noch 1 Testcode).
+- **Klassengröße:** 31 Kinder (inkl. 2 Sprachseiteneinsteiger, 1 Förderschüler) – `config.json` → `classSizes`.
+
+### Restliste Mittwochabend
+- [ ] **Apps Script:** `Code.gs` + `Dashboard.html` aus dem Repo im Editor ersetzen → Bereitstellen → neue Version (Kennzahl „Fehler beim Üben behoben“).
+- [ ] **KI-Bericht** im Dashboard erstellen und sichern: Dashboard im eigenen Tab öffnen → Cmd + P → „Als PDF sichern“
+      (jeder Bericht steht zusätzlich im Blatt „KI-Auswertung“; das Dashboard zeigt immer den letzten).
+- [ ] **Drucken:** Gast-Karten (`tools/gastkarten.html`, Seite 1 einmal, Seite 2 je Gast) · Testartikel `private/besuch/testartikel-uluru.pdf` (6×) ·
+      Handouts `private/besuch/handout-empfang.pdf` (2×) und `handout-lotsen.pdf` (5×) · prüfen: **AUS1-PP-1 (32× weiß), AUS1-PP-2 (12× gold)**.
+- [ ] **Gast-iPads** (4–5, geladen); Gast-Karten optional schon heute scannen (spart morgen Zeit).
+- [ ] Optional: **iPad-Test „Back to the chat“** mit eigenem Test-Code (nicht Gast): Outback → Startcode → Foto → GET YOUR STAMP → Knopf.
+      Danach den Test-Code über „Testcodes ausschließen …“ herausnehmen.
+- [ ] Optional: Writing Coach mit dem Testartikel und `GAST-KO05` (noch heute – ab 0 Uhr bleiben Gast-Abgaben sichtbar).
+
+### Do früh
+- [ ] Rollen klären: Empfangsteam (wer spricht, Anrede des Präsidenten – Lücke im Handout), 4–5 Lotsen (≈ 3 Road A, 2 Road B, wer tauscht nach ~10 Min.).
+- [ ] Tafel-Gerät: `hub/konzept.html` **lokal** aus dem Klon (läuft ohne WLAN), Vollbild **F**, Clicker testen. Kinderfolie = Folie 4.
+- [ ] Lehrer-Gerät: Dashboard als Lesezeichen, „Codes ausblenden“ antippen; gesicherten Bericht als PDF offen halten.
+- [ ] In der ersten halben Stunde: Dashboard „Today in class“ → 🤖 Coach time.
+- [ ] Optional: Zahlen im Dashboard noch einmal ablesen → `DATA`-Block in `konzept.html` (Claude kann das in einer Minute nachtragen).
+
+### Dateien für morgen
+| Datei | Zweck |
+|---|---|
+| `hub/konzept.html` | Präsentation (lokal öffnen) |
+| `tools/gastkarten.html` | Gast-Karten + Anleitung |
+| `private/arbeitsblaetter/AUS1-PP-1/-2.pdf` | Arbeitsblätter Outback (weiß/gold) |
+| `private/arbeitsblaetter/AUS1-PP-R.pdf` | Regel-Blatt (Mi, Lagerfeuer) – Schreibraum entzerrt |
+| `private/arbeitsblaetter/AUS1-WRITE-1.pdf` | Artikel-Plan + Checkliste (an die Kinder geschickt) |
+| `private/besuch/handout-empfang.pdf` · `handout-lotsen.pdf` | Vorbereitung Empfangsteam / Lotsen |
+| `private/besuch/testartikel-uluru.pdf` | Beispielartikel mit Fehlern für Gäste und Tests |
+| `private/lehrkraft/evidenzcheck-lernlandschaft.md` | Evidenzcheck (nur eingesetzte Elemente), Formulierungen für das Gespräch |
+
+### Nach dem Besuch (nicht dringend)
+- Achievement „Level up!“ (`core.js`) nutzt noch den verzerrten Vergleich Üben-Niveau > Blatt-Niveau → auf „Fehler behoben“ umstellen.
+- Station „Practice test“ (Blue Mountains) als Post-Test (Parallelform des Check-ins) öffnen; verzögerten Post-Test einplanen.
+- KI-Bewertungen stichprobenartig selbst doppelt bewerten (je Station 5 Blätter/Texte).
+- Info-Stationen Alice Springs/Kata Tjuta: Stempel an eine geschriebene Begründung koppeln (Durchklicken vermeiden).
+- Lehrerkarte (Vorführ-Karte) mit Einstieg zu `konzept.html`; ggf. Weitergabe-Fassung der Präsentation.
+- `guest.since` und die Gast-Reise nach dem Besuch zurücksetzen oder entfernen.
 
 ## Die Woche davor
 
@@ -64,22 +120,9 @@ digitalen Tafel jederzeit, in welcher Phase wir sind (Phasenleiste unten links).
 - **Generalprobe:** Jeder Lotse macht einmal selbst eine Runde mit einem Gast-Code (GAST-KO01 … KO06). Danach im Dashboard prüfen: Die Gast-Abgaben erscheinen nicht.
 
 ## Technik-Checkliste (Mittwochabend)
-- [x] Sidekick: Present Perfect Coach und Past or Perfect Coach angelegt, Prompts `agents/dist/PP.md` und `agents/dist/SPPP.md`,
-      Wissen: `AUS1-PP-1_loesung.md`, `AUS1-PP-2_loesung.md` bzw. `AUS1-SPPP-1_loesung.md`, `AUS1-SPPP-2_loesung.md`.
-      Prompts von SPR und SP neu einfügen (sie leiten jetzt an die neuen Coaches weiter).
-- [x] Beide Eingabe-Adressen an Claude geschickt → Stationen 3 und 4 freigeschaltet.
-- [x] `apps-script/Code.gs` ersetzt (Gäste-Filter) → Bereitstellen → Neue Version. Getestet: Gast steht im Sheet, nicht im Dashboard.
-- [x] Drucken: AUS1-SPPP-R (30×), AUS1-SPPP-1 (32× weiß), AUS1-SPPP-2 (12× gold)
-- [ ] Drucken: Gast-Karten `tools/gastkarten.html` (1×, ausschneiden).
-- [ ] **Gast-iPads:** 4–5 eigene iPads für die Gäste (nicht die der Kinder – sonst ist danach der Gast-Code auf dem Kinder-iPad).
-      Falls doch Kinder-iPads: danach die eigene Code-Karte des Kindes neu scannen.
-- [ ] Writing Coach (Uluru) mit einer echten 1. Fassung getestet.
-- [ ] KI-Bericht Mittwochabend erstellt und lokal gespeichert; Ablauf für den Live-Bericht am Donnerstag einmal durchgespielt.
-- [ ] Klassenzahlen in `hub/konzept.html` (Block `DATA`) aktualisiert.
-- [ ] `konzept.html` auf dem Tafel-Gerät **lokal** geöffnet (Datei aus dem Klon, funktioniert ohne WLAN), Vollbild mit **F**, Clicker getestet.
-      Phasen: Shift + 1–6 oder Klick auf die Leiste unten links.
-- [ ] Dashboard-Adresse als Lesezeichen am Lehrer-Gerät; Präsentationsmodus getestet.
-- [ ] Generalprobe ganz durch: Kinder-Code und Gast-Code, Foto hochladen, Stempel, Dashboard aktualisieren.
+Erledigt: Sidekick-Coaches PP/SPPP angelegt · Eingabe-Adressen eingetragen · Apps Script mit Gäste-Filter, Dashboard-Umbau und
+Testcode-Ausschluss eingespielt · Lagerfeuer Outback angezündet · Outback/Uluru per `opensAt` offen · Gast-Codes live geprüft.
+Offen: siehe **Restliste Mittwochabend** und **Do früh** oben.
 
 ## Notfallkarte
 | Problem | Lösung |

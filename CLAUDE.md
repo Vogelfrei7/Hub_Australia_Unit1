@@ -24,8 +24,9 @@ Grammar Road: Start Sydney → 1 SPR Gold Coast → 2 SP Great Barrier Reef → 
 Writing Track (Thema „Is Australia worth visiting?“, Klassenarbeit später: Artikel „High school year in Australia“ – Aufgabe nur in `private/`):
 ART Alice Springs (Info-Station, `lesson.html?st=ART`, ohne KI) → ARG Kata Tjuta (Argumente sortieren, 3–4 wählen, Plan; `lesson.html?st=ARG`, Plan bleibt auf dem iPad und reist zusätzlich im Feld „Stärke“ der Abgabe nach ` ### ` ins Sheet) → WRITE Uluru (Writing Coach: Artikel auf Papier, Foto; `-W1` erste Fassung, `-W2` Endfassung; Startcode trägt den Plan aus ARG – vom iPad, sonst aus dem Sheet).
 Writing Coach = `agents/core-writing.md` + `agents/topics/writing.md` (Raster wie Klassenarbeit, `private/lehrkraft/bewertungsraster-article.md`).
-Stationen mit `page: true` + `lesson` in config: ein Durchgang = Stempel (Schritt `<ID>-P`). Stations-IDs nur Buchstaben (Schritt-Regex). Gast-Codes `GAST-KO01…06` (Koala, vorbereitete Reise bis Darwin, im Apps Script herausgefiltert).
-Unterrichtsbesuch 15.10.: `docs/besuch-15-10.md`.
+Stationen mit `page: true` + `lesson` in config: ein Durchgang = Stempel (Schritt `<ID>-P`). Stations-IDs nur Buchstaben (Schritt-Regex). Gast-Codes `GAST-KO01…06` (Koala, vorbereitete Reise in `guest.events`: Grammatik bis Reef, Writing bis Kata Tjuta mit Plan; `guest.since` blendet ältere Gast-Abgaben aus; im Apps Script herausgefiltert).
+Stationen können sich per `"opensAt"` (ISO-Zeit) selbst freischalten (`loadConfig` in `core.js`).
+Unterrichtsbesuch 15.10.: `docs/besuch-15-10.md` – oben steht die **Übergabe** mit aktuellem Stand und Restliste.
 
 ## Datenfluss
 Kind: Code (z. B. `LOEWE-K7Q2`, per QR) → Check-in (Startwert `<THEMA>-B`) → Arbeitsblatt (Foto an Coach, `-W1`/`-W2`)
