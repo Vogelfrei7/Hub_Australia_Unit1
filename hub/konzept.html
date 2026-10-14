@@ -645,10 +645,10 @@ body.idle .phases { opacity: .8; }
   <nav class="road" id="road" aria-label="Stationen"></nav>
 
   <!-- ================= Phase 1 · Ankommen (Standbild beim Betreten, Karte in Schleife) ================= -->
-  <section class="slide" id="a1" data-phase="1" data-stop="Willkommen" data-steps="1" data-sol="0" data-title="Eine Klasse. 32 Lernwege.">
+  <section class="slide" id="a1" data-phase="1" data-stop="Willkommen" data-steps="1" data-sol="0" data-title="Eine Klasse. 31 Lernwege.">
     <div class="left">
       <div class="kicker"><span class="st">Unterrichtsbesuch · Englisch · Klasse 9</span></div>
-      <h1>Eine Klasse.<br><span class="hl-w">32 Lernwege.</span></h1>
+      <h1>Eine Klasse.<br><span class="hl-w">31 Lernwege.</span></h1>
       <p class="lead" data-at="0" style="--d:.6s">Eine immersive Lernlandkarte mit KI-Coach: <b>Jedes Kind übt, was es wirklich braucht.</b></p>
       <p class="lead quiet" data-at="0" style="--d:1.2s"><b>Adaptive Grammatikübungen &amp; individuelles Schreibfeedback</b> – sofort, für jedes Kind.</p>
       <div class="tracks" data-at="0" style="--d:1.6s"><span class="paper"><i style="--c:#1B2A55"></i>Grammar Road</span><span class="paper"><i style="--c:#C2410C"></i>Writing Track</span></div>
@@ -846,12 +846,12 @@ body.idle .phases { opacity: .8; }
   </section>
 
   <!-- 1 · Adaptive Lernwege -->
-  <section class="slide" id="s1" data-phase="4" data-steps="3" data-sol="2" data-title="32 Kinder. 32 × Stärken &amp; Schwächen.">
+  <section class="slide" id="s1" data-phase="4" data-steps="3" data-sol="2" data-title="31 Kinder. 31 × Stärken &amp; Schwächen.">
     <div class="left">
       <div class="kicker"><span class="st">Station 1</span><strong>Adaptive Lernwege</strong><span class="stack"><span class="badge" data-at="0" data-until="1">Das Problem</span><span class="badge sol" data-at="2">Die Lösung</span></span></div>
       <div class="stack">
         <div data-at="0" data-until="1">
-          <h2 class="md">32 Kinder.<br><span class="hl-w">32 × Stärken</span><br><span class="hl-w">&amp; Schwächen.</span></h2>
+          <h2 class="md">31 Kinder.<br><span class="hl-w">31 × Stärken</span><br><span class="hl-w">&amp; Schwächen.</span></h2>
           <p class="lead">Jedes Kind macht <b>seine eigenen Fehler</b> – und hat <b>seine eigenen Stärken</b>.</p>
           <p class="lead quiet" data-at="1">Und trotzdem bekommen im normalen Unterricht alle die gleichen Arbeitsblätter. Zu leicht für den einen, zu schwer für den anderen.</p>
         </div>
@@ -928,7 +928,7 @@ body.idle .phases { opacity: .8; }
       <div class="kicker"><span class="st">Station 3</span><strong>Feedback für jedes Kind</strong><span class="stack"><span class="badge" data-at="0" data-until="1">Das Problem</span><span class="badge sol" data-at="2">Die Lösung</span></span></div>
       <div class="stack">
         <div data-at="0" data-until="1">
-          <h2>32 Blätter.<br><span class="hl-w">1 Lehrkraft.</span></h2>
+          <h2>31 Blätter.<br><span class="hl-w">1 Lehrkraft.</span></h2>
           <p class="lead">Jedes Kind braucht eine <b>Rückmeldung</b> zu seinen Antworten – am besten <b>sofort</b>.</p>
           <div data-at="1">
             <p class="lead quiet">Doch bis alle Blätter korrigiert sind, ist das Thema längst vorbei. Eine persönliche Rückmeldung für jedes Kind, direkt in der Stunde?</p>
@@ -952,7 +952,7 @@ body.idle .phases { opacity: .8; }
     <div class="scene">
       <div data-at="0" data-until="1" style="position:absolute;inset:0;transform:none">
         <div class="pile" id="pile"></div>
-        <div data-at="0" data-until="0"><div class="pile-n">32<small>Arbeitsblätter</small></div></div>
+        <div data-at="0" data-until="0"><div class="pile-n">31<small>Arbeitsblätter</small></div></div>
         <svg class="clock" viewBox="0 0 200 200" data-at="0" data-until="0" style="--d:1.6s">
           <circle cx="100" cy="104" r="92" fill="#C9643B"/><circle cx="100" cy="100" r="92" fill="#FFFBF3"/><circle cx="100" cy="100" r="80" fill="none" stroke="#E2D4BA" stroke-width="3"/>
           <g stroke="#1B2A55" stroke-width="5" stroke-linecap="round"><path d="M100 26 V36"/><path d="M174 100 H164"/><path d="M100 174 V164"/><path d="M26 100 H36"/></g>
@@ -1283,8 +1283,8 @@ body.idle .phases { opacity: .8; }
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const NS = 'http://www.w3.org/2000/svg';
   const rnd = (seed) => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
-  // 32 Kinder: 31 Tiere, eins doppelt (wie in der echten Klasse)
-  const ANIMALS = 'alpaca bear bunny cobra dolphin eagle falcon fawn fox gorilla hamster hedgehog jaguar kitten koala lamb lion lynx orca otter panda panther penguin puppy rhino seal shark squirrel tiger viper wolf fox'.split(' ');
+  // 31 Kinder, je ein Tier
+  const ANIMALS = 'alpaca bear bunny cobra dolphin eagle falcon fawn fox gorilla hamster hedgehog jaguar kitten koala lamb lion lynx orca otter panda panther penguin puppy rhino seal shark squirrel tiger viper wolf'.split(' ');
   const img = (a) => `assets/img/animals/${a}.webp`;
   const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
@@ -1330,7 +1330,7 @@ body.idle .phases { opacity: .8; }
 
   /* ---------- Echte Klassenzahlen (Dashboard + KI-Bericht, Stand 11.10.2026) ----------
      Nur das idealtypische Beispiel simple past: Lagerfeuer → Coach → Üben. Am Mi 14.10. abends prüfen. */
-  const DATA = { n1Before: 14, n1Now: 3, dist: [3, 9, 14, 6], avg: ['2,0', '3,15'], improved: 14 };
+  const DATA = { n1Before: 13, n1Now: 4, dist: [4, 9, 14, 6], avg: ['2,1', '3,0'], improved: 14, compared: 22 };   // Dashboard 14.10. abends (simple past)
 
   /* ---------- Karte ---------- */
   const LAND = 'M230,260 L300,215 L380,195 L450,140 L480,118 L560,108 L600,130 L625,150 L640,215 L700,128 L740,58 L770,120 L800,200 L830,260 L870,330 L905,420 L912,500 L895,570 L880,610 L850,680 L800,705 L760,700 L700,670 L640,640 L600,625 L575,595 L560,600 L520,570 L450,555 L380,560 L300,590 L200,620 L130,625 L110,560 L95,470 L110,380 L160,320 Z';
@@ -1421,7 +1421,7 @@ body.idle .phases { opacity: .8; }
       setTimeout(() => m.pencil.classList.add('on'), RM ? 0 : delay);
       anim('wraf', 2600 * Math.max(frac, .4), delay, (e) => m.wplace(e * frac), () => { setTimeout(() => m.pencil.classList.remove('on'), 500); if (done) done(); }); };
     m.el = el;
-    if (opt.kids) { // "32 Lernwege": Kinder an verschiedenen Stellen beider Routen
+    if (opt.kids) { // "31 Lernwege": Kinder an verschiedenen Stellen beider Routen
       const r = rnd(9), pool = ANIMALS.slice().sort(() => r() - .5);
       const pts = [...[.07, .19, .31, .45, .57, .7, .83, .94].map((f) => route.getPointAtLength(f * m.total)), ...[.28, .66].map((f) => wroute.getPointAtLength(f * m.wtotal))];
       $('.kids', svg).innerHTML = pts.map((p, i) => `<g class="kidtok" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})" style="--kd:${(i * .23).toFixed(2)}s"><g class="kin"><g class="kbob"><circle r="25" fill="#FFFBF3" filter="url(#ds-${uid})"/><image href="${img(pool[i])}" x="-21" y="-21" width="42" height="42" clip-path="url(#kc-${uid})"/></g></g></g>`).join('');
@@ -1452,16 +1452,16 @@ body.idle .phases { opacity: .8; }
   /* ---------- Szene 2: Klassenraum ---------- */
   (() => {
     const r = rnd(21), room = $('#room'), raise = [8, 16, 20, 25];
-    const others = [...Array(32).keys()].filter((i) => !raise.includes(i)).sort(() => r() - .5).slice(0, 17);
+    const others = [...Array(31).keys()].filter((i) => !raise.includes(i)).sort(() => r() - .5).slice(0, 17);
     room.insertAdjacentHTML('beforeend', ANIMALS.map((a, i) => {
-      const row = Math.floor(i / 7), col = i % 7, x = 30 + col * 104 + (row === 4 ? 156 : 0), y = 170 + row * 90;
+      const row = Math.floor(i / 7), col = i % 7, x = 30 + col * 104 + (row === 4 ? 208 : 0), y = 170 + row * 90;
       const j = others.indexOf(i);
       return `<div class="desk ${raise.includes(i) ? 'raise' : ''}" style="--x:${x}px;--y:${y}px;--i:${i};--j:${j}"><div class="tok"><img src="${img(a)}" alt=""></div>${raise.includes(i) ? '<span class="hand">✋</span>' : ''}${j >= 0 ? '<span class="qm">?</span>' : ''}</div>`;
     }).join(''));
   })();
 
   /* ---------- Szene 3: Stapel ---------- */
-  (() => { const r = rnd(3); $('#pile').innerHTML = [...Array(32)].map((_, i) => `<div class="sh" style="--i:${i};--r:${((r() - .5) * 6).toFixed(1)}deg"></div>`).join(''); })();
+  (() => { const r = rnd(3); $('#pile').innerHTML = [...Array(31)].map((_, i) => `<div class="sh" style="--i:${i};--r:${((r() - .5) * 6).toFixed(1)}deg"></div>`).join(''); })();
 
   /* ---------- Szene 4: Writing-Coach-Punkte ---------- */
   const pts = (n, f, g) => [...Array(n)].map((_, i) => `<b class="${i < f ? 'f' : i < f + g ? 'g' : ''}" style="--k:${i - f}"></b>`).join('');
@@ -1514,7 +1514,7 @@ body.idle .phases { opacity: .8; }
     $('#gBar').innerHTML = DATA.dist.map((n, k) => `<span style="--c:${C[k]};--w:${(n / sum * 100).toFixed(1)}%;--d:${(2.4 + k * .15).toFixed(2)}s">${n}</span>`).join('');
     $('#gCap').innerHTML = `Heute: <b>${DATA.dist[2] + DATA.dist[3]} von ${sum} Kindern</b> sicher auf Niveau 3 oder 4.`;
     $('#gAvg').textContent = `${DATA.avg[0]} → ${DATA.avg[1]}`;
-    $('#gImp').textContent = `${DATA.improved} Kinder`;
+    $('#gImp').textContent = `${DATA.improved} von ${DATA.compared}`;
   })();
 
   // L1: zwei Zonen mit je 16 Kindern

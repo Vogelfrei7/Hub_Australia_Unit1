@@ -667,7 +667,15 @@ function analysis_(cfg) {
       var current = followed.length ? followed[followed.length - 1].n : (sheet ? sheet.n : latest.n);
       levels[current] = (levels[current] || 0) + 1;
       var later = kind === 'draft' ? final : practice;
-      if (sheet && later) { compared++; if (later.n > sheet.n) improved++; }
+      // Vergleich: Schreiben = Endfassung besser als 1. Fassung (gleiches Raster).
+      // Grammatik = beim Üben mind. einen Fehlerbereich vom Blatt behoben (Niveaus von Blatt und Üben sind nicht vergleichbar: Üben-Niveau 4 gibt es erst auf Stufe D).
+      if (kind === 'draft') { if (sheet && final) { compared++; if (final.n > sheet.n) improved++; } }
+      else if (kind === 'grammar') {
+        var lastSheet = lastOf(sheetsAll), lastPr = lastOf(by('practice'));
+        if (lastSheet && lastPr && String(lastPr.ts) >= String(lastSheet.ts) && lastSheet.f.length) {
+          compared++; if (lastSheet.f.some(function (c) { return lastPr.f.indexOf(c) < 0; })) improved++;
+        }
+      }
       if (base && work.length) {
         gN++; gBase += base.n; gNow += current; if (current > base.n) gUp++;
         var kg = kidGrowth[code] || (kidGrowth[code] = { base: 0, now: 0 }); kg.base += base.n; kg.now += current;
@@ -719,7 +727,7 @@ function analysis_(cfg) {
     var rec = function (type, p, n2, text, action, list) { if (treated) out.recommendations.push({ type: type, topic: label, kind: kind, p: p, n: n2, r: lastWork, text: text, action: action, codes: list && list.length ? list : null }); };
     if (growth && growth.kids >= 3) rec('gut', 3, growth.up, 'Lernzuwachs seit dem Check-in: Ø Niveau ' + String(growth.base).replace('.', ',') + ' → ' + String(growth.now).replace('.', ',') +
       ' (' + growth.up + ' von ' + growth.kids + ' Kindern verbessert).', 'Vorsichtig deuten (unterschiedliche Aufgabenformate).');
-    if (compared >= 3) rec('gut', 3, improved, kind === 'draft' ? improved + ' von ' + compared + ' Kindern: Endfassung besser als die 1. Fassung.' : improved + ' von ' + compared + ' Kindern sind beim Üben besser als auf dem Blatt.',
+    if (compared >= 3) rec('gut', 3, improved, kind === 'draft' ? improved + ' von ' + compared + ' Kindern: Endfassung besser als die 1. Fassung.' : improved + ' von ' + compared + ' Kindern mit Fehlern auf dem Blatt haben beim Üben mindestens einen Fehlerbereich behoben.',
       kind === 'draft' ? 'Das Feedback zur 1. Fassung wirkt.' : 'Das adaptive Üben wirkt.');
     areaList.forEach(function (a) {
       var pct = n ? a.now / n : 0;
@@ -865,7 +873,7 @@ function buildAiInput_() {
     lines.push('Schritte erledigt: ' + t.stepList.map(function (s) { return s.label + ' ' + s.v; }).join(' · '));
     lines.push('Aktuelles Niveau: 1: ' + t.levels[1] + ' · 2: ' + t.levels[2] + ' · 3: ' + t.levels[3] + ' · 4: ' + t.levels[4]);
     if (t.growth) lines.push('Lernzuwachs seit Check-in: Ø ' + t.growth.base + ' → ' + t.growth.now + ', ' + t.growth.up + ' von ' + t.growth.kids + ' Kindern verbessert');
-    if (t.compared) lines.push((t.kind === 'draft' ? 'Endfassung besser als 1. Fassung: ' : 'Üben besser als Blatt: ') + t.improved + ' von ' + t.compared);
+    if (t.compared) lines.push((t.kind === 'draft' ? 'Endfassung besser als 1. Fassung: ' : 'Kinder mit Fehlern auf dem Blatt, die beim Üben mind. einen Fehlerbereich behoben haben: ') + t.improved + ' von ' + t.compared);
     if (t.manyHelps.length) lines.push('Viele Hilfen (3+): ' + t.manyHelps.join(', '));
     t.areas.forEach(function (x) {
       lines.push('- ' + x.code + ' (' + x.label + '): noch offen ' + x.now + (x.now ? ' [' + x.nowCodes.join(', ') + ']' : '') + ', behoben ' + x.resolved +

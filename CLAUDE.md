@@ -1,6 +1,6 @@
 # Australia Road Trip – Projektwissen für Claude
 
-Gamifizierter Grammatik-/Schreib-Hub für Englisch Klasse 9 (Realschule NRW, Headlight 5, Unit 1, Klasse 09c, 29 SuS).
+Gamifizierter Grammatik-/Schreib-Hub für Englisch Klasse 9 (Realschule NRW, Headlight 5, Unit 1, Klasse 09c, 31 SuS inkl. 2 Sprachseiteneinsteiger, 1 Förderschüler).
 Lehrkraft: Vogelfrei7 (GitHub). Präsentation beim Regierungspräsidenten am **Do, 15.10.2026**.
 Kernbotschaft: KI macht Diagnostik zu einem mächtigen Werkzeug (Lehrkraft erfährt mehr, SuS verstehen Stärken/Schwächen).
 

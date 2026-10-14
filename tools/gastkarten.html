@@ -36,21 +36,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script>
   var CODES = ['GAST-KO01', 'GAST-KO02', 'GAST-KO03', 'GAST-KO04', 'GAST-KO05', 'GAST-KO06'];
-  var HUB = 'https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/?st=SPPP&code=';   // öffnet die Karte an der Station Darwin
+  var HUB = 'https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/?st=PP&code=';   // öffnet die Karte an der Station Outback
   function qr(text) { var q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 3, margin: 0, scalable: true }); }
   var cards = CODES.map(function (c) {
     return '<div class="card"><h2>Welcome on board!<small>Sie reisen heute mit der 09c durch Australien. (Guest traveller)</small></h2>' +
       '<img class="av" src="../hub/assets/img/animals/koala.webp" alt="Koala">' +
-      '<div><div class="code">' + c + '</div><p class="hint" style="margin:6px 0 0">QR-Code scannen – die Karte öffnet sich mit Ihrem Code an der Station <b>Darwin</b>.</p></div>' +
+      '<div><div class="code">' + c + '</div><p class="hint" style="margin:6px 0 0">QR-Code scannen – die Karte öffnet sich mit Ihrem Code an der Station <b>Outback</b>.</p></div>' +
       '<div class="qr">' + qr(HUB + c) + '</div>' +
       '<p class="hint" style="margin:0">Ihr Lotse (ein Kind der Klasse) zeigt Ihnen den Weg. Ihre Ergebnisse fließen nicht in die Auswertung der Klasse ein.</p></div>';
   }).join('');
   var howto = '<div class="howto"><h3>So probieren Sie es aus – in 5 Minuten</h3><ol>' +
-    '<li><b>QR-Code scannen.</b> Die Karte zeigt Ihre Reise: Die ersten Stationen sind schon geschafft, Ihr Campervan steht in <b>Darwin</b>.</li>' +
-    '<li>Auf <b>Darwin</b> tippen → <b>Copy start code</b> → unten ins Coach-Feld tippen, einfügen, senden. Es öffnet sich der Chat mit dem Coach.</li>' +
-    '<li><b>Practice (Üben)</b> wählen. Der Coach stellt 8 Sätze: simple past oder present perfect? Antworten Sie z. B. <i>1 saw, 2 have been …</i></li>' +
+    '<li><b>QR-Code scannen.</b> Die Karte zeigt Ihre Reise: Die ersten Stationen sind schon geschafft – genau wie bei den Kindern.</li>' +
+    '<li>Auf <b>Outback</b> tippen → <b>Copy start code</b> → unten ins Coach-Feld tippen, einfügen, senden. Es öffnet sich der Chat mit dem Coach.</li>' +
+    '<li>Der Coach startet direkt mit dem Üben: 8 Sätze zum <i>present perfect</i>. Antworten Sie z. B. <i>1 have seen, 2 has flown …</i></li>' +
     '<li>Sie bekommen eine Rückmeldung wie die Kinder – mit Erklärung, Stärke und Tipp. Am Ende: <b>„🏅 Get your stamp“</b> antippen.</li>' +
-    '<li>Zurück auf der Karte: Ihr Stern und Ihr Stempel sind da – und die Station Darwin erwacht. Im <b>Pass</b> sehen Sie Ihre Reise.</li>' +
+    '<li>Zurück auf der Karte: Ihr Stern ist da. Im <b>Pass</b> sehen Sie Ihre ganze Reise.</li>' +
     '</ol><p class="hint" style="margin:6px 0 0">Datenschutz: Die Kinder arbeiten nur mit solchen Tier-Codes – nie mit Namen. Die Zuordnung Code → Kind kennt nur die Lehrkraft (auf Papier).</p></div>';
   document.getElementById('sheet').innerHTML = cards + howto;
 </script>

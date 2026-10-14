@@ -2,7 +2,7 @@
 
 Gäste: Regierungspräsident, Dezernentin (Bez. Düsseldorf), Schuldezernentin (Wuppertal), Fachberater KI der Bez.-Reg., ggf. eine weitere Person.
 Rahmen (Gesamtablauf der Schule, `RP_Schürmann_Ablauf.docx`): **30 Min. Agentic AI im Unterricht + 10 Min. Austausch**, danach Berufsorientierung.
-Klasse: ganze 09c (32 Kinder inkl. Seiteneinsteiger) + 4–5 Lotsinnen und Lotsen. Die Stunde läuft schon **ca. 30 Minuten**, wenn die Gäste kommen.
+Klasse: ganze 09c (31 Kinder inkl. 2 Sprachseiteneinsteiger, 1 Förderschüler) + 4–5 Lotsinnen und Lotsen. Die Stunde läuft schon **ca. 30 Minuten**, wenn die Gäste kommen.
 
 **Leitidee:** Die Kinder arbeiten, ich rede wenig. Erst erleben lassen, dann einordnen. Die Präsentation `hub/konzept.html` zeigt auf der
 digitalen Tafel jederzeit, in welcher Phase wir sind (Phasenleiste unten links).

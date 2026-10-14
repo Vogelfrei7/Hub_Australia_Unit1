@@ -11,7 +11,7 @@
     "09c"
   ],
   "classSizes": {
-    "09c": 29
+    "09c": 31
   },
   "codePattern": "^[A-Z]{3,8}-[A-Z0-9]{4}$",
   "codeExample": "LOEWE-K7Q2",
