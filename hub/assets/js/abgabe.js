@@ -2,8 +2,8 @@
 import {
   loadConfig, loadEvents, progress, diff, getTraveller, setTraveller, isDemo, link, esc, stampHTML, badgeHTML,
   UI, store, signature, addPending, parseFromURL, parseBlock, validate, submitToForm, normaliseEvent, isGuest, stepInfo, fmtDate,
-} from './core.js?v=3.8';
-import { openDialog } from './ui.js?v=3.8';
+} from './core.js?v=3.9';
+import { openDialog } from './ui.js?v=3.9';
 
 const app = document.getElementById('app');
 let cfg;
@@ -137,15 +137,17 @@ function renderMoment(r, ev, before, after, warnings, already) {
       <div class="next-box"><span class="how-n" style="width:40px;height:40px;font-size:18px;flex-shrink:0">➜</span><span><b>${esc(next[0])}</b><br><span class="de">(${esc(next[1])})</span></span></div>
       ${warnings.length ? `<div class="hint-de">${warnings.map(esc).join('<br>')}</div>` : ''}
       ${toChat ? `<button type="button" class="btn full" id="to-chat">↩ Back to the chat (Zurück zum Chat)</button>
-      <div class="hint-de" id="chat-hint" hidden style="text-align:center"><b>Tap ✕ at the top to close this tab – your chat is still open.</b><br>(Tippe oben auf ✕, um diesen Tab zu schließen – dein Chat ist noch offen.)</div>` : ''}
+      <div class="hint-de" id="chat-hint" hidden style="text-align:center"><b>Still here? Switch to your chat tab at the top of the screen.</b><br>(Noch hier? Oben auf den Tab mit deinem Chat tippen.)</div>` : ''}
       <a class="btn full${toChat ? ' ghost' : ''}" id="back" href="${link('index.html', { st: tid })}">Back to the map (Zur Karte)</a>
       <div class="save-state" id="save-state" role="status">${already ? '' : '…'}</div>
       <div class="hint-de" style="text-align:center">${esc(cfg.texts.privacy)}</div>
     </div>`;
-  // Der Stempel-Tab wurde aus dem Chat geöffnet: schließen führt zurück in den Chat. Geht das nicht, zeigen wir, wie es von Hand geht.
+  // Zurück zum Chat: Kam der Stempel im selben Tab (Verlauf vorhanden) → eine Seite zurück.
+  // Kam er in einem neuen Tab → Tab schließen, dann ist der Chat-Tab wieder vorn. Klappt beides nicht: Hinweis zum Tab-Wechsel.
   app.querySelector('#to-chat')?.addEventListener('click', () => {
-    try { window.close(); } catch { /* */ }
-    setTimeout(() => { const h = app.querySelector('#chat-hint'); if (h) h.hidden = false; }, 400);
+    if (history.length > 1) history.back();
+    else { try { window.close(); } catch { /* */ } }
+    setTimeout(() => { const h = app.querySelector('#chat-hint'); if (h) h.hidden = false; }, 600);
   });
   app.querySelector('#back').addEventListener('click', () => {
     try { sessionStorage.setItem('arh.just', JSON.stringify({ topic: tid })); } catch { /* */ }
