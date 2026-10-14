@@ -1,7 +1,7 @@
 // Logik-Test ohne Browser:  node docs/tests/routing.test.mjs
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { progress, diff, normaliseEvent, validate, parseBlock, parseFromURL, stepInfo, normaliseCode, animalOf, avatarSrc, planLine } from '../../hub/assets/js/core.js';
+import { progress, diff, normaliseEvent, validate, parseBlock, parseFromURL, stepInfo, normaliseCode, animalOf, avatarSrc, planLine, planFromEvents } from '../../hub/assets/js/core.js';
 
 const cfg = JSON.parse(readFileSync(new URL('../../hub/config.json', import.meta.url)));
 cfg.codeRe = new RegExp(cfg.codePattern);
@@ -70,7 +70,10 @@ const guestPr = progress(cfgOpen, cfg.guest.events.map(normaliseEvent), { open: 
 assert.equal(guestPr.status.SP, 'done');
 assert.equal(guestPr.status.PP, 'now', 'Gast: Outback ist die aktuelle Station');
 assert.equal(guestPr.topics.PP.stars, 0, 'Gast: in Outback noch kein Stern');
-assert.equal(guestPr.topics.ARG.stars + guestPr.topics.WRITE.stars + guestPr.topics.ART.stars, 0, 'Gast: Writing Track unberührt');
+assert.equal(guestPr.status.ART, 'done'); assert.equal(guestPr.status.ARG, 'done');
+assert.equal(guestPr.status.WRITE, 'now', 'Gast: Uluru ist die aktuelle Schreib-Station');
+assert.equal(guestPr.topics.WRITE.stars, 0, 'Gast: am Uluru noch kein Stern');
+assert.ok(planFromEvents(guestPr.topics.ARG).startsWith('MY PLAN'), 'Gast: Plan aus Kata Tjuta reist mit nach Uluru');
 assert.ok(cfg.guest.since && !isNaN(Date.parse(cfg.guest.since)), 'Gast: Stichtag für alte Testabgaben');
 // 3e. Kind mit Gold Coast und Reef fertig: Outback ist dran, noch ohne Blatt und Übung
 const kidPr = progress(cfgOpen, [...base, w1, p1, ev('SP-W1', 3), ev('SP-P', 3)], { open: ['PP'] });
