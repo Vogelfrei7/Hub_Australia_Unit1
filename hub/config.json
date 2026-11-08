@@ -669,7 +669,7 @@
       "image": "assets/img/PROG.webp",
       "coach": {
         "name": "Past Progressive Coach",
-        "input": ""
+        "input": "https://agent.sidekick.ki/input/99792-08935/CIA-468DA?colorMode=0"
       },
       "rules": [
         {
@@ -741,7 +741,7 @@
       "image": "assets/img/GOING.webp",
       "coach": {
         "name": "Going-to Coach",
-        "input": ""
+        "input": "https://agent.sidekick.ki/input/99792-08935/CIA-6140C?colorMode=0"
       },
       "rules": [
         {
@@ -803,7 +803,7 @@
       "image": "assets/img/TEST.webp",
       "coach": {
         "name": "Practice Test Coach",
-        "input": ""
+        "input": "https://agent.sidekick.ki/input/99792-08935/CIA-44B1D?colorMode=0"
       },
       "areas": [
         "SPR",

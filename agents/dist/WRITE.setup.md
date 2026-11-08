@@ -1,7 +1,7 @@
 # Writing Coach – Einrichtung in Sidekick
 
 - **Name:** Writing Coach
-- **System-Prompt:** Inhalt von `dist/WRITE.md` komplett einfügen (24212 Zeichen)
+- **System-Prompt:** Inhalt von `dist/WRITE.md` komplett einfügen (24883 Zeichen)
 - **Modell:** Sonnet 5.5 (Alternative: GPT 6 Sol)
 - **Wissen:** keins – Raster und Musterartikel stehen im Prompt
 - **Nutzergedächtnis:** aus
