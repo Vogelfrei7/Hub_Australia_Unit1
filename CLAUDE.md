@@ -34,7 +34,7 @@ Unterrichtsbesuch 15.10.: `docs/besuch-15-10.md` – oben steht die **Übergabe*
   Ein früher abgegebenes Blatt zählt als eine Übung (niemand verliert Sterne). Writing/Seiten-Stationen bleiben wie bisher.
 - **Neue Coaches** `PROG` (Perth), `GOING` (Melbourne), `TEST` (Practice Test, alle fünf Zeiten gemischt, Fehlerkürzel SPR/SP/PP/PROG/GOING/CONTRAST).
   Sidekick-Agenten müssen **von Hand angelegt** und die Links in `config.json` → `topics.<ID>.coach.input` eingetragen werden (stehen leer).
-- **Zweiter Artikel:** Writing Coach (Uluru) bietet nach der Endfassung `NEW-ARTICLE` an (3 Übungsfragen in `agents/topics/writing.md`, nie das Klassenarbeitsthema).
+- **Zweiter Artikel:** Uluru zeigt einen Kasten mit genau einer Übungsfrage („School trips abroad – a good idea?“, `topics.WRITE.more`), Startcode `NEW-ARTICLE` (Coach: `agents/topics/writing.md`, nie das Klassenarbeitsthema).
 - `agents/topics/*.md` ohne Blatt-IDs; Prompts neu bauen (`node agents/build.mjs`) und in Sidekick neu einfügen. `apps-script/` muss neu in den Editor kopiert werden.
 
 ## Datenfluss

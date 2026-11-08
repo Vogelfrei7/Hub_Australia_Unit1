@@ -1591,6 +1591,12 @@
       "place": "Uluru",
       "name": "Write your article – your goal!",
       "topic": "Is Australia worth visiting?",
+      "more": {
+        "title": "One more article to practise",
+        "titleDe": "Noch ein Artikel zum Üben",
+        "question": "School trips abroad – a good idea?",
+        "questionDe": "Sind Klassenfahrten ins Ausland eine gute Idee?"
+      },
       "x": 500,
       "y": 520,
       "label": "below",

@@ -1,9 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
   loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo, isGuest, planLine, planKey, planFromEvents,
-} from './core.js?v=4.0';
-import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=4.0';
-import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=4.0';
+} from './core.js?v=4.1';
+import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=4.1';
+import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=4.1';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -260,17 +260,38 @@ function renderPanel() {
     ${def.rules ? `<button type="button" class="btn ghost" id="rules">${UI.book}<span>Rules <span class="de-inline">(Regeln)</span></span></button>` : ''}
     ${def.camp && state !== 'soon' ? campRow(id, def) : ''}
     ${state !== 'soon' && route?.shape === 'circle' && !def.optional && !t.checkin ? `<ul class="steps">${steps}</ul>` : ''}
-    ${body}`;
+    ${body}
+    ${def.more && trav.code && !t.checkin ? moreBox(def, color) : ''}`;
 
   panel.querySelector('.postcard img')?.addEventListener('error', (e) => e.target.remove());
   panel.querySelector('#rules')?.addEventListener('click', () => openRules(cfg, def));
   panel.querySelector('#missed')?.addEventListener('click', () => openMissed(cfg, def));
+  panel.querySelector('#copy2')?.addEventListener('click', () => {
+    copyText(panel.querySelector('#startcode2').textContent);
+    panel.querySelector('#copied2').hidden = false;
+  });
   panel.querySelector('#copy')?.addEventListener('click', () => {
     const sc = panel.querySelector('#startcode');
     copyText(sc.dataset.copy || sc.textContent);
     view.copied = true;
     panel.querySelector('#copied').hidden = false;
   });
+}
+
+// Zusätzlicher Übungsartikel mit genau einer Frage (config: topics.<ID>.more)
+function moreBox(def, color) {
+  const start = `START ${def.id} ${trav.code} NEW-ARTICLE`;
+  return `<div class="action" style="--rc:${color}">
+    <div class="action-h">${esc(def.more.title).toUpperCase()} <span class="de-inline">(${esc(def.more.titleDe)})</span></div>
+    <p style="margin:0"><b>${esc(def.more.question)}</b><br><span class="de">(${esc(def.more.questionDe)})</span></p>
+    <ol class="todo">
+      <li><span>Write an <b>article on paper</b> (at least 120 words): headline, introduction, three arguments with reasons, your opinion.</span><span class="de">(Schreib einen Artikel auf Papier, mindestens 120 Wörter: Überschrift, Einleitung, drei Argumente mit Begründung, deine Meinung.)</span></li>
+      <li><span>Copy this start code, paste it into the coach field, send it – then send a <b>photo</b>.</span><span class="de">(Diesen Startcode kopieren, ins Coach-Feld einfügen, senden – dann ein Foto schicken.)</span></li>
+    </ol>
+    <div class="startcode"><span class="code-mono" id="startcode2">${esc(start)}</span>
+      <button type="button" class="btn" id="copy2">${UI.copy}<span>Copy start code <span class="de-inline">(kopieren)</span></span></button></div>
+    <div class="ok-box" id="copied2" hidden>✓ Copied! Now tap into the coach field and paste. <span class="de">(Kopiert! Jetzt ins Coach-Feld tippen und einfügen.)</span></div>
+  </div>`;
 }
 
 // Station mit eigener Übungsseite (lesson.html) statt Coach
@@ -306,11 +327,8 @@ function actionBox(def, t, color) {
         ['Copy your start code, paste and send – then send a <b>photo</b> of your final draft.', 'Startcode kopieren, einfügen, senden – dann ein Foto von deiner Endfassung schicken.'],
       ];
     } else {
-      mode = ' NEW-ARTICLE';
-      todo = [
-        ['<b>Goal reached!</b> Your final draft is done. Want more practice? Write a <b>new article</b> – the coach gives you three new questions.', 'Ziel erreicht! Deine Endfassung ist fertig. Mehr üben? Schreib einen neuen Artikel – der Coach gibt dir drei neue Fragen.'],
-        ['Copy your start code, paste it, choose a question – then write on paper and send a <b>photo</b>.', 'Startcode kopieren, einfügen, eine Frage wählen – dann auf Papier schreiben und ein Foto schicken.'],
-      ];
+      mode = ' FINAL-DRAFT';
+      todo = [['<b>Goal reached!</b> Your final draft is done. You can send a better version any time.', 'Ziel erreicht! Deine Endfassung ist fertig. Du kannst jederzeit eine bessere Fassung schicken.']];
     }
   } else if (t.rounds < 1) {   // kein Arbeitsblatt mehr: direkt online üben (16 Sätze)
     mode = ' PRACTICE';

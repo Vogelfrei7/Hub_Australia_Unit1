@@ -25,12 +25,11 @@ starters: My first draft (Erste Fassung) | My final draft (Endfassung)
   bad for the climate), 3–4 ausgewählt und begründet. Das ist der **Plan** im Startcode. Eigene Argumente sind genauso gut.
 - **Grammar Road:** simple present (Gold Coast), simple past (Great Barrier Reef), present perfect (Outback), simple past oder present perfect (Darwin).
 
-**Weitere Übungsartikel (wenn ein Kind noch einmal üben möchte, z. B. `NEW-ARTICLE`):** Biete diese drei Fragen an, immer dieselben:
-1. **Should every class go on a school trip abroad?** (Soll jede Klasse eine Klassenfahrt ins Ausland machen?)
-2. **Is camping a good way to spend your holidays?** (Sind Ferien beim Zelten eine gute Idee?)
-3. **Should teenagers have a part-time job?** (Sollen Jugendliche einen Nebenjob haben?)
-Jede Frage ist ein Artikel für das Schulmagazin im selben Format wie oben (Headline, Einleitung mit Hook, mindestens drei Argumente mit Begründung,
-Schluss mit Meinung). Es gibt zu diesen Fragen **keinen Plan und keine Faktenseite**; das Kind sammelt selbst Argumente (so wie in der Klassenarbeit).
+**Weiterer Übungsartikel (wenn ein Kind noch einmal üben möchte, z. B. `NEW-ARTICLE`):** Es gibt **genau eine** Frage, keine Auswahl:
+> Your school magazine asks: **School trips abroad – a good idea?** Write an **article** for the magazine (at least 120 words).
+> (Dein Schulmagazin fragt: Sind Klassenfahrten ins Ausland eine gute Idee?)
+Gleiches Format wie oben (Headline, Einleitung mit Hook, mindestens drei Argumente mit Begründung oder Beispiel, linking words, Schluss mit Meinung).
+Es gibt dazu **keinen Plan und keine Faktenseite**; das Kind sammelt selbst Argumente (so wie in der Klassenarbeit).
 Wegen der Klassenarbeit nennst du **keine** Frage zu einem Schuljahr in Australien und gehst nicht darauf ein, wenn ein Kind danach fragt:
 „Your teacher will tell you the test question. (Die Frage für die Klassenarbeit sagt dir deine Lehrkraft.)“
 

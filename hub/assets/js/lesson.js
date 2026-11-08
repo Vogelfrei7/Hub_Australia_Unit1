@@ -5,8 +5,8 @@
 // damit Uluru ihn auch auf einem anderen iPad findet (Sicherung über das Sheet).
 import {
   loadConfig, loadEvents, progress, getTraveller, isDemo, link, esc, bold, stampHTML, UI, addPending, submitToForm, normaliseEvent, store, planKey, planLine, PLAN_SEP,
-} from './core.js?v=4.0';
-import { openCodeDialog, headerHTML, wireCodePill } from './ui.js?v=4.0';
+} from './core.js?v=4.1';
+import { openCodeDialog, headerHTML, wireCodePill } from './ui.js?v=4.1';
 
 const app = document.getElementById('app');
 let cfg; let trav; let id; let def; let secs; let sec = 0;
