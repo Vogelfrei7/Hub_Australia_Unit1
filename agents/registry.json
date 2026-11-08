@@ -1,58 +1,53 @@
 {
   "book": "Headlight 5",
   "resultUrl": "https://vogelfrei7.github.io/Hub_Australia_Unit1/hub/abgabe.html",
-  "finalCheckOpen": false,
-  "finalCheckDate": "Thursday, 15 October (Donnerstag, 15. Oktober)",
   "agents": [
     {
       "id": "SPR",
       "file": "topics/simple-present.md",
       "covers": "simple present (Gegenwart: he/she/it -s, do/does)",
-      "sheets": "AUS1-SPR-…",
       "active": true
     },
     {
       "id": "SP",
       "file": "topics/simple-past.md",
       "covers": "simple past (Vergangenheit: -ed, unregelmäßige Verben, was/were, did)",
-      "sheets": "AUS1-SP-…",
       "active": true
     },
     {
       "id": "PP",
       "file": "topics/present-perfect.md",
       "covers": "present perfect (have/has + 3. Form)",
-      "sheets": "AUS1-PP-…",
       "active": true
     },
     {
       "id": "SPPP",
       "file": "topics/past-vs-present-perfect.md",
       "covers": "simple past oder present perfect? (Kontrast)",
-      "sheets": "AUS1-SPPP-…",
       "active": true
     },
     {
       "id": "PROG",
-      "file": null,
-      "name": "Past Progressive Coach",
+      "file": "topics/past-progressive.md",
       "covers": "past progressive (was/were + -ing)",
-      "sheets": "AUS1-PROG-…",
-      "active": false
+      "active": true
     },
     {
       "id": "GOING",
-      "file": null,
-      "name": "Going-to Coach",
+      "file": "topics/going-to.md",
       "covers": "going to-future (Pläne)",
-      "sheets": "AUS1-GOING-…",
-      "active": false
+      "active": true
+    },
+    {
+      "id": "TEST",
+      "file": "topics/practice-test.md",
+      "covers": "Practice Test: alle Zeitformen gemischt (simple present, simple past, present perfect, past progressive, going to)",
+      "active": true
     },
     {
       "id": "WRITE",
       "file": "topics/writing.md",
       "covers": "Schreiben: Artikel planen, schreiben, verbessern",
-      "sheets": "AUS1-W…",
       "active": true,
       "core": "core-writing.md"
     }

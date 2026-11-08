@@ -31,42 +31,55 @@ assert.equal(p.topics.SP.gold, false);
 assert.equal(p.topics.PROG.gold, false, 'Startwert 3 reicht nicht mehr für Gold');
 assert.equal(p.topics.SPR.stars, 0, 'Startwert gibt keinen Stern');
 
-// 2. Arbeitsblatt → 1 Stern + Stempel, Station noch nicht fertig
-p = progress(cfg, [...base, ev('SPR-W1', 2, ['S', 'NEG'])]);
+// 2. Kein Arbeitsblatt mehr nötig: erste Online-Übung (16 Sätze) = Stern 1 + Stempel + Station geschafft
+const p1 = ev('SPR-P', 3, []);
+p = progress(cfg, [...base, p1]);
 assert.equal(p.topics.SPR.stars, 1);
 assert.equal(p.topics.SPR.stamp, true);
-assert.equal(p.status.SPR, 'now');
-assert.equal(p.stamps, 2, 'Start-Stempel + Gold-Coast-Stempel');
-
-// 2b. Goldenes Blatt allein zählt als Arbeitsblatt-Stern
-p = progress(cfg, [...base, ev('SPR-W2', 4)]);
-assert.equal(p.topics.SPR.stars, 1);
-
-// 3. Üben → 2 Sterne, Station fertig, Level-up wenn besser als Blatt
-const w1 = ev('SPR-W1', 2, ['S']);
-const p1 = ev('SPR-P', 3, []);
-const before = progress(cfg, [w1]);
-p = progress(cfg, [w1, p1]);
-assert.equal(p.topics.SPR.stars, 2);
+assert.equal(p.topics.SPR.complete, true);
 assert.equal(p.status.SPR, 'done');
+assert.equal(p.stamps, 2, 'Start-Stempel + Gold-Coast-Stempel');
+assert.equal(p.status.SP, 'now', 'nach simple present liegt das Reef als nächstes an');
+
+// 2b. Zweite Übung = Stern 2 (mehr als 2 Sterne gibt es nicht)
+const p2 = ev('SPR-P', 4, []);
+p = progress(cfg, [...base, p1, p2]);
+assert.equal(p.topics.SPR.stars, 2);
+assert.equal(p.topics.SPR.extra, true);
+p = progress(cfg, [...base, p1, p2, ev('SPR-P', 4), ev('SPR-P', 4)]);
+assert.equal(p.topics.SPR.stars, 2, 'maximal 2 Sterne');
+
+// 2c. Ein früher abgegebenes Arbeitsblatt zählt als eine Übung (niemand verliert Sterne)
+p = progress(cfg, [ev('SPR-W1', 2, ['S'])]);
+assert.equal(p.topics.SPR.stars, 1);
+assert.equal(progress(cfg, [ev('SPR-W1', 2), ev('SPR-P', 3)]).topics.SPR.stars, 2);
+
+// 3. Level-up: zweite Übung besser als die erste (oder Übung besser als altes Blatt)
+const before = progress(cfg, [ev('SPR-P', 2)]);
+p = progress(cfg, [ev('SPR-P', 2), ev('SPR-P', 3)]);
 assert.equal(p.achievements.levelup, true);
 assert.deepEqual(diff(before, p).newAch, ['levelup']);
-assert.equal(progress(cfg, [...base, w1, p1]).status.SP, 'now', 'nach simple present geht es zum Great Barrier Reef');
+assert.equal(progress(cfg, [ev('SPR-W1', 2), ev('SPR-P', 3)]).achievements.levelup, true);
+assert.equal(progress(cfg, [ev('SPR-P', 3), ev('SPR-P', 2)]).achievements.levelup, false);
 assert.equal(stepInfo(cfg, 'SP-W2').kind, 'extra');
-// 3b. Neue Reihenfolge: SP → PP (Outback) → SPPP (Darwin); Lagerfeuer öffnet eine spätere Station für alle
-assert.deepEqual(cfg.routes[0].stops.slice(2, 6), ['SP', 'PP', 'SPPP', 'PROG']);
-p = progress(cfg, [...base, w1, p1], { open: ['PP'] });
-assert.equal(p.status.SP, 'now', 'Van bleibt beim simple past');
-assert.equal(p.status.PP, cfg.topics.PP.status === 'soon' ? 'soon' : 'open');
+
+// 3b. Reihenfolge SP → PP (Outback) → SPPP (Darwin) → PROG → GOING → Test
+assert.deepEqual(cfg.routes[0].stops.slice(2), ['SP', 'PP', 'SPPP', 'PROG', 'GOING', 'TEST']);
+// 3b2. Freie Übungsphase: keine Station ist mehr „soon“ oder zeitgesteuert, kein Final check
+for (const [id, tp] of Object.entries(cfg.topics)) {
+  assert.notEqual(tp.status, 'soon', `${id}: Station muss offen sein`);
+  assert.ok(!tp.opensAt, `${id}: kein opensAt mehr`);
+}
+assert.equal(cfg.bonus, undefined, 'Final check ist entfernt');
+p = progress(cfg, base, { open: Object.keys(cfg.topics) });
+for (const id of cfg.routes[0].stops.slice(2)) assert.ok(['now', 'open'].includes(p.status[id]), `${id}: offen`);
 assert.equal(cfg.routes[0].stops.filter((id) => p.status[id] === 'now').length, 1, 'Grammar Road: genau ein "now"');
 // 3c. Kontrast-Station zählt nicht als eigene Zeitform (Achievement „All 5 tenses“)
 assert.equal(cfg.topics.SPPP.contrast, true);
 assert.equal(cfg.routes[0].stops.filter((id) => /^\d+$/.test(cfg.topics[id].number) && !cfg.topics[id].contrast).length, 5);
 // 3d. Gast-Codes: Koala, vorbereitete Reise bis zum Reef; Outback offen und unerledigt – wie bei der Klasse
 assert.equal(avatarSrc(cfg, 'GAST-KO01'), 'assets/img/animals/koala.webp');
-const cfgOpen = structuredClone(cfg);   // Stand ab Mi 14.10., 21 Uhr (opensAt): Outback und Uluru offen
-cfgOpen.topics.PP.status = 'active'; cfgOpen.topics.WRITE.status = 'active';
-const guestPr = progress(cfgOpen, cfg.guest.events.map(normaliseEvent), { open: Object.keys(cfg.topics) });
+const guestPr = progress(cfg, cfg.guest.events.map(normaliseEvent), { open: Object.keys(cfg.topics) });
 assert.equal(guestPr.status.SP, 'done');
 assert.equal(guestPr.status.PP, 'now', 'Gast: Outback ist die aktuelle Station');
 assert.equal(guestPr.topics.PP.stars, 0, 'Gast: in Outback noch kein Stern');
@@ -75,19 +88,15 @@ assert.equal(guestPr.status.WRITE, 'now', 'Gast: Uluru ist die aktuelle Schreib-
 assert.equal(guestPr.topics.WRITE.stars, 0, 'Gast: am Uluru noch kein Stern');
 assert.ok(planFromEvents(guestPr.topics.ARG).startsWith('MY PLAN'), 'Gast: Plan aus Kata Tjuta reist mit nach Uluru');
 assert.ok(cfg.guest.since && !isNaN(Date.parse(cfg.guest.since)), 'Gast: Stichtag für alte Testabgaben');
-// 3e. Kind mit Gold Coast und Reef fertig: Outback ist dran, noch ohne Blatt und Übung
-const kidPr = progress(cfgOpen, [...base, w1, p1, ev('SP-W1', 3), ev('SP-P', 3)], { open: ['PP'] });
-assert.equal(kidPr.status.PP, 'now');
-assert.equal(kidPr.topics.PP.w1, null);
-assert.equal(kidPr.topics.PP.stars, 0);
 
-// 4. Dritter Stern: Zusatzblatt ODER zweite Übung
-assert.equal(progress(cfg, [w1, p1, ev('SPR-W2', 4)]).topics.SPR.stars, 3);
-assert.equal(progress(cfg, [w1, p1, ev('SPR-P', 2)]).topics.SPR.stars, 3);
-assert.equal(progress(cfg, [w1, ev('SPR-P', 2)]).topics.SPR.stars, 2, 'eine Übung allein = kein Extra');
+// 4. Achievements: „Star collector“ = bei allen fünf Zeitformen 2 Sterne
+const all2 = ['SPR', 'SP', 'PP', 'PROG', 'GOING'].flatMap((id) => [ev(`${id}-P`, 3), ev(`${id}-P`, 3)]);
+assert.equal(progress(cfg, all2).achievements.stars, true);
+assert.equal(progress(cfg, all2).achievements.allfive, true);
+assert.equal(progress(cfg, all2.slice(2)).achievements.stars, false);
 
 // 5. Bester Versuch zählt
-assert.equal(progress(cfg, [w1, ev('SPR-P', 4), ev('SPR-P', 1)]).topics.SPR.p.n, 4);
+assert.equal(progress(cfg, [ev('SPR-P', 4), ev('SPR-P', 1)]).topics.SPR.p.n, 4);
 
 // 6. Schritt-IDs
 assert.equal(stepInfo(cfg, 'SPR-W1').kind, 'sheet');

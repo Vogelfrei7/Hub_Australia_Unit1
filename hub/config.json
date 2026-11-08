@@ -393,8 +393,7 @@
       "x": 690,
       "y": 330,
       "label": "above",
-      "status": "soon",
-      "opensAt": "2026-10-14T21:00:00+02:00",
+      "status": "active",
       "coach": {
         "name": "Present Perfect Coach",
         "input": "https://agent.sidekick.ki/input/99792-08935/CIA-9A124?colorMode=0"
@@ -503,7 +502,7 @@
       "x": 480,
       "y": 215,
       "label": "below",
-      "status": "soon",
+      "status": "active",
       "contrast": true,
       "coach": {
         "name": "Past or Perfect Coach",
@@ -651,7 +650,7 @@
       "x": 140,
       "y": 570,
       "label": "right",
-      "status": "soon",
+      "status": "active",
       "stamp": {
         "shape": "circle",
         "ink": "#1B2A55",
@@ -667,7 +666,52 @@
         "WAS": "was oder were",
         "USE": "Hintergrund (while) vs. Handlung (when)"
       },
-      "image": "assets/img/PROG.webp"
+      "image": "assets/img/PROG.webp",
+      "coach": {
+        "name": "Past Progressive Coach",
+        "input": ""
+      },
+      "rules": [
+        {
+          "title": "was / were + verb-ing",
+          "de": "Bildung",
+          "text": "I / he / she / it **was** racing · you / we / they **were** racing. Negative: **wasn't / weren't**. Question: **Was / Were** they racing?",
+          "textDe": "was/were + Verb mit -ing. Rechtschreibung: take → taking, run → running.",
+          "ex": "Ben **was racing** down the hill."
+        },
+        {
+          "title": "In progress at that time",
+          "de": "Gerade im Gange",
+          "text": "What was **going on** at a time in the past: **at 5 pm** · **at that moment** · **while**",
+          "textDe": "Eine Handlung war zu einem Zeitpunkt in der Vergangenheit gerade im Gange.",
+          "ex": "At 5 pm Ben **was taking** photos."
+        },
+        {
+          "title": "when → something happened",
+          "de": "Dazwischen kommt etwas",
+          "text": "**Long** action (past progressive) + **short** action that interrupted it (simple past) with **when**.",
+          "textDe": "Die lange Handlung ist im Gange, die kurze unterbricht sie.",
+          "ex": "It **was raining** when the plane **landed**."
+        },
+        {
+          "title": "while → two things at once",
+          "de": "Gleichzeitig",
+          "text": "**While** + past progressive: two actions at the **same time**.",
+          "textDe": "Zwei Handlungen laufen gleichzeitig ab.",
+          "ex": "**While** Ben **was racing**, Mia **was cheering**."
+        },
+        {
+          "title": "One after another → simple past",
+          "de": "Nacheinander",
+          "text": "Actions **one after another** are in the **simple past**, not past progressive.",
+          "textDe": "Nacheinander passiert: simple past.",
+          "ex": "Ben **saw** a koala and **took** a photo."
+        }
+      ],
+      "challenge": {
+        "title": "Challenge: German traps",
+        "text": "Ich **sah** gerade fern, als es klingelte → I **was watching** TV when the bell **rang**. · Während ich **kochte**, las er → While I **was cooking**, he **was reading**."
+      }
     },
     "GOING": {
       "route": "grammar",
@@ -678,7 +722,7 @@
       "x": 755,
       "y": 680,
       "label": "below",
-      "status": "soon",
+      "status": "active",
       "stamp": {
         "shape": "rect",
         "ink": "#4F7449",
@@ -694,7 +738,52 @@
         "INF": "Grundform nach going to",
         "NEG": "Fragen und Verneinung mit going to"
       },
-      "image": "assets/img/GOING.webp"
+      "image": "assets/img/GOING.webp",
+      "coach": {
+        "name": "Going-to Coach",
+        "input": ""
+      },
+      "rules": [
+        {
+          "title": "am / is / are + going to + verb",
+          "de": "Bildung",
+          "text": "I **am** going to … · he / she / it **is** going to … · you / we / they **are** going to … + **base form**",
+          "textDe": "am/is/are vor going to, danach die Grundform.",
+          "ex": "Mia **is going to have** a match next Saturday."
+        },
+        {
+          "title": "Negative and questions",
+          "de": "Verneinung und Fragen",
+          "text": "Ben **isn't going to** come. · I'**m not going to** … · **Is** it **going to** rain? · **Are** you **going to** visit the Reef?",
+          "textDe": "not nach am/is/are; Frage: am/is/are vor das Subjekt.",
+          "ex": "**Are** you **going to** visit the Reef?"
+        },
+        {
+          "title": "Plans",
+          "de": "Pläne",
+          "text": "Something you have **decided** to do: **tomorrow** · **next Saturday** · **tonight** · **soon**",
+          "textDe": "Das, was man sich vorgenommen hat.",
+          "ex": "Tomorrow she **is going to see** the Reef."
+        },
+        {
+          "title": "Predictions",
+          "de": "Vorhersagen",
+          "text": "You can **see** it now: **Look at the sky!** The cause is already there.",
+          "textDe": "Man sieht schon, dass etwas passieren wird.",
+          "ex": "Look at the sky! It **is going to rain**."
+        },
+        {
+          "title": "Not 'to go'!",
+          "de": "Nichts mit gehen",
+          "text": "**going to** means **werden / vorhaben**. It has nothing to do with the German **gehen**.",
+          "textDe": "going to ist kein Verb der Bewegung.",
+          "ex": "I **am going to stick** with it."
+        }
+      ],
+      "challenge": {
+        "title": "Challenge: German traps",
+        "text": "Ich **werde** morgen **schwimmen** → I **am going to swim** tomorrow. · Er **hat vor**, nicht zu kommen → He **isn't going to** come."
+      }
     },
     "TEST": {
       "route": "grammar",
@@ -705,13 +794,33 @@
       "x": 770,
       "y": 560,
       "label": "left",
-      "status": "soon",
+      "status": "active",
       "stamp": {
         "shape": "rect",
         "ink": "#A9502B",
         "icon": "mountainFire"
       },
-      "image": "assets/img/TEST.webp"
+      "image": "assets/img/TEST.webp",
+      "coach": {
+        "name": "Practice Test Coach",
+        "input": ""
+      },
+      "areas": [
+        "SPR",
+        "SP",
+        "PP",
+        "PROG",
+        "GOING",
+        "CONTRAST"
+      ],
+      "areaLabels": {
+        "SPR": "simple present",
+        "SP": "simple past",
+        "PP": "present perfect",
+        "PROG": "past progressive",
+        "GOING": "going to-future",
+        "CONTRAST": "Zeitform aus dem Zusammenhang wählen (simple past / present perfect / past progressive)"
+      }
     },
     "ART": {
       "route": "writing",
@@ -1485,8 +1594,7 @@
       "x": 500,
       "y": 520,
       "label": "below",
-      "status": "soon",
-      "opensAt": "2026-10-14T21:00:00+02:00",
+      "status": "active",
       "goal": true,
       "stamp": {
         "shape": "oval",
@@ -1582,44 +1690,25 @@
       ]
     }
   },
-  "bonus": {
-    "FINAL": {
-      "name": "Final check",
-      "place": "Sydney Harbour",
-      "x": 955,
-      "y": 740,
-      "label": "none",
-      "opens": "Thursday, 15 October",
-      "opensDe": "Donnerstag, 15. Oktober",
-      "status": "soon"
-    }
-  },
   "steps": [
     {
-      "id": "W1",
-      "star": "Worksheet",
-      "de": "Arbeitsblatt",
-      "medium": "paper"
-    },
-    {
       "id": "P",
-      "star": "Practice",
-      "de": "Üben mit dem Coach",
+      "star": "Practice 1",
+      "de": "Erste 16 Sätze mit dem Coach",
       "medium": "digital"
     },
     {
       "id": "EXTRA",
-      "star": "Extra",
-      "de": "Zusatz: Blatt 2 oder noch eine Übung",
-      "medium": "both",
-      "optional": true
+      "star": "Practice 2",
+      "de": "Zweite 16 Sätze – zweiter Stern",
+      "medium": "digital"
     }
   ],
   "achievements": [
     {
       "id": "levelup",
       "name": "Level up!",
-      "de": "Beim Üben besser als auf dem Blatt",
+      "de": "Beim zweiten Üben besser als beim ersten Mal",
       "icon": "rocket",
       "image": "assets/img/badges/levelup.webp"
     },
@@ -1633,7 +1722,7 @@
     {
       "id": "stars",
       "name": "Star collector",
-      "de": "Bei allen Zeitformen 3 Sterne",
+      "de": "Bei allen Zeitformen 2 Sterne",
       "icon": "star",
       "image": "assets/img/badges/stars.webp"
     }

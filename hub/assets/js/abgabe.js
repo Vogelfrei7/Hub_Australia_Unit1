@@ -2,8 +2,8 @@
 import {
   loadConfig, loadEvents, progress, diff, getTraveller, setTraveller, isDemo, link, esc, stampHTML, badgeHTML,
   UI, store, signature, addPending, parseFromURL, parseBlock, validate, submitToForm, normaliseEvent, isGuest, stepInfo, fmtDate,
-} from './core.js?v=3.9';
-import { openDialog } from './ui.js?v=3.9';
+} from './core.js?v=4.0';
+import { openDialog } from './ui.js?v=4.0';
 
 const app = document.getElementById('app');
 let cfg;
@@ -96,8 +96,8 @@ function renderMoment(r, ev, before, after, warnings, already) {
   const firstStamp = !tb.stamp && ta.stamp;
   const { newAch } = diff(before, after);
   const finalDraft = def.drafts && si.kind !== 'sheet';   // Schreiben: W1 = erste Fassung, W2 = Endfassung
-  const head = firstStamp ? 'Stamp collected!' : finalDraft ? 'Final draft done!' : newStar ? '+1 star!' : si.kind === 'final' ? 'Final check done!' : 'Well done!';
-  const headDe = firstStamp ? 'Stempel bekommen!' : finalDraft ? 'Endfassung geschafft!' : newStar ? 'Ein Stern mehr!' : si.kind === 'final' ? 'Final check geschafft!' : 'Gut gemacht!';
+  const head = firstStamp ? 'Stamp collected!' : finalDraft ? 'Final draft done!' : newStar ? '+1 star!' : 'Well done!';
+  const headDe = firstStamp ? 'Stempel bekommen!' : finalDraft ? 'Endfassung geschafft!' : newStar ? 'Ein Stern mehr!' : 'Gut gemacht!';
   const label = def.drafts ? (finalDraft ? 'Final draft' : 'First draft') : si.label;
   let next;
   // Nach dem Papier-Schritt geht es im selben Chat weiter (Üben bzw. Endfassung) – dann ist „Zurück zum Chat“ der Hauptknopf
@@ -114,13 +114,9 @@ function renderMoment(r, ev, before, after, warnings, already) {
         : ['Well done! You can send a better version any time.', 'Gut gemacht! Du kannst jederzeit eine bessere Fassung schicken.'])
       : ['Now write your final draft on paper – with the tips from the coach. Then go back to the chat, write "My final draft" and send a photo.',
         'Schreib jetzt die Endfassung auf Papier – mit den Tipps vom Coach. Dann zurück in den Chat, „My final draft“ schreiben und ein Foto schicken.'];
-  } else if ((si.kind === 'sheet' || si.kind === 'extra') && !ta.p) {
-    toChat = true;
-    next = ['Next: go back to the chat and write "Practice".', 'Als Nächstes: zurück in den Chat und „Practice“ schreiben.'];
-  } else if (!ta.w1) next = ['Do worksheet 1 next.', 'Als Nächstes: Arbeitsblatt 1.'];
-  else if (!ta.p) next = ['Next: practise with the coach.', 'Als Nächstes: Üben mit dem Coach.'];
-  else if (!ta.extra) next = ['Get your third star: worksheet 2 or one more practice round.', 'Dritter Stern: Arbeitsblatt 2 oder noch eine Übungsrunde.'];
-  else next = ['All three stars – amazing! You can practise again any time.', 'Alle drei Sterne – super! Du kannst jederzeit weiter üben.'];
+  } else if (ta.rounds < 1) next = ['Next: practise with the coach.', 'Als Nächstes: Üben mit dem Coach.'];
+  else if (!ta.extra) next = ['Get your second star: practise 16 more sentences.', 'Zweiter Stern: übe noch einmal 16 Sätze.'];
+  else next = ['Both stars – amazing! You can practise again any time.', 'Beide Sterne – super! Du kannst jederzeit weiter üben.'];
 
   app.innerHTML = `
     <div class="moment">

@@ -28,6 +28,15 @@ Stationen mit `page: true` + `lesson` in config: ein Durchgang = Stempel (Schrit
 Stationen können sich per `"opensAt"` (ISO-Zeit) selbst freischalten (`loadConfig` in `core.js`).
 Unterrichtsbesuch 15.10.: `docs/besuch-15-10.md` – oben steht die **Übergabe** mit aktuellem Stand und Restliste.
 
+## Stand seit 08.11. (freie Übungsphase vor der Klassenarbeit)
+- **Alle Stationen offen** (kein `soon`, kein `opensAt`, alle Kinder sehen alles). Das Lagerfeuer färbt nur noch die Karte.
+- **Kein Arbeitsblatt, kein Final check mehr** (`bonus` aus der config entfernt, Coach-Prompts ohne Foto/Final). Sterne: **max. 2** – Übung 1 (2 Runden à 8 = 16 Sätze) = Stern 1, Übung 2 = Stern 2.
+  Ein früher abgegebenes Blatt zählt als eine Übung (niemand verliert Sterne). Writing/Seiten-Stationen bleiben wie bisher.
+- **Neue Coaches** `PROG` (Perth), `GOING` (Melbourne), `TEST` (Practice Test, alle fünf Zeiten gemischt, Fehlerkürzel SPR/SP/PP/PROG/GOING/CONTRAST).
+  Sidekick-Agenten müssen **von Hand angelegt** und die Links in `config.json` → `topics.<ID>.coach.input` eingetragen werden (stehen leer).
+- **Zweiter Artikel:** Writing Coach (Uluru) bietet nach der Endfassung `NEW-ARTICLE` an (3 Übungsfragen in `agents/topics/writing.md`, nie das Klassenarbeitsthema).
+- `agents/topics/*.md` ohne Blatt-IDs; Prompts neu bauen (`node agents/build.mjs`) und in Sidekick neu einfügen. `apps-script/` muss neu in den Editor kopiert werden.
+
 ## Datenfluss
 Kind: Code (z. B. `LOEWE-K7Q2`, per QR) → Check-in (Startwert `<THEMA>-B`) → Arbeitsblatt (Foto an Coach, `-W1`/`-W2`)
 → Üben (`-P`) → Coach-Link „Get your stamp“ → `abgabe.html` → Google Formular → Sheet → Apps Script `doGet` → Karte.

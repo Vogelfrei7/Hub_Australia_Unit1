@@ -301,13 +301,13 @@ function renderRecs() {
 /* ---------- Stationen im Detail ---------- */
 // Spalten der Kindertabelle je Stationsart
 var TABLE = {
-  grammar: ['code:Kind', 'stars:Sterne', 'base:Start', 'sheet:Blatt', 'practice:Üben', 'extra:Extra', 'final:Final', 'trend:Trend', 'open:Offene Bereiche', 'need:Nächster Schritt'],
+  grammar: ['code:Kind', 'stars:Sterne', 'base:Start', 'practice:Üben', 'extra:Extra', 'open:Offene Bereiche', 'need:Nächster Schritt'],
   draft: ['code:Kind', 'sheet:1. Fassung', 'final:Endfassung', 'trend:Trend', 'open:Offene Bereiche', 'need:Nächster Schritt'],
   page: ['code:Kind', 'current:Ergebnis', 'open:Fehler beim ersten Versuch']
 };
 function cell(r, key) {
   if (key === 'code') return '<b>' + esc(who(r.code)) + '</b>';
-  if (key === 'stars') return '⭐'.repeat(r.stars) + '<span class="sub">' + '☆'.repeat(Math.max(0, 3 - r.stars)) + '</span>';
+  if (key === 'stars') return '⭐'.repeat(r.stars) + '<span class="sub">' + '☆'.repeat(Math.max(0, (r.kind === 'draft' ? 3 : 2) - r.stars)) + '</span>';
   if (key === 'extra') return r.extra ? '✓' : '';
   if (key === 'trend') return r.trend == null ? '' : r.trend > 0 ? '↑ +' + r.trend : r.trend < 0 ? '↓ ' + r.trend : '→';
   if (key === 'open') return r.open.length ? r.open.map(esc).join('<br>') : '<span class="sub">–</span>';

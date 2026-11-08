@@ -1,9 +1,9 @@
 // Map v2 (index.html): zwei Routen, Stationen mit 3 Sternen, Regeln, Coach direkt auf der Seite.
 import {
   loadConfig, loadEvents, progress, getTraveller, setTraveller, normaliseCode, isDemo, link, esc, starsHTML, starOne, UI, store, reducedMotion, avatarSrc, campLit, todayInfo, isGuest, planLine, planKey, planFromEvents,
-} from './core.js?v=3.9';
-import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=3.9';
-import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=3.9';
+} from './core.js?v=4.0';
+import { openCodeDialog, openRules, openMissed, copyText, headerHTML, wireCodePill } from './ui.js?v=4.0';
+import { terrainSVG, motifsSVG, vanHTML, campSVG } from './scenery.js?v=4.0';
 
 const app = document.getElementById('app');
 const view = { sel: null, copied: false, just: null };
@@ -31,9 +31,8 @@ async function main() {
     return;
   }
   info = await loadEvents(cfg, trav.code);
-  // Lagerfeuer angezündet = die Klasse ist dort → Station für alle offen
-  // Gäste dürfen jede freigeschaltete Station anklicken, Kinder nur bis zum Lagerfeuer der Klasse
-  const open = Object.keys(cfg.topics).filter((id) => isGuest(cfg, trav.code) || campLit(cfg, info.klass, id));
+  // Freie Übungsphase vor der Klassenarbeit: alle Stationen sind für alle offen (Lagerfeuer färbt nur die Karte)
+  const open = Object.keys(cfg.topics);
   pr = progress(cfg, info.events, { open });
   if (!view.sel) view.sel = pr.now.grammar || pr.now.writing || 'SPR';
   render();
@@ -171,7 +170,7 @@ function markers() {
     const cls = ['marker', `is-${state}`, route?.shape === 'square' ? 'sq' : bonus ? 'bonus' : 'rd', wide ? 'wide' : '', sel ? 'is-selected' : '', def.goal ? 'goal' : '', pops.has(id) && !reducedMotion() ? 'pop' : ''].join(' ');
     const label = `${route ? `${route.name}, ` : 'Bonus, '}${def.number}, ${def.place}, ${state}`;
     const dots = route && !def.optional && route.shape === 'circle' && t && !t.checkin
-      ? `<span class="dots">${[0, 1, 2].map((i) => `<i class="${i < t.stars ? 'on' : ''}"></i>`).join('')}</span>` : '';
+      ? `<span class="dots">${[0, 1].map((i) => `<i class="${i < t.stars ? 'on' : ''}"></i>`).join('')}</span>` : '';
     return `<div class="spot" style="left:${def.x / 10}%;top:${def.y / 8}%;--rc:${color}">
       ${id === vanAt ? vanHTML(esc(avatarSrc(cfg, trav.code)), (def.van || (def.label === 'above' ? 'side' : 'top'))) : state === 'now' ? '<span class="now-flag">NOW</span>' : ''}
       <button type="button" class="${cls}" data-id="${id}" aria-pressed="${sel}" aria-label="${esc(label)}">
@@ -186,8 +185,7 @@ function markers() {
 function legend() {
   return `<div class="legend">
     ${cfg.routes.map((r) => `<span class="k"><i style="background:${r.color};border-radius:${r.shape === 'square' ? '5px' : '50%'}"></i><b>${esc(r.name)}</b>&nbsp;(${esc(r.nameDe)})</span>`).join('')}
-    <span class="k">${starsHTML(1, { size: 16 })}&nbsp;one star per step (ein Stern pro Schritt)</span>
-    <span class="k"><i style="background:#fff;border:2.5px dashed #3F8E99;border-radius:10px;width:28px"></i><b>Final check</b>&nbsp;(Bonus)</span>
+    <span class="k">${starsHTML(1, { size: 16 })}&nbsp;2 stars per station (2 Sterne pro Station)</span>
   </div>`;
 }
 
@@ -222,7 +220,7 @@ function renderPanel() {
   }
 
   const steps = cfg.steps.map((s) => {
-    const done = s.id === 'W1' ? !!t.w1 : s.id === 'P' ? !!t.p : t.extra;
+    const done = s.id === 'P' ? t.rounds >= 1 : t.extra;
     return `<li class="step ${done ? 'done' : ''}">${starOne(done, 24)}
       <span><b>${esc(s.star)}</b>${s.optional ? ' <span class="opt">optional</span>' : ''}<br><span class="de">${esc(s.de)}</span></span>
       <span class="step-tag">${done ? 'done ✓' : ''}</span></li>`;
@@ -308,41 +306,27 @@ function actionBox(def, t, color) {
         ['Copy your start code, paste and send – then send a <b>photo</b> of your final draft.', 'Startcode kopieren, einfügen, senden – dann ein Foto von deiner Endfassung schicken.'],
       ];
     } else {
-      mode = ' FINAL-DRAFT';
-      todo = [['<b>Goal reached!</b> Your final draft is done. You can send a better version any time.', 'Ziel erreicht! Deine Endfassung ist fertig. Du kannst jederzeit eine bessere Fassung schicken.']];
+      mode = ' NEW-ARTICLE';
+      todo = [
+        ['<b>Goal reached!</b> Your final draft is done. Want more practice? Write a <b>new article</b> – the coach gives you three new questions.', 'Ziel erreicht! Deine Endfassung ist fertig. Mehr üben? Schreib einen neuen Artikel – der Coach gibt dir drei neue Fragen.'],
+        ['Copy your start code, paste it, choose a question – then write on paper and send a <b>photo</b>.', 'Startcode kopieren, einfügen, eine Frage wählen – dann auf Papier schreiben und ein Foto schicken.'],
+      ];
     }
-  } else if (isGuest(cfg, trav.code)) {   // Gäste: kein Arbeitsblatt, direkt eine Übungsrunde
+  } else if (t.rounds < 1) {   // kein Arbeitsblatt mehr: direkt online üben (16 Sätze)
     mode = ' PRACTICE';
     todo = [
-      ['Welcome on board! <b>Practise</b> with the coach – just like the class.', 'Willkommen! Üben Sie mit dem Coach – genau wie die Klasse.'],
-      ['Copy the start code, tap into the coach field, paste and send.', 'Startcode kopieren, ins Coach-Feld tippen, einfügen, senden.'],
-    ];
-  } else if (!t.w1 && t.gold) {
-    todo = [
-      ['Your check-in shows: you are good at this! Take the <b>GOLD worksheet</b> from the box.', 'Dein Check-in zeigt: Das kannst du schon gut! Nimm das goldene Arbeitsblatt.'],
-      ['Copy your start code and tap into the coach field below.', 'Kopiere deinen Startcode und tippe unten in das Coach-Feld.'],
-      ['Paste the code, send it – then send a <b>photo</b> of your worksheet.', 'Code einfügen, senden – dann ein Foto vom Blatt schicken.'],
-    ];
-  } else if (!t.w1) {
-    todo = [
-      ['Take <b>worksheet 1</b> from the box and do it.', 'Nimm Arbeitsblatt 1 aus der Box und bearbeite es.'],
-      ['Copy your start code and tap into the coach field below.', 'Kopiere deinen Startcode und tippe unten in das Coach-Feld.'],
-      ['Paste the code, send it – then send a <b>photo</b> of your worksheet.', 'Code einfügen, senden – dann ein Foto vom Blatt schicken.'],
-    ];
-  } else if (!t.p) {
-    mode = ' PRACTICE';
-    todo = [
-      ['Now <b>practise</b> with the coach.', 'Jetzt übst du mit dem Coach.'],
+      ['<b>Practise</b> with the coach: 16 sentences, no worksheet needed. You get <b>star 1</b>.', 'Üben mit dem Coach: 16 Sätze, kein Arbeitsblatt nötig. Dafür gibt es Stern 1.'],
       ['Copy your start code, tap into the coach field, paste and send.', 'Startcode kopieren, ins Coach-Feld tippen, einfügen, senden.'],
     ];
   } else if (!t.extra) {
+    mode = ' PRACTICE';
     todo = [
-      ['Get your <b>third star</b>: worksheet 2 (gold) <i>or</i> one more practice round.', 'Dritter Stern: Arbeitsblatt 2 (gold) oder noch eine Übungsrunde.'],
+      ['Get your <b>second star</b>: practise 16 more sentences.', 'Zweiter Stern: übe noch einmal 16 Sätze.'],
       ['Copy your start code, tap into the coach field, paste and send.', 'Startcode kopieren, ins Coach-Feld tippen, einfügen, senden.'],
     ];
   } else {
     mode = ' PRACTICE';
-    todo = [['<b>All three stars!</b> You can practise again any time.', 'Alle drei Sterne! Du kannst jederzeit weiter üben.']];
+    todo = [['<b>Both stars!</b> You can practise again any time.', 'Beide Sterne! Du kannst jederzeit weiter üben.']];
   }
   const start = `START ${def.id} ${trav.code}${mode}`;
   // Station mit Plan (planFrom): Plan aus Kata Tjuta hängt am Startcode – ein Mal kopieren reicht

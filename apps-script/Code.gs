@@ -350,7 +350,7 @@ function writeOverview_(cfg, list, label) {
   var head = ['Kurs', 'Code'];
   topicIds.forEach(function (t) {
     var n = cfg.topics[t].name;
-    head.push(n + ': Start', n + ': Blatt', n + ': Üben', n + ': Zusatz', n + ': Final', n + ': offene Fehlerbereiche', n + ': Vorschlag');
+    head.push(n + ': Start', n + ': Üben', n + ': Zusatz', n + ': offene Fehlerbereiche', n + ': Vorschlag');
   });
   var rows = [head];
   var bg = [head.map(function () { return SETTINGS.HEADER_COLOR; })];
@@ -367,7 +367,7 @@ function writeOverview_(cfg, list, label) {
         if (!best[si.kind] || b.n > best[si.kind].n) best[si.kind] = b;
         lastByStep[s] = p.last[s];
       });
-      ['baseline', 'sheet', 'practice', 'extra', 'final'].forEach(function (k) {
+      ['baseline', 'practice', 'extra'].forEach(function (k) {
         row.push(best[k] ? best[k].n : '');
         colors.push(best[k] ? (SETTINGS.LEVEL_COLORS[best[k].n] || '#FFFFFF') : '#FFFFFF');
       });
@@ -376,10 +376,9 @@ function writeOverview_(cfg, list, label) {
       row.push(Object.keys(open).join(', '));
       colors.push('#FFFFFF');
       var tip;
-      if (!best.sheet) tip = 'Arbeitsblatt machen';
-      else if (!best.practice) tip = 'Üben mit dem Coach';
+      if (!best.practice) tip = 'Üben mit dem Coach';
       else if (best.practice.n <= 2) tip = 'noch eine Übungsrunde';
-      else if (best.practice.n === 3) tip = 'optional: Zusatzblatt oder Runde';
+      else if (best.practice.n === 3) tip = 'optional: noch eine Übung';
       else tip = 'fertig – nächstes Thema';
       row.push(tip);
       colors.push('#FFFFFF');
@@ -637,7 +636,7 @@ function analysis_(cfg) {
     var kind = t.kind;
     var sheetKinds = kind === 'draft' ? ['sheet'] : kind === 'page' ? [] : ['sheet', 'extra'];    // Papier
     var followKinds = kind === 'draft' ? ['extra'] : ['practice', 'final'];                      // danach geprüft
-    var steps = kind === 'draft' ? { sheet: 0, extra: 0 } : kind === 'page' ? { practice: 0 } : { baseline: 0, sheet: 0, practice: 0, extra: 0, final: 0 };
+    var steps = kind === 'draft' ? { sheet: 0, extra: 0 } : kind === 'page' ? { practice: 0 } : { baseline: 0, practice: 0, extra: 0 };   // Grammatik: kein Arbeitsblatt und kein Final check mehr
     var levels = { 1: 0, 2: 0, 3: 0, 4: 0 };
     var area = {};
     t.areas.forEach(function (a) { area[a] = { code: a, label: t.labels[a] || a, now: [], ever: [], unchecked: [], start: [] }; });
@@ -656,7 +655,9 @@ function analysis_(cfg) {
       var practice = kind === 'draft' ? null : bestOf(by('practice'));
       var final = kind === 'draft' ? lastOf(by('extra')) : kind === 'grammar' ? bestOf(by('final')) : null;   // Schreiben: neueste Endfassung
       var distinctSheets = {}; sheetsAll.forEach(function (a) { distinctSheets[a.step] = true; });
-      var extra = kind === 'grammar' && (Object.keys(distinctSheets).length >= 2 || by('practice').length >= 2);
+      // Zwei Übungen = zwei Sterne (ein früher abgegebenes Arbeitsblatt zählt als eine Übung)
+      var rounds = by('practice').length + (kind === 'grammar' && sheetsAll.length ? 1 : 0);
+      var extra = kind === 'grammar' && rounds >= 2;
       Object.keys(steps).forEach(function (s) {
         var has = s === 'baseline' ? base : s === 'sheet' ? sheet : s === 'practice' ? practice : s === 'final' ? final : kind === 'draft' ? final : extra;
         if (has) steps[s]++;
@@ -696,10 +697,10 @@ function analysis_(cfg) {
       if (lastSheetIdx >= 0 && !checkedAfter) k.attempts[lastSheetIdx].f.forEach(function (c) { if (area[c]) area[c].unchecked.push(code); });
       var next = kind === 'draft' ? (!sheet ? '1. Fassung' : !final ? 'Endfassung' : 'fertig')
         : kind === 'page' ? 'fertig'
-        : !sheet ? 'Arbeitsblatt' : !practice ? 'Üben' : current <= 2 ? 'noch eine Übungsrunde' : current === 3 ? 'optional: Extra' : 'fertig';
+        : !practice ? 'Üben (Stern 1)' : !extra ? 'zweite Übung (Stern 2)' : current <= 2 ? 'weiter üben' : 'fertig';
       kidRows.push({
         code: code, kurs: k.kurs, base: base ? base.n : null, sheet: sheet ? sheet.n : null, practice: practice ? practice.n : null, final: final ? final.n : null,
-        extra: extra, current: current, stars: (sheet ? 1 : 0) + (later ? 1 : 0) + (extra ? 1 : 0),
+        extra: extra, current: current, stars: kind === 'grammar' ? Math.min(2, rounds) : (sheet ? 1 : 0) + (later ? 1 : 0) + (extra ? 1 : 0),
         open: (work.length ? work[work.length - 1] : latest).f.map(function (c) { return t.labels[c] || c; }), next: next,
         trend: sheet && later ? later.n - sheet.n : null,
         attempts: k.attempts.map(function (a) { return { step: a.step, kind: a.kind, label: stepLabel_(kind, a.kind), n: a.n, h: a.h, fc: a.f, f: a.f.map(function (c) { return t.labels[c] || c; }), ts: a.ts }; })
@@ -782,8 +783,9 @@ var AI_CONTEXT = [
   'So entstehen die Daten (wichtig für deine Interpretation):',
   '- Jedes Kind ist nur über einen Code bekannt (z. B. KOALA-7Q2X). Es gibt keine Namen. Verwende nur diese Codes.',
   '- Grammatik-Stationen: B = Check-in (Pre-Test auf der Website, für alle gleich, ohne KI ausgewertet – der Startwert),',
-  '  W1 = Arbeitsblatt (Papier, vom Coach per Foto korrigiert), W2 = goldenes, schwereres Zusatzblatt,',
-  '  P = adaptives Üben im Chat, F = Final check. Hilfen 0–3 = wie viele Hinweise das Kind beim Üben brauchte.',
+  '  P = adaptives Üben im Chat (16 Sätze = 1 Übung; erste Übung = Stern 1, zweite = Stern 2; es gibt kein Arbeitsblatt und keinen Final check mehr –',
+  '  ältere Abgaben W1/W2/F können noch vorkommen). Hilfen 0–3 = wie viele Hinweise das Kind beim Üben brauchte. Die Station TEST (Practice Test) mischt alle Zeitformen;',
+  '  ihre Fehlerkürzel SPR/SP/PP/PROG/GOING zeigen die Zeitform, CONTRAST = falsche Zeitform gewählt.',
   '- Schreib-Station (Art "Schreiben", z. B. Uluru): W1 = erste Fassung eines Artikels, W2 = überarbeitete Endfassung (beide auf Papier, vom Writing Coach',
   '  nach einem Raster bewertet). Die Fehlerbereiche sind Rasterpunkte (A = Inhalt, B = Darstellung/Sprache). Kein Check-in, keine Hilfen.',
   '- Übungsseiten ohne Coach (Art "Übungsseite", z. B. Alice Springs, Kata Tjuta): P = einmal durchgearbeitet, Niveau = Anteil beim ersten Versuch richtig.',

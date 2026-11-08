@@ -234,7 +234,7 @@ export function progress(cfg, rawEvents, opts = {}) {
       (sheets[t.id] ||= new Set()).add(e.si.id);
       if (better(e, t.w1)) t.w1 = e;                                       // weißes ODER goldenes Blatt = Arbeitsblatt-Stern
     }
-    if (e.si.kind === 'practice') { practices[t.id] = (practices[t.id] || 0) + 1; if (better(e, t.p)) t.p = e; }
+    if (e.si.kind === 'practice') { practices[t.id] = (practices[t.id] || 0) + 1; if (!t.pFirst) t.pFirst = e; if (better(e, t.p)) t.p = e; }
     if (e.si.kind === 'final' && better(e, t.final)) t.final = e;
   }
   const checkinDone = Object.values(topics).some((t) => t.base);
@@ -249,9 +249,11 @@ export function progress(cfg, rawEvents, opts = {}) {
       Object.assign(t, { extra: false, stars: (t.draft ? 1 : 0) + (final ? 1 : 0), complete: !!final, stamp: !!(t.draft || final), gold: false, single: true });
       continue;
     }
-    t.extra = (sheets[t.id]?.size || 0) >= 2 || (practices[t.id] || 0) >= 2;   // zweites Blatt oder zweite Übung
-    t.stars = (t.w1 ? 1 : 0) + (t.p ? 1 : 0) + (t.extra ? 1 : 0);
-    t.complete = !!(t.w1 && t.p);
+    // Kein Arbeitsblatt mehr nötig: Stern 1 = erste Online-Übung (16 Sätze), Stern 2 = zweite. Ein früher abgegebenes Blatt zählt als eine Übung.
+    t.rounds = (practices[t.id] || 0) + (sheets[t.id]?.size ? 1 : 0);
+    t.extra = t.rounds >= 2;
+    t.stars = Math.min(2, t.rounds);
+    t.complete = t.rounds >= 1;
     t.stamp = t.stars > 0;
     t.gold = !!(t.base && cfg.checkin && t.base.n >= cfg.checkin.goldFrom);  // Empfehlung: gleich das goldene Blatt
   }
@@ -275,15 +277,15 @@ export function progress(cfg, rawEvents, opts = {}) {
 
   const tenses = cfg.routes.find((r) => r.id === 'grammar').stops.filter((id) => /^\d+$/.test(cfg.topics[id].number) && !cfg.topics[id].contrast);
   const achievements = {
-    levelup: Object.values(topics).some((t) => t.w1 && t.p && t.p.n > t.w1.n),
+    levelup: Object.values(topics).some((t) => t.p && ((t.w1 && t.p.n > t.w1.n) || (t.pFirst && t.p.n > t.pFirst.n))),
     allfive: tenses.length > 0 && tenses.every((id) => topics[id].complete),
-    stars: tenses.length > 0 && tenses.every((id) => topics[id].stars === 3),
+    stars: tenses.length > 0 && tenses.every((id) => topics[id].stars === 2),
   };
   const finalDone = Object.values(topics).some((t) => t.final);
   const stampSlots = Object.keys(cfg.topics).length + Object.keys(cfg.bonus || {}).length;
   return {
     topics, status, now, achievements, finalDone,
-    stamps: Object.values(topics).filter((t) => t.stamp).length + (finalDone ? 1 : 0),
+    stamps: Object.values(topics).filter((t) => t.stamp).length,
     stampSlots,
     starCount: Object.values(topics).reduce((s, t) => s + t.stars, 0),
   };
@@ -327,7 +329,7 @@ function starSVG(on, size) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" fill="${on ? '#E0A526' : 'none'}" stroke="${on ? '#B07F12' : '#BBA98A'}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
 }
 export function starsHTML(n, { size = 18 } = {}) {
-  return `<span class="stars" role="img" aria-label="${n} of 3 stars">${starSVG(n > 0, size)}${starSVG(n > 1, size)}${starSVG(n > 2, size)}</span>`;
+  return `<span class="stars" role="img" aria-label="${n} of 2 stars">${starSVG(n > 0, size)}${starSVG(n > 1, size)}</span>`;
 }
 export function starOne(on, size = 22) {
   return `<span class="star1" role="img" aria-label="${on ? 'star collected' : 'no star yet'}">${starSVG(on, size)}</span>`;

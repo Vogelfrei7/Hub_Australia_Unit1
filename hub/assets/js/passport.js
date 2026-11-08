@@ -1,6 +1,6 @@
 // Pass v2 (passport.html): Steckbrief, Stempel nach Routen, Bonus, Achievements.
-import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, avatarSrc, UI, shownText } from './core.js?v=3.9';
-import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=3.9';
+import { loadConfig, loadEvents, progress, getTraveller, link, esc, fmtDate, stampHTML, slotHTML, badgeHTML, starOne, animalOf, avatarSrc, UI, shownText } from './core.js?v=4.0';
+import { openCodeDialog, headerHTML, wireCodePill, openDialog } from './ui.js?v=4.0';
 
 const app = document.getElementById('app');
 let cfg; let trav; let pr;
@@ -40,10 +40,6 @@ function render() {
       ${cfg.routes.map((r) => `
         <div class="sec-h"><i style="background:${r.color};border-radius:${r.shape === 'square' ? '5px' : '50%'}"></i><b style="color:${r.color}">${esc(r.name)}</b><span class="de">(${esc(r.nameDe)})</span></div>
         <div class="grid4">${r.stops.map((id) => cell(id, r)).join('')}</div>`).join('')}
-      <div class="sec-h"><i style="background:#3F8E99;border-radius:50%"></i><b style="color:#1F5F68">Bonus</b></div>
-      <div class="grid4">${Object.entries(cfg.bonus || {}).map(([id, b]) => `<div class="cell">${pr.finalDone
-        ? stampHTML(cfg, { place: b.place, name: b.name, stamp: { shape: 'circle', ink: '#1F5F68', icon: 'flag' } }, { size: 130 })
-        : `<div class="slot" style="width:130px;height:130px;border-radius:22px;border-color:#3F8E99;background:#F1F8F8"><span class="slot-place" style="color:#1F5F68">${esc(b.name)}</span><span class="slot-sub" style="color:#1F5F68">opens ${esc(b.opens)}</span></div>`}</div>`).join('')}</div>
     </section>
   </div>`;
   wireCodePill(cfg);
@@ -53,7 +49,7 @@ function render() {
 function cell(id, route) {
   const def = cfg.topics[id]; const t = pr.topics[id];
   if (t.stamp) {
-    return `<button type="button" class="cell" data-id="${id}" aria-label="${esc(def.place)} stamp, ${t.stars} of 3 stars. Show details.">
+    return `<button type="button" class="cell" data-id="${id}" aria-label="${esc(def.place)} stamp, ${t.stars} of 2 stars. Show details.">
       ${stampHTML(cfg, def, { size: 128, stars: t.checkin || t.single ? null : t.stars, date: t.checkin ? '' : fmtDate((t.p || t.w1 || t.last).ts) })}</button>`;
   }
   return `<div class="cell">${slotHTML(def, { size: 124, state: pr.status[id], route })}</div>`;
@@ -68,7 +64,7 @@ function details(id) {
     <h2>${esc(def.place)}</h2>
     <div class="skill">${esc(def.name)}</div>
     <ul class="steps">
-      ${row(!!t.w1, 'Worksheet', 'Arbeitsblatt')}${row(!!t.p, 'Practice', 'Üben mit dem Coach')}${row(t.extra, 'Extra', 'Zusatz')}
+      ${row(t.rounds >= 1, 'Practice 1', 'Erste 16 Sätze')}${row(t.extra, 'Practice 2', 'Zweite 16 Sätze')}
     </ul>
     ${last?.s ? `<div class="two"><div class="good"><b>Well done (Gut gemacht)</b>${esc(shownText(last.s))}</div>${last.fb ? `<div class="tip"><b>Tip (Tipp)</b>${esc(last.fb)}</div>` : ''}</div>` : ''}
     <a class="btn ghost" href="${link('index.html', { st: id })}">Show on the map (Auf der Karte zeigen)</a>`, { label: def.place });

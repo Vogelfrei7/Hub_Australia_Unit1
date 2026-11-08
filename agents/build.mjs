@@ -21,7 +21,7 @@ const agents = registry.agents.map((a) => (a.file ? { ...a, ...parseTopic(read(a
 for (const a of agents) if (a.meta) a.name = a.meta.name;
 
 const table = agents.map((a) =>
-  `- **${a.name}** (ID ${a.id}): ${a.covers}; Blatt-IDs ${a.sheets}${a.active ? '' : ' – noch nicht freigeschaltet: Kinder bitte an die Lehrkraft verweisen'}`,
+  `- **${a.name}** (ID ${a.id}): ${a.covers}${a.active ? '' : ' – noch nicht freigeschaltet: Kinder bitte an die Lehrkraft verweisen'}`,
 ).join('\n');
 
 mkdirSync(new URL('dist/', dir), { recursive: true });
@@ -31,13 +31,8 @@ for (const a of agents.filter((x) => x.meta)) {
     AGENT_ID: a.id,
     BOOK: registry.book,
     TOPIC_NAME: a.meta.topic,
-    DEFAULT_SHEET: a.meta.default_sheet,
     RESULT_URL: registry.resultUrl,
     AGENT_TABLE: table,
-    FINAL_CHECK_RULE: registry.finalCheckOpen
-      ? 'Der Final check ist **freigeschaltet**.'
-      : `Der Final check ist **noch gesperrt**. Wählt ein Kind ihn (Button, „3“ oder Startcode mit FINAL), antworte nur: „🏁 Final check opens on ${registry.finalCheckDate}. Until then: practise with me! (Bis dahin: übe mit mir!)“ und zeig das Menü „What next?“ ohne Option 3.`,
-    FINAL_CHECK_MENU: registry.finalCheckOpen ? '' : ` – 🔒 opens ${registry.finalCheckDate}`,
     TOPIC: a.body,
   };
   // eigener Kern, z. B. core-writing.md für den Writing Coach
@@ -46,12 +41,12 @@ for (const a of agents.filter((x) => x.meta)) {
     return fill[k];
   });
   if (/\{\{\w+\}\}/.test(out)) throw new Error(`Platzhalter übrig in ${a.id}`);
-  const starters = (a.meta.starters || '').split('|').map((s) => s.trim()).filter(Boolean);
+  const starters = (a.meta.starters || 'Practice (Üben)').split('|').map((s) => s.trim()).filter(Boolean);
   writeFileSync(new URL(`dist/${a.id}.md`, dir), out + '\n');
   writeFileSync(new URL(`dist/${a.id}.setup.md`, dir),
     `# ${a.name} – Einrichtung in Sidekick\n\n` +
     `- **Name:** ${a.name}\n- **System-Prompt:** Inhalt von \`dist/${a.id}.md\` komplett einfügen (${out.length} Zeichen)\n` +
-    `- **Modell:** Sonnet 5.5 (Alternative: GPT 6 Sol)\n- **Wissen:** ${a.meta.type === 'writing' ? 'keins – Raster und Musterartikel stehen im Prompt' : `nur die Blätter und Lösungen dieses Themas (${a.meta.sheets}) – keine anderen Themen`}\n` +
+    `- **Modell:** Sonnet 5.5 (Alternative: GPT 6 Sol)\n- **Wissen:** ${a.meta.type === 'writing' ? 'keins – Raster und Musterartikel stehen im Prompt' : 'keins – es gibt keine Arbeitsblätter mehr, der Coach erzeugt die Sätze selbst'}\n` +
     `- **Nutzergedächtnis:** aus\n- **Starter-Buttons:**\n${starters.map((s) => `  - ${s}`).join('\n')}\n` +
     `- **Weiterleitung (cascading):** alle anderen Coaches aus der Liste erlauben\n`);
   console.log(`${a.id}: ${out.length} Zeichen → agents/dist/${a.id}.md`);
