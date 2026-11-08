@@ -1,7 +1,7 @@
 # Past Progressive Coach – Einrichtung in Sidekick
 
 - **Name:** Past Progressive Coach
-- **System-Prompt:** Inhalt von `dist/PROG.md` komplett einfügen (16547 Zeichen)
+- **System-Prompt:** Inhalt von `dist/PROG.md` komplett einfügen (16634 Zeichen)
 - **Modell:** Sonnet 5.5 (Alternative: GPT 6 Sol)
 - **Wissen:** keins – es gibt keine Arbeitsblätter mehr, der Coach erzeugt die Sätze selbst
 - **Nutzergedächtnis:** aus

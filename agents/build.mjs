@@ -21,7 +21,7 @@ const agents = registry.agents.map((a) => (a.file ? { ...a, ...parseTopic(read(a
 for (const a of agents) if (a.meta) a.name = a.meta.name;
 
 const table = agents.map((a) =>
-  `- **${a.name}** (ID ${a.id}): ${a.covers}${a.active ? '' : ' – noch nicht freigeschaltet: Kinder bitte an die Lehrkraft verweisen'}`,
+  `- **${a.name}** (ID ${a.id}): ${a.covers}${a.sheets ? `; Blatt-IDs ${a.sheets}` : ''}${a.active ? '' : ' – noch nicht freigeschaltet: Kinder bitte an die Lehrkraft verweisen'}`,
 ).join('\n');
 
 mkdirSync(new URL('dist/', dir), { recursive: true });
@@ -33,6 +33,7 @@ for (const a of agents.filter((x) => x.meta)) {
     TOPIC_NAME: a.meta.topic,
     RESULT_URL: registry.resultUrl,
     AGENT_TABLE: table,
+    DEFAULT_SHEET: a.meta.default_sheet || '–',
     TOPIC: a.body,
   };
   // eigener Kern, z. B. core-writing.md für den Writing Coach

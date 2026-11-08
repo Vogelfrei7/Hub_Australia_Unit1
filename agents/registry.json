@@ -6,25 +6,33 @@
       "id": "SPR",
       "file": "topics/simple-present.md",
       "covers": "simple present (Gegenwart: he/she/it -s, do/does)",
-      "active": true
+      "active": true,
+      "sheets": "AUS1-SPR-…",
+      "core": "core-worksheet.md"
     },
     {
       "id": "SP",
       "file": "topics/simple-past.md",
       "covers": "simple past (Vergangenheit: -ed, unregelmäßige Verben, was/were, did)",
-      "active": true
+      "active": true,
+      "sheets": "AUS1-SP-…",
+      "core": "core-worksheet.md"
     },
     {
       "id": "PP",
       "file": "topics/present-perfect.md",
       "covers": "present perfect (have/has + 3. Form)",
-      "active": true
+      "active": true,
+      "sheets": "AUS1-PP-…",
+      "core": "core-worksheet.md"
     },
     {
       "id": "SPPP",
       "file": "topics/past-vs-present-perfect.md",
       "covers": "simple past oder present perfect? (Kontrast)",
-      "active": true
+      "active": true,
+      "sheets": "AUS1-SPPP-…",
+      "core": "core-worksheet.md"
     },
     {
       "id": "PROG",
